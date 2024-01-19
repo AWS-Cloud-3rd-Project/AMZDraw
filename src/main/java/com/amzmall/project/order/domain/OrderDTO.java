@@ -1,12 +1,10 @@
 package com.amzmall.project.order.domain;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
-public class Order {
+@Data
+public class OrderDTO {
 
-    private Long id;
     //주문 번호
     private String orderId;
     //주문 상태
@@ -18,8 +16,7 @@ public class Order {
     //주문 금액
     private String orderAmount;
 
-    @Builder
-    public Order(String orderId, String orderStatus, String orderDate, String orderer, String orderAmount) {
+    public OrderDTO(String orderId, String orderStatus, String orderDate, String orderer, String orderAmount) {
         this.orderId = orderId;
         this.orderStatus = orderStatus;
         this.orderDate = orderDate;

@@ -1,12 +1,21 @@
-package com.amzmall.project.order.domain;
+package com.amzmall.project.order.adapter.out;
 
-import lombok.Builder;
-import lombok.Getter;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-public class Order {
+@Entity
+@Table(name = "order_item")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrderJpaEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     //주문 번호
     private String orderId;
     //주문 상태
@@ -18,8 +27,7 @@ public class Order {
     //주문 금액
     private String orderAmount;
 
-    @Builder
-    public Order(String orderId, String orderStatus, String orderDate, String orderer, String orderAmount) {
+    public OrderJpaEntity(String orderId, String orderStatus, String orderDate, String orderer, String orderAmount) {
         this.orderId = orderId;
         this.orderStatus = orderStatus;
         this.orderDate = orderDate;
