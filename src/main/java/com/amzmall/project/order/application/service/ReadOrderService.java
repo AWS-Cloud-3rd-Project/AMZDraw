@@ -8,6 +8,8 @@ import com.amzmall.project.order.domain.OrderDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ReadOrderService implements ReadOrderUseCase {
@@ -16,14 +18,22 @@ public class ReadOrderService implements ReadOrderUseCase {
 
     //주문 정보 단건 조회
     @Override
-    public OrderDTO findOrderById(FindOrderCommand command) {
-        OrderJpaEntity orderJpaEntity = findOrderPort.findOrderByOrderId(command.getOrderId());
-        return toDto(orderJpaEntity);
+    public OrderDTO findOrderByOrderId(FindOrderCommand command) {
+        OrderJpaEntity orderJpaEntity = findOrderPort.findByOrderId(command.getOrderId());
+        return toOrderDto(orderJpaEntity);
+    }
+
+    @Override
+    public List<OrderDTO> findOrdersByOrderer(FindOrderCommand command) {
+        var orderHistories = findOrderPort.findAllByOrderer(command.getOrderer());
+        return orderHistories.stream()
+                .map(this::toOrderDto)
+                .toList();
     }
 
     // 주문 정보 목록 조회
 
-    public OrderDTO toDto(OrderJpaEntity orderEntity) {
+    public OrderDTO toOrderDto(OrderJpaEntity orderEntity) {
         return new OrderDTO(
                 orderEntity.getOrderId(),
                 orderEntity.getOrderStatus(),
@@ -32,4 +42,5 @@ public class ReadOrderService implements ReadOrderUseCase {
                 orderEntity.getOrderAmount()
         );
     }
+
 }

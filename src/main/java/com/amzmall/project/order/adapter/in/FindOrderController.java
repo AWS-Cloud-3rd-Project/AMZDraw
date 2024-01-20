@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping(path = "/orders")
 public class FindOrderController {
 
     private final ReadOrderUseCase readOrderUseCase;
@@ -20,10 +22,21 @@ public class FindOrderController {
     @GetMapping(path = "/{orderId}")
     public OrderDTO findOrderByOrderId(@PathVariable(name = "orderId") String orderId) {
 
-        FindOrderCommand command = FindOrderCommand.builder()
+        FindOrderCommand orderCommand = FindOrderCommand.builder()
                 .orderId(orderId)
                 .build();
 
-        return readOrderUseCase.findOrderById(command);
+        return readOrderUseCase.findOrderByOrderId(orderCommand);
+    }
+
+    //주문내역 조회
+    @GetMapping(path = "/{orderer}/orderList")
+    public List<OrderDTO> findOrdersByOrderer(@PathVariable(name = "orderer") String orderer) {
+
+        FindOrderCommand ordersCommand = FindOrderCommand.builder()
+                .orderer(orderer)
+                .build();
+
+        return readOrderUseCase.findOrdersByOrderer(ordersCommand);
     }
 }

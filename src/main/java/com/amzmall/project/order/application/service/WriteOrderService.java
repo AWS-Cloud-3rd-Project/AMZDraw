@@ -29,6 +29,6 @@ public class WriteOrderService implements WriteOrderUseCase {
                         .orderAmount(command.getOrderAmount())
                         .build()
         );
-    return readService.toDto(orderEntity);
+    return readService.toOrderDto(orderEntity);
     }
 }

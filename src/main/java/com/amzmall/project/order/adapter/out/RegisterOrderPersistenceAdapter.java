@@ -6,6 +6,8 @@ import com.amzmall.project.order.domain.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Component
 public class RegisterOrderPersistenceAdapter implements RegisterOrderPort, FindOrderPort {
@@ -25,7 +27,12 @@ public class RegisterOrderPersistenceAdapter implements RegisterOrderPort, FindO
     }
 
     @Override
-    public OrderJpaEntity findOrderByOrderId(String orderId) {
+    public OrderJpaEntity findByOrderId(String orderId) {
         return orderRepository.findByOrderId(orderId);
+    }
+
+    @Override
+    public List<OrderJpaEntity> findAllByOrderer(String orderer) {
+        return orderRepository.findAllByOrderer(orderer);
     }
 }

@@ -7,8 +7,10 @@ import lombok.Data;
 @Builder
 public class FindOrderCommand {
     private final String orderId;
+    private final String orderer;
 
-    public FindOrderCommand(String orderId) {
+    public FindOrderCommand(String orderId, String orderer) {
         this.orderId = orderId;
+        this.orderer = orderer;
     }
 }
