@@ -1,8 +1,7 @@
 package com.amzmall.project.order.adapter.in;
 
-import com.amzmall.project.order.application.port.WriteOrderUseCase;
-import com.amzmall.project.order.application.port.RegisterOrderCommand;
-import com.amzmall.project.order.domain.Order;
+import com.amzmall.project.order.application.port.in.WriteOrderUseCase;
+import com.amzmall.project.order.application.port.in.RegisterOrderCommand;
 import com.amzmall.project.order.domain.OrderDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/order")
-public class OrderController {
+public class RegisterOrderController {
 
     private final WriteOrderUseCase writeOrderUseCase;
 

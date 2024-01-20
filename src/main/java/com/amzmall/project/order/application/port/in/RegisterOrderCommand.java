@@ -1,4 +1,4 @@
-package com.amzmall.project.order.application.port;
+package com.amzmall.project.order.application.port.in;
 
 import lombok.Builder;
 import lombok.Data;

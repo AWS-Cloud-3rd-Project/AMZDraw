@@ -1,9 +1,9 @@
 package com.amzmall.project.order.application.service;
 
 import com.amzmall.project.order.adapter.out.OrderJpaEntity;
-import com.amzmall.project.order.application.port.WriteOrderUseCase;
-import com.amzmall.project.order.application.port.RegisterOrderCommand;
-import com.amzmall.project.order.application.port.OrderPort;
+import com.amzmall.project.order.application.port.in.WriteOrderUseCase;
+import com.amzmall.project.order.application.port.in.RegisterOrderCommand;
+import com.amzmall.project.order.application.port.out.RegisterOrderPort;
 import com.amzmall.project.order.domain.Order;
 import com.amzmall.project.order.domain.OrderDTO;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class WriteOrderService implements WriteOrderUseCase {
 
-    private final OrderPort orderPort;
+    private final RegisterOrderPort registerOrderPort;
     private final ReadOrderService readService;
 
     @Override
     public OrderDTO registerOrder(RegisterOrderCommand command) {
-        OrderJpaEntity orderEntity = orderPort.createOrder(
+        OrderJpaEntity orderEntity = registerOrderPort.createOrder(
                 Order.builder()
                         .orderId(command.getOrderId())
                         .orderStatus(command.getOrderStatus())

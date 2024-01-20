@@ -8,10 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterOrderRequest {
-    private String orderId;
+    private String orderId; // TODO 주문번호 생성
     private String orderStatus;
     private String orderDate;
-    private String orderer; // TODO 회원 정보의 이름을 받아
+    private String orderer; // TODO 회원 정보의 이름을 받아서?
     private String orderAmount;
-
 }
