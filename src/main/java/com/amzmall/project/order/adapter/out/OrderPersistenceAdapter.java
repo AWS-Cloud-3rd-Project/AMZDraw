@@ -10,7 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class RegisterOrderPersistenceAdapter implements RegisterOrderPort, FindOrderPort {
+public class OrderPersistenceAdapter implements RegisterOrderPort, FindOrderPort {
 
     private final SpringDataOrderRepository orderRepository;
     @Override

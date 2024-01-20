@@ -29,7 +29,7 @@ public class FindOrderController {
         return readOrderUseCase.findOrderByOrderId(orderCommand);
     }
 
-    //주문내역 조회
+    //주문 목록 조회 TODO: 주문자 아이디로 조회
     @GetMapping(path = "/{orderer}/orderList")
     public List<OrderDTO> findOrdersByOrderer(@PathVariable(name = "orderer") String orderer) {
 
