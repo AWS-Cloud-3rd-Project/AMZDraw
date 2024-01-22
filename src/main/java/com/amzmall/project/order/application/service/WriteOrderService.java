@@ -7,6 +7,7 @@ import com.amzmall.project.order.application.port.out.RegisterOrderPort;
 import com.amzmall.project.order.domain.Order;
 import com.amzmall.project.order.domain.OrderDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
