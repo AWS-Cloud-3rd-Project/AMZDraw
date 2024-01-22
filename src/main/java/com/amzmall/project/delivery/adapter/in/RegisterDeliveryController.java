@@ -17,17 +17,18 @@ public class RegisterDeliveryController {
 
     private final WriteDeliveryUseCase writeDeliveryUseCase;
 
-    @PostMapping("")
+    @PostMapping("/register")
     public DeliveryDTO registerDelivery(@RequestBody RegisterDeliveryRequest deliveryRequest) {
 
         RegisterDeliveryCommand command = RegisterDeliveryCommand.builder()
                 .deliveryId(deliveryRequest.getDeliveryId())
-                .deliveryStatus(deliveryRequest.getDeliveryStatus())
-                .deliveryDepartureDate(deliveryRequest.getDeliveryDepartureDate())
-                .receiver(deliveryRequest.getReceiver())
-                .shippingAddress(deliveryRequest.getShippingAddress())
+                .waybill(deliveryRequest.getWaybill())
+                .deliveryRequest(deliveryRequest.getDeliveryRequest())
+                .receiveMethod(deliveryRequest.getReceiveMethod())
+                .startDate(deliveryRequest.getStartDate())
+                .type(deliveryRequest.getType())
+                .progress(deliveryRequest.getProgress())
                 .build();
-
         return writeDeliveryUseCase.registerDelivery(command);
     }
 }

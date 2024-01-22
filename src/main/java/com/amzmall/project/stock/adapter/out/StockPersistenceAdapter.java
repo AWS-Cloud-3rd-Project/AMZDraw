@@ -12,10 +12,10 @@ import java.util.List;
 @Component
 public class StockPersistenceAdapter implements RegisterStockPort, FindStockPort {
 
-    private final SpringDataStockRepository orderRepository;
+    private final SpringDataStockRepository stockRepository;
     @Override
     public StockJpaEntity save(Stock stock) {
-        return orderRepository.save(
+        return stockRepository.save(
                 new StockJpaEntity(
                         stock.getStockId(),
                         stock.getQuantity(),
@@ -29,7 +29,7 @@ public class StockPersistenceAdapter implements RegisterStockPort, FindStockPort
 
     @Override
     public StockJpaEntity findByStockId(String stockId) {
-        return orderRepository.findByStockId(stockId);
+        return stockRepository.findByStockId(stockId);
     }
 //
 //    @Override

@@ -33,6 +33,6 @@ public class StockController {
                 .quantity(stockReq.getQuantity())
                 .availableQuantity(stockReq.getAvailableQuantity())
                 .build();
-        return writeStockUseCase.updateStock(stockId, command);
+        return writeStockUseCase.updateStock(command);
     }
 }

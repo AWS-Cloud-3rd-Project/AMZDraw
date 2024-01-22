@@ -14,11 +14,16 @@ public class DeliveryPersistenceAdapter implements RegisterDeliveryPort {
         return deliveryRepository.save(
                 new DeliveryJpaEntity(
                         delivery.getDeliveryId(),
-                        delivery.getDeliveryStatus(),
-                        delivery.getDeliveryDepartureDate(),
-                        delivery.getDeliveryArrivalDate(),
-                        delivery.getReceiver(),
-                        delivery.getShippingAddress()
+                        delivery.getWaybill(),
+                        delivery.getDeliveryRequest(),
+                        delivery.getReceiveMethod(),
+                        delivery.getStartDate(),
+                        delivery.getEndDate(),
+                        delivery.getType(),
+                        delivery.getProgress(),
+                        delivery.getCreatedAt(),
+                        delivery.getUpdatedAt(),
+                        delivery.getDeliveryStatus()
                 )
         );
     }

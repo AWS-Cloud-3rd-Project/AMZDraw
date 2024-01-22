@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -12,8 +13,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class RegisterDeliveryRequest {
     private String deliveryId;
-    private String deliveryStatus;
-    private LocalDate deliveryDepartureDate;
-    private String receiver;
-    private String shippingAddress;
+
+    private String waybill;
+    private String deliveryRequest;
+    private String receiveMethod;
+
+    //배송 출발 날짜
+    private LocalDate startDate;
+    private String type;
+    private String progress;
 }

@@ -5,5 +5,5 @@ import com.amzmall.project.stock.domain.StockDTO;
 public interface WriteStockUseCase {
     StockDTO registerStock(StockCommand command);
 
-    StockDTO updateStock(String stockId, StockCommand command);
+    StockDTO updateStock(StockCommand command);
 }

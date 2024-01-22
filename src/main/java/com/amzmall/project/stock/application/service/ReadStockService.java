@@ -34,14 +34,14 @@ public class ReadStockService implements ReadStockUseCase {
 
     // 주문 정보 목록 조회
 
-    public StockDTO toStockDTO(StockJpaEntity orderEntity) {
+    public StockDTO toStockDTO(StockJpaEntity stockEntity) {
         return new StockDTO(
-                orderEntity.getStockId(),
-                orderEntity.getQuantity(),
-                orderEntity.getAvailableQuantity(),
-                orderEntity.getCreateDat(),
-                orderEntity.getUpdateDat(),
-                orderEntity.getStockStatus()
+                stockEntity.getStockId(),
+                stockEntity.getQuantity(),
+                stockEntity.getAvailableQuantity(),
+                stockEntity.getCreateDat(),
+                stockEntity.getUpdateDat(),
+                stockEntity.getStockStatus()
         );
     }
 

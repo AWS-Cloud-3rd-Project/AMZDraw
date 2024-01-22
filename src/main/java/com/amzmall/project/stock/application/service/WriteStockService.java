@@ -7,7 +7,7 @@ import com.amzmall.project.stock.application.port.out.FindStockPort;
 import com.amzmall.project.stock.application.port.out.RegisterStockPort;
 import com.amzmall.project.stock.domain.Stock;
 import com.amzmall.project.stock.domain.StockDTO;
-import jakarta.persistence.EntityNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,7 @@ public class WriteStockService implements WriteStockUseCase {
 
     //현재 시간
     LocalDateTime currentTime = LocalDateTime.now();
+    @Operation(summary = "재고 등록")
     @Override
     public StockDTO registerStock(StockCommand command) {
 
@@ -43,11 +44,12 @@ public class WriteStockService implements WriteStockUseCase {
     }
 
     //
+    @Operation(summary = "재고 업데이트")
     @Override
-    public StockDTO updateStock(String stockId, StockCommand command) {
+    public StockDTO updateStock(StockCommand command) {
 
         // 재고 정보 조회
-        StockJpaEntity stockEntity = findStockPort.findByStockId(stockId);
+        StockJpaEntity stockEntity = findStockPort.findByStockId(command.getStockId());
 
         if (command.getQuantity() < 0) {
             throw new IllegalArgumentException("재고는 0보다 작을 수 없습니다.");
