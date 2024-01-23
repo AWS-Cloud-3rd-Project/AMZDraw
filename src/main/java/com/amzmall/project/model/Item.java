@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @ToString
 @Getter
-
+@AllArgsConstructor
 @Document(collection = "item")
 public class Item {
     @Id
@@ -16,17 +16,8 @@ public class Item {
     private double price;
     private int quantity;
 
-
 //    @NoArgsConstructor
     public Item() {
     }
 
-//    @AllArgsConstructor
-    public Item(String id, String title, String description, double price, int quantity) {
-        this.id=id;
-        this.title=title;
-        this.description=description;
-        this.price=price;
-        this.quantity=quantity;
-    }
 }

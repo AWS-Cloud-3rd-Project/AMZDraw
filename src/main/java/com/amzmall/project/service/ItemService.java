@@ -1,7 +1,7 @@
 package com.amzmall.project.service;
 
 import com.amzmall.project.model.Item;
-import com.amzmall.project.repository.Itemrepository;
+import com.amzmall.project.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +11,10 @@ import java.util.Optional;
 @Service
 public class ItemService {
 
-    private final Itemrepository itemrepository;
+    private final ItemRepository itemrepository;
 
     @Autowired
-    public ItemService(Itemrepository itemrepository) {
+    public ItemService(ItemRepository itemrepository) {
         this.itemrepository = itemrepository;
     }
 

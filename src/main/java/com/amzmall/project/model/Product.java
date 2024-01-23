@@ -18,9 +18,9 @@ import java.time.LocalDateTime;
 @Document(collection = "product")
 public class Product {
     @Id
-    private Integer productId;
+    private String productId;
     private Integer sellerId;
-    private Integer categoryId;
+//    private Integer categoryId;
     private Integer productCode;
     private String name;
     private String isOption; //on off 체크 만약 없다면 off로 취급
