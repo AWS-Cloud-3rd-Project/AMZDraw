@@ -30,21 +30,22 @@ public class DeliveryPersistenceAdapter implements WriteDeliveryPort, ReadDelive
     }
 
     @Override
-    public void changeStatusToStart(Delivery delivery) {
-        deliveryRepository.findById(delivery.getDeliveryId())
-                .ifPresent(deliveryJpaEntity -> {
-                    deliveryJpaEntity.setDeliveryStatus(Delivery.DeliveryStatus.START);
-                    deliveryRepository.save(deliveryJpaEntity);
-                });
-    }
-
-    @Override
-    public void changeStatusToComplete(Delivery delivery) {
-        deliveryRepository.findById(delivery.getDeliveryId())
-                .ifPresent(deliveryJpaEntity -> {
-                    deliveryJpaEntity.setDeliveryStatus(Delivery.DeliveryStatus.COMPLETE);
-                    deliveryRepository.save(deliveryJpaEntity);
-                });
+    public DeliveryJpaEntity updateDelivery(Delivery delivery) {
+        return deliveryRepository.save(
+                new DeliveryJpaEntity(
+                        delivery.getDeliveryId(),
+                        delivery.getWaybill(),
+                        delivery.getDeliveryRequest(),
+                        delivery.getReceiveMethod(),
+                        delivery.getStartDate(),
+                        delivery.getEndDate(),
+                        delivery.getType(),
+                        delivery.getProgress(),
+                        delivery.getCreatedAt(),
+                        delivery.getUpdatedAt(),
+                        delivery.getDeliveryStatus()
+                )
+        );
     }
 
     @Override

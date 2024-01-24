@@ -39,6 +39,7 @@ public class ReadOrderService implements ReadOrderUseCase {
                 orderEntity.getOrderStatus(),
                 orderEntity.getOrderDate(),
                 orderEntity.getOrderer(),
+                orderEntity.getOrderQuantity(),
                 orderEntity.getOrderAmount()
         );
     }

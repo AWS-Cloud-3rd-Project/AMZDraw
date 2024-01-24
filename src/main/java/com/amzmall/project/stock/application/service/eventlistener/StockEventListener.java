@@ -1,26 +1,27 @@
 package com.amzmall.project.stock.application.service.eventlistener;
 
-import com.amzmall.project.delivery.domain.Delivery;
-import com.amzmall.project.delivery.domain.events.DeliveryStartedEvent;
+import com.amzmall.project.order.domain.Order;
+import com.amzmall.project.order.domain.event.OrderCompletedEvent;
 import com.amzmall.project.stock.application.service.WriteStockService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Slf4j
+@Service
+@Transactional
 @RequiredArgsConstructor
 public class StockEventListener {
 
     private final WriteStockService stockService;
 
+    //TODO 주문 수량 값 int로 변경
     @EventListener
-    public void onDeliveryStarted(DeliveryStartedEvent event) {
-        Delivery delivery = event.getDelivery();
-        // 재고 감소 로직 호출
-        if (delivery.getDeliveryStatus() == Delivery.DeliveryStatus.READY) {
-            stockService.decreaseStock(delivery.getDeliveryId(), delivery.getDeliveryQuantity());
-        } else {
-            throw new IllegalArgumentException("배송 시작 이벤트는 READY 상태에서만 발생할 수 있습니다.");
-        }
+    public void onDeliveryReady(OrderCompletedEvent event) {
+        Order order = event.getOrder();
+        stockService.decreaseStock(
+                order.getOrderId(), Integer.parseInt(order.getOrderQuantity()));
     }
 }

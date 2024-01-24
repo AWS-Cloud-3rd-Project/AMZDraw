@@ -45,10 +45,6 @@ public class DeliveryJpaEntity {
     //배송 상태
     private Delivery.DeliveryStatus deliveryStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "stock_id")
-    private StockJpaEntity stock;
-
     public DeliveryJpaEntity(String deliveryId, String waybill, String deliveryRequest, String receiveMethod, LocalDate startDate, LocalDate endDate, String type, String progress, LocalDateTime createdAt, LocalDateTime updatedAt, Delivery.DeliveryStatus deliveryStatus) {
         this.deliveryId = deliveryId;
         this.waybill = waybill;

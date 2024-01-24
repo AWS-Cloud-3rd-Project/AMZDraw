@@ -11,6 +11,7 @@ import com.amzmall.project.delivery.domain.DeliveryStatusDTO;
 import com.amzmall.project.delivery.domain.events.DeliveryCompletedEvent;
 import com.amzmall.project.delivery.domain.events.DeliveryStartedEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -32,20 +34,23 @@ public class WriteDeliveryService implements WriteDeliveryUseCase {
 
     @Override
     public DeliveryDTO registerDelivery(RegisterDeliveryCommand command) {
-        DeliveryJpaEntity deliveryEntity = writeDeliveryPort.createDelivery(
-                Delivery.builder()
-                        .deliveryId(command.getDeliveryId())
-                        .deliveryQuantity(command.getDeliveryQuantity())
-                        .waybill(command.getWaybill())
-                        .deliveryRequest(command.getDeliveryRequest())
-                        .receiveMethod(command.getReceiveMethod())
-                        .startDate(command.getStartDate())
-                        .endDate(ETADate(command.getStartDate())) //도착일은 출발일 + 3일
-                        .type(command.getType())
-                        .progress(command.getProgress())
-                        .deliveryStatus(Delivery.DeliveryStatus.READY)
-                        .build()
-        );
+
+        Delivery delivery = Delivery.builder()
+                .deliveryId(command.getDeliveryId())
+                .deliveryQuantity(command.getDeliveryQuantity())
+                .waybill(command.getWaybill())
+                .deliveryRequest(command.getDeliveryRequest())
+                .receiveMethod(command.getReceiveMethod())
+                .startDate(command.getStartDate())
+                .endDate(ETADate(command.getStartDate())) //도착일은 출발일 + 3일
+                .type(command.getType())
+                .progress(command.getProgress())
+                .deliveryStatus(Delivery.DeliveryStatus.READY)
+                .build();
+
+        DeliveryJpaEntity deliveryEntity = writeDeliveryPort.createDelivery(delivery);
+        eventPublisher.publishEvent(new DeliveryCompletedEvent(delivery));
+
         return readDeliveryService.toDeliveryDTO(deliveryEntity);
     }
 
@@ -59,14 +64,18 @@ public class WriteDeliveryService implements WriteDeliveryUseCase {
                 .deliveryStatus(Delivery.DeliveryStatus.READY)
                 .build();
 
-        delivery.startDelivery();
+        if (delivery.getDeliveryStatus() == Delivery.DeliveryStatus.READY) {
+            delivery.startDelivery();
 
-        eventPublisher.publishEvent(new DeliveryStartedEvent(delivery));
-        writeDeliveryPort.changeStatusToStart(delivery);
+            eventPublisher.publishEvent(new DeliveryStartedEvent(delivery));
 
-        // 상태 변경 후 다시 조회
-        DeliveryJpaEntity updatedDeliveryEntity = readDeliveryPort.findByDeliveryId(deliveryId);
-        return readDeliveryService.toDeliveryStatusDTO(deliveryEntity);
+            // 상태 변경 후 다시 조회
+            DeliveryJpaEntity updatedDeliveryEntity = readDeliveryPort.findByDeliveryId(deliveryId);
+            return readDeliveryService.toDeliveryStatusDTO(deliveryEntity);
+        } else {
+            log.info("delivery.getDeliveryStatus() = {}", delivery.getDeliveryStatus());
+            throw new IllegalArgumentException("배송 시작 이벤트는 READY 상태에서만 발생할 수 있습니다.");
+        }
     }
 
     @Override
@@ -74,15 +83,22 @@ public class WriteDeliveryService implements WriteDeliveryUseCase {
         DeliveryJpaEntity deliveryEntity = readDeliveryPort.findByDeliveryId(deliveryId);
 
         Delivery delivery = Delivery.builder()
+                .deliveryId(deliveryEntity.getDeliveryId())
                 .deliveryStatus(Delivery.DeliveryStatus.START)
                 .build();
 
-        delivery.completeDelivery();
-        eventPublisher.publishEvent(new DeliveryCompletedEvent(delivery));
+        if (delivery.getDeliveryStatus() == Delivery.DeliveryStatus.START) {
+            delivery.completeDelivery();
 
-        writeDeliveryPort.changeStatusToComplete(delivery);
-        return readDeliveryService.toDeliveryStatusDTO(deliveryEntity);
+            eventPublisher.publishEvent(new DeliveryCompletedEvent(delivery));
 
+            // 상태 변경 후 다시 조회
+            DeliveryJpaEntity updatedDeliveryEntity = readDeliveryPort.findByDeliveryId(deliveryId);
+            return readDeliveryService.toDeliveryStatusDTO(deliveryEntity);
+        } else {
+            log.info("delivery.getDeliveryStatus() = {}", delivery.getDeliveryStatus());
+            throw new IllegalArgumentException("배송 완료 이벤트는 START 상태에서만 발생할 수 있습니다.");
+        }
     }
 
     //배송 도착 날짜는 출발일 + 3일 설정

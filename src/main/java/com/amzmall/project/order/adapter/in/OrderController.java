@@ -2,21 +2,34 @@ package com.amzmall.project.order.adapter.in;
 
 import com.amzmall.project.order.application.port.in.FindOrderCommand;
 import com.amzmall.project.order.application.port.in.ReadOrderUseCase;
+import com.amzmall.project.order.application.port.in.WriteOrderUseCase;
+import com.amzmall.project.order.application.port.in.RegisterOrderCommand;
 import com.amzmall.project.order.domain.OrderDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/orders")
-public class FindOrderController {
+@RequestMapping("/orders")
+public class OrderController {
 
+    private final WriteOrderUseCase writeOrderUseCase;
     private final ReadOrderUseCase readOrderUseCase;
+
+    @PostMapping("/register")
+    public OrderDTO registerOrder(@RequestBody RegisterOrderRequest orderRequest) {
+        RegisterOrderCommand command = RegisterOrderCommand.builder()
+                .orderId(orderRequest.getOrderId())
+                .orderDate(orderRequest.getOrderDate())
+                .orderer(orderRequest.getOrderer())
+                .orderQuantity(orderRequest.getOrderQuantity())
+                .orderAmount(orderRequest.getOrderAmount())
+                .build();
+        return writeOrderUseCase.registerOrder(command);
+    }
+
 
     //주문 정보 조회
     @GetMapping(path = "/{orderId}")

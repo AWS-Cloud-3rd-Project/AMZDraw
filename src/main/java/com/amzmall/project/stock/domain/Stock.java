@@ -40,4 +40,10 @@ public class Stock {
         }
         this.quantity -= quantity;
     }
+
+    //재고 상태 변경 로직
+    public void changeStockStatus(StockStatus stockStatus) {
+        this.stockStatus = stockStatus;
+    }
+
 }

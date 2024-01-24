@@ -4,8 +4,7 @@ import com.amzmall.project.order.adapter.out.OrderJpaEntity;
 import com.amzmall.project.order.domain.Order;
 import org.springframework.stereotype.Component;
 
-@Component
-public interface RegisterOrderPort {
+public interface WriteOrderPort {
 
     OrderJpaEntity createOrder(Order order);
 }

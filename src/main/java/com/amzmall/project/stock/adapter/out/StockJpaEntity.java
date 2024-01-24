@@ -1,6 +1,5 @@
 package com.amzmall.project.stock.adapter.out;
 
-import com.amzmall.project.delivery.adapter.out.DeliveryJpaEntity;
 import com.amzmall.project.stock.domain.Stock;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "stock")
@@ -36,8 +34,6 @@ public class StockJpaEntity {
     //재고 상태
     private Stock.StockStatus stockStatus;
 
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL) //배송과 재고 연결되어 있으므로 삭제 금지
-    private List<DeliveryJpaEntity> deliveries;
 
     public StockJpaEntity(String stockId, int quantity, LocalDateTime createdAt, LocalDateTime updatedAt, Stock.StockStatus stockStatus) {
         this.stockId = stockId;

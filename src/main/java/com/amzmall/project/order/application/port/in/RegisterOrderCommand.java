@@ -1,26 +1,17 @@
 package com.amzmall.project.order.application.port.in;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 @Builder
 @Data
-@NonNull
+@AllArgsConstructor
+@NoArgsConstructor
 public class RegisterOrderCommand {
 
-    private final String orderId;
-    private final String orderStatus;
-    private final String orderDate;
-    private final String orderer;
-    private final String orderAmount;
-
-    public RegisterOrderCommand(String orderId, String orderStatus, String orderDate, String orderer, String orderAmount) {
-        this.orderId = orderId;
-        this.orderStatus = orderStatus;
-        this.orderDate = orderDate;
-        this.orderer = orderer;
-        this.orderAmount = orderAmount;
-    }
+    private String orderId;
+    private String orderDate;
+    private String orderer;
+    private String orderQuantity;
+    private String orderAmount;
 
 }

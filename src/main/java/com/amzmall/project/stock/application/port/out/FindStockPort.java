@@ -10,6 +10,7 @@ import java.util.List;
 public interface FindStockPort {
 
     StockJpaEntity findByStockId(String stockId);
+    List<StockJpaEntity> findAllByStockId(String stockId);
 //
 //    List<StockJpaEntity> findAllByOrderer(String orderer);
 }

@@ -38,8 +38,8 @@ public class ReadStockService implements ReadStockUseCase {
         return new StockDTO(
                 stockEntity.getStockId(),
                 stockEntity.getQuantity(),
-                stockEntity.getCreateDat(),
-                stockEntity.getUpdateDat(),
+                stockEntity.getCreatedAt(),
+                stockEntity.getUpdatedAt(),
                 stockEntity.getStockStatus()
         );
     }

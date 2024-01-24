@@ -5,9 +5,8 @@ import com.amzmall.project.stock.domain.Stock;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface RegisterStockPort {
+public interface WriteStockPort {
 
-    StockJpaEntity save(Stock stock);
-
-    void decreaseStock(String stockId, int quantity);
+    StockJpaEntity createStock(Stock stock);
+    StockJpaEntity updateStock(Stock stock);
 }

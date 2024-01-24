@@ -1,7 +1,7 @@
 package com.amzmall.project.order.adapter.out;
 
 import com.amzmall.project.order.application.port.out.FindOrderPort;
-import com.amzmall.project.order.application.port.out.RegisterOrderPort;
+import com.amzmall.project.order.application.port.out.WriteOrderPort;
 import com.amzmall.project.order.domain.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class OrderPersistenceAdapter implements RegisterOrderPort, FindOrderPort {
+public class OrderPersistenceAdapter implements WriteOrderPort, FindOrderPort {
 
     private final SpringDataOrderRepository orderRepository;
     @Override
@@ -21,6 +21,7 @@ public class OrderPersistenceAdapter implements RegisterOrderPort, FindOrderPort
                         order.getOrderStatus(),
                         order.getOrderDate(),
                         order.getOrderer(),
+                        order.getOrderQuantity(),
                         order.getOrderAmount()
                 )
         );
