@@ -23,8 +23,6 @@ public class WriteStockService implements WriteStockUseCase {
     private final FindStockPort findStockPort;
     private final ReadStockService readService;
 
-    //현재 시간
-    LocalDateTime currentTime = LocalDateTime.now();
     @Operation(summary = "재고 등록")
     @Override
     public StockDTO registerStock(StockCommand command) {
@@ -33,9 +31,6 @@ public class WriteStockService implements WriteStockUseCase {
         Stock stock = Stock.builder()
                 .stockId(command.getStockId())
                 .quantity(command.getQuantity())
-                .availableQuantity(command.getAvailableQuantity())
-                .createDat(currentTime) //현재 시간
-                .updateDat(currentTime) //현재 시간
                 .stockStatus(Stock.StockStatus.IN_STOCK) //재고 상태 초기화
                 .build();
 
@@ -58,14 +53,30 @@ public class WriteStockService implements WriteStockUseCase {
         Stock stock = Stock.builder()
                 .stockId(stockEntity.getStockId())
                 .quantity(command.getQuantity())
-                .availableQuantity(command.getAvailableQuantity())
-                .createDat(stockEntity.getCreateDat())
-                .updateDat(currentTime) //현재 시간
                 .stockStatus(Stock.StockStatus.IN_STOCK) //재고 상태 업데이트
                 .build();
 
         // 엔터티를 데이터베이스에 저장
         StockJpaEntity updatedStockEntity = registerStockPort.save(stock);
         return readService.toStockDTO(updatedStockEntity);
+    }
+
+    @Operation(summary = "재고 감소")
+    @Override
+    public void decreaseStock(String stockId, int quantity) {
+        // 재고 정보 조회
+        StockJpaEntity stockEntity = findStockPort.findByStockId(stockId);
+        Stock stock = Stock.builder()
+                .stockId(stockEntity.getStockId())
+                .quantity(stockEntity.getQuantity())
+                .stockStatus(stockEntity.getStockStatus())
+                .build();
+
+        if (stock.getQuantity() < quantity) {
+            throw new IllegalArgumentException("재고가 부족합니다.");
+        } else {
+            stock.decreaseStock(quantity);
+            registerStockPort.save(stock);
+        }
     }
 }

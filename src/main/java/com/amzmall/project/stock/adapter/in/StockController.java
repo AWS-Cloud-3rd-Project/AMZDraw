@@ -18,7 +18,6 @@ public class StockController {
         StockCommand command = StockCommand.builder()
                 .stockId(stockReq.getStockId())
                 .quantity(stockReq.getQuantity())
-                .availableQuantity(stockReq.getAvailableQuantity())
                 .build();
         return writeStockUseCase.registerStock(command);
     }
@@ -29,9 +28,8 @@ public class StockController {
             @RequestBody UpdateStockRequest stockReq) {
 
         StockCommand command = StockCommand.builder()
-                .stockId(stockReq.getStockId())
+                .stockId(stockId)
                 .quantity(stockReq.getQuantity())
-                .availableQuantity(stockReq.getAvailableQuantity())
                 .build();
         return writeStockUseCase.updateStock(command);
     }

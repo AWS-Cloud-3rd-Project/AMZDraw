@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,24 +27,23 @@ public class StockJpaEntity {
     private String stockId;
     //재고
     private int quantity;
-    //판매 가능 재고
-    private int availableQuantity;
-    //생성 날짜
-    private LocalDateTime createDat;
-    //업데이트 날짜
-    private LocalDateTime updateDat;
-    //재고 상태
-    private Stock.StockStatus stockStatus;// TODO enum으로 변경 (재고 있음, 재고 없음)
 
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    //재고 상태
+    private Stock.StockStatus stockStatus;
+
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL) //배송과 재고 연결되어 있으므로 삭제 금지
     private List<DeliveryJpaEntity> deliveries;
 
-    public StockJpaEntity(String stockId, int quantity, int availableQuantity, LocalDateTime createDat, LocalDateTime updateDat, Stock.StockStatus stockStatus) {
+    public StockJpaEntity(String stockId, int quantity, LocalDateTime createdAt, LocalDateTime updatedAt, Stock.StockStatus stockStatus) {
         this.stockId = stockId;
         this.quantity = quantity;
-        this.availableQuantity = availableQuantity;
-        this.createDat = createDat;
-        this.updateDat = updateDat;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.stockStatus = stockStatus;
     }
 }

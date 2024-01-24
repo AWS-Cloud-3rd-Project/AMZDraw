@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @NonNull
 public class RegisterDeliveryCommand {
     private String deliveryId;
+    //배송 수량
+    private int deliveryQuantity;
 
     private String waybill;
     private String deliveryRequest;
@@ -22,8 +24,9 @@ public class RegisterDeliveryCommand {
     private String type;
     private String progress;
 
-    public RegisterDeliveryCommand(String deliveryId, String waybill, String deliveryRequest, String receiveMethod, LocalDate startDate, String type, String progress) {
+    public RegisterDeliveryCommand(String deliveryId, int deliveryQuantity, String waybill, String deliveryRequest, String receiveMethod, LocalDate startDate, String type, String progress) {
         this.deliveryId = deliveryId;
+        this.deliveryQuantity = deliveryQuantity;
         this.waybill = waybill;
         this.deliveryRequest = deliveryRequest;
         this.receiveMethod = receiveMethod;

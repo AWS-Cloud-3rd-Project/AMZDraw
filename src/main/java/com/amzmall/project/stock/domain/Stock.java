@@ -13,31 +13,31 @@ public class Stock {
         IN_STOCK,
         OUT_OF_STOCK
     }
-
-    //TODO 상품명
-    //TODO 상품번호
-    //TODO 배송 번호?
     //재고 번호
     private final String stockId;
     //재고
-    private final int quantity;
-    //판매 가능 재고
-    private final int availableQuantity;
+    private int quantity;
     //생성 날짜
-    private final LocalDateTime createDat;
+    private LocalDateTime createDat;
     //업데이트 날짜
-    private final LocalDateTime updateDat;
+    private LocalDateTime updateDat;
     //재고 상태
-    private final StockStatus stockStatus;
+    private StockStatus stockStatus;
 
     @Builder
-    public Stock(String stockId, int quantity, int availableQuantity, LocalDateTime createDat, LocalDateTime updateDat, StockStatus stockStatus) {
+    public Stock(String stockId, int quantity, LocalDateTime createDat, LocalDateTime updateDat, StockStatus stockStatus) {
         this.stockId = stockId;
         this.quantity = quantity;
-        this.availableQuantity = availableQuantity;
         this.createDat = createDat;
         this.updateDat = updateDat;
         this.stockStatus = stockStatus;
     }
 
+    //재고 감소 로직
+    public void decreaseStock(int quantity) {
+        if (this.quantity < quantity) {
+            throw new IllegalStateException("재고가 부족합니다.");
+        }
+        this.quantity -= quantity;
+    }
 }

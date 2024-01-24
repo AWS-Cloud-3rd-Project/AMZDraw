@@ -15,6 +15,5 @@ public class RegisterStockRequest {
     private String stockId;
     //재고
     private int quantity;
-    //판매 가능 재고
-    private int availableQuantity;
+
 }

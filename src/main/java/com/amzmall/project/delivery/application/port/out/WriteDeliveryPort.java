@@ -5,8 +5,10 @@ import com.amzmall.project.delivery.domain.Delivery;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface RegisterDeliveryPort {
+public interface WriteDeliveryPort {
 
     DeliveryJpaEntity createDelivery(Delivery delivery);
 
+    void changeStatusToStart(Delivery delivery);
+    void changeStatusToComplete(Delivery delivery);
 }

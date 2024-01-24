@@ -9,4 +9,5 @@ public interface RegisterStockPort {
 
     StockJpaEntity save(Stock stock);
 
+    void decreaseStock(String stockId, int quantity);
 }

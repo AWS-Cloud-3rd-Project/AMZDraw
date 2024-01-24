@@ -19,13 +19,20 @@ public class StockPersistenceAdapter implements RegisterStockPort, FindStockPort
                 new StockJpaEntity(
                         stock.getStockId(),
                         stock.getQuantity(),
-                        stock.getAvailableQuantity(),
                         stock.getCreateDat(),
                         stock.getUpdateDat(),
                         stock.getStockStatus()
                 )
         );
     }
+
+    @Override
+    public void decreaseStock(String stockId, int quantity) {
+        StockJpaEntity stockJpaEntity = stockRepository.findByStockId(stockId);
+        stockJpaEntity.setQuantity(stockJpaEntity.getQuantity() - quantity);
+        stockRepository.save(stockJpaEntity);
+    }
+
 
     @Override
     public StockJpaEntity findByStockId(String stockId) {

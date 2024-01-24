@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,8 +24,6 @@ public class DeliveryJpaEntity {
     private Long id;
     //배송 번호
     private String deliveryId;
-    //주문 번호
-//    private String orderId;
 
     private String waybill;
     private String deliveryRequest;
@@ -33,12 +33,17 @@ public class DeliveryJpaEntity {
     private LocalDate startDate;
     //배송 도착 날짜는 출발일 + 3일
     private LocalDate endDate;
+
     private String type;
     private String progress;
+
+    @CreatedDate
     private LocalDateTime createdAt;
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
+
     //배송 상태
-    private Delivery.DeliveryStatus deliveryStatus; // TODO enum으로 변경 (배송 준비, 배송 시작, 배송 중, 배송 완료)
+    private Delivery.DeliveryStatus deliveryStatus;
 
     @ManyToOne
     @JoinColumn(name = "stock_id")

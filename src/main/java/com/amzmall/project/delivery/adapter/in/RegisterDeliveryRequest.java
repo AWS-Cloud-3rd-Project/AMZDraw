@@ -12,7 +12,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterDeliveryRequest {
+
     private String deliveryId;
+    private int deliveryQuantity;
 
     private String waybill;
     private String deliveryRequest;

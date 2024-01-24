@@ -21,8 +21,10 @@ public class DeliveryDTO {
     private String progress;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    private int deliveryQuantity;
     //배송 상태
-    private Delivery.DeliveryStatus deliveryStatus; // TODO enum으로 변경 (배송 준비, 배송 시작, 배송 중, 배송 완료)
+    private Delivery.DeliveryStatus deliveryStatus;
 
     public DeliveryDTO(String deliveryId, String waybill, String deliveryRequest, String receiveMethod, LocalDate startDate, LocalDate endDate, String type, String progress, LocalDateTime createdAt, LocalDateTime updatedAt, Delivery.DeliveryStatus deliveryStatus) {
         this.deliveryId = deliveryId;
