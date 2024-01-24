@@ -12,16 +12,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @GetMapping("/categorys")
-    public ResponseEntity<?> getCategoryList() {
-        return ResponseEntity.ok(categoryService.getCategoryList());
-    }
+    //전부 조회
+//    @GetMapping("/categorys")
+//    public ResponseEntity<?> getCategoryList() {
+//        return ResponseEntity.ok(categoryService.getCategoryList());
+//    }
 
-
+    //depth에 따라 조회
     @GetMapping("/categorys/{depth}")
     public ResponseEntity<?> test(@PathVariable("depth") int depth) {
-        Long parentCategoryId = 1L;
-        return ResponseEntity.ok(categoryService.depthtest(parentCategoryId,depth));
+
+
+            return ResponseEntity.ok(categoryService.getDepthOneCategories(depth));
+
+//        else {
+//            Long parentCategoryId = 1L;
+//            return ResponseEntity.ok(categoryService.depthtest(parentCategoryId,depth));
+//        }
     }
 
 }
