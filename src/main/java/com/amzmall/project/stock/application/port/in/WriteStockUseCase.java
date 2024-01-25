@@ -5,5 +5,4 @@ import com.amzmall.project.stock.domain.StockDTO;
 public interface WriteStockUseCase {
     StockDTO registerStock(StockCommand command);
     StockDTO addStock(StockCommand command);
-    void decreaseStock(String stockId, int quantity);
 }

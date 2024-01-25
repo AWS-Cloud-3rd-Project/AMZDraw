@@ -50,5 +50,4 @@ public class Stock {
     public void changeStockStatus(StockStatus stockStatus) {
         this.stockStatus = stockStatus;
     }
-
 }

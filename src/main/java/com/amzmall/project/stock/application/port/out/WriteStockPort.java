@@ -9,4 +9,5 @@ public interface WriteStockPort {
     StockJpaEntity createStock(Stock stock);
 
     StockJpaEntity addStock(StockJpaEntity addedStockEntity);
+
 }

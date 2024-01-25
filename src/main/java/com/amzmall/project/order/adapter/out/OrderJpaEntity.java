@@ -1,13 +1,13 @@
 package com.amzmall.project.order.adapter.out;
 
 import com.amzmall.project.delivery.adapter.out.DeliveryJpaEntity;
-import com.amzmall.project.delivery.domain.Delivery;
+
 import com.amzmall.project.order.domain.Order;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,6 +41,9 @@ public class OrderJpaEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private DeliveryJpaEntity deliveryJpaEntity;
+
+    @OneToMany(mappedBy = "orderJpaEntity")
+    private List<OrderStockJpaEntity> orderStockJpaEntities = new ArrayList<>();
 
     public OrderJpaEntity(String orderId, Order.OrderStatus orderStatus, LocalDate orderDate, String orderer, int orderQuantity, int orderAmount) {
         this.orderId = orderId;

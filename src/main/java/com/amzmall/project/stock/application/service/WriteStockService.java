@@ -1,13 +1,15 @@
 package com.amzmall.project.stock.application.service;
 
+import com.amzmall.project.order.adapter.out.OrderJpaEntity;
+import com.amzmall.project.order.adapter.out.OrderStockJpaEntity;
+import com.amzmall.project.order.application.port.out.ReadOrderPort;
 import com.amzmall.project.stock.adapter.out.StockJpaEntity;
 import com.amzmall.project.stock.application.port.in.StockCommand;
 import com.amzmall.project.stock.application.port.in.WriteStockUseCase;
-import com.amzmall.project.stock.application.port.out.FindStockPort;
+import com.amzmall.project.stock.application.port.out.ReadStockPort;
 import com.amzmall.project.stock.application.port.out.WriteStockPort;
 import com.amzmall.project.stock.domain.Stock;
 import com.amzmall.project.stock.domain.StockDTO;
-import com.amzmall.project.stock.domain.events.StockDecreasedEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -24,10 +27,9 @@ import java.time.LocalDateTime;
 public class WriteStockService implements WriteStockUseCase {
 
     private final WriteStockPort writeStockPort;
-    private final FindStockPort findStockPort;
+    private final ReadStockPort readStockPort;
     private final ReadStockService readService;
 
-    private final ApplicationEventPublisher eventPublisher;
     LocalDateTime currentDateTime = LocalDateTime.now();
 
     @Operation(summary = "재고 등록")
@@ -51,7 +53,7 @@ public class WriteStockService implements WriteStockUseCase {
     @Override
     public StockDTO addStock(StockCommand command) {
             // 재고 정보 조회
-            StockJpaEntity stockEntity = findStockPort.findByStockId(command.getStockId());
+            StockJpaEntity stockEntity = readStockPort.findByStockId(command.getStockId());
 
             if (stockEntity == null) {
                 throw new IllegalArgumentException("재고가 존재하지 않습니다.");
@@ -67,30 +69,5 @@ public class WriteStockService implements WriteStockUseCase {
 
     }
 
-    @Operation(summary = "재고 감소")
-    @Override
-    public void decreaseStock(String stockId, int quantity) {
-
-        // 재고 정보 조회
-        StockJpaEntity stockEntity = findStockPort.findByStockId(stockId);
-
-        if (stockEntity.getQuantity() < quantity) {
-            throw new IllegalArgumentException("재고가 부족합니다.");
-        }
-        Stock stock = Stock.builder()
-                .stockId(stockEntity.getStockId())
-                .quantity(stockEntity.getQuantity())
-                .stockStatus(Stock.StockStatus.IN_STOCK) //재고 상태 초기화
-                .createDate(currentDateTime)
-                .updateDate(currentDateTime)
-                .build();
-
-        stock.decreaseStock(quantity);
-        if (stock.getQuantity() == 0) {
-            stock.changeStockStatus(Stock.StockStatus.OUT_OF_STOCK);
-        }
-        StockJpaEntity decreasedStockQty = findStockPort.findByStockId(stockId);
-
-        writeStockPort.addStock(decreasedStockQty);
-    }
 }
+

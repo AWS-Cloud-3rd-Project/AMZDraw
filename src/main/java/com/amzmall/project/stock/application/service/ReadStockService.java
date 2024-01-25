@@ -3,23 +3,21 @@ package com.amzmall.project.stock.application.service;
 import com.amzmall.project.stock.adapter.out.StockJpaEntity;
 import com.amzmall.project.stock.application.port.in.FindStockCommand;
 import com.amzmall.project.stock.application.port.in.ReadStockUseCase;
-import com.amzmall.project.stock.application.port.out.FindStockPort;
+import com.amzmall.project.stock.application.port.out.ReadStockPort;
 import com.amzmall.project.stock.domain.StockDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ReadStockService implements ReadStockUseCase {
 
-    private final FindStockPort findStockPort;
+    private final ReadStockPort readStockPort;
 
     //재고 정보 단건 조회
     @Override
     public StockDTO findByStockId(FindStockCommand command) {
-        StockJpaEntity stockJpaEntity = findStockPort.findByStockId(command.getStockId());
+        StockJpaEntity stockJpaEntity = readStockPort.findByStockId(command.getStockId());
         return toStockDTO(stockJpaEntity);
     }
 

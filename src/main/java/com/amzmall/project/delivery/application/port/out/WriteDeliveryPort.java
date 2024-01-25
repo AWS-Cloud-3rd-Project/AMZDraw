@@ -10,4 +10,6 @@ public interface WriteDeliveryPort {
 
     DeliveryJpaEntity createDelivery(Delivery delivery);
     DeliveryJpaEntity updateDelivery(DeliveryJpaEntity deliveryEntity);
+
+
 }

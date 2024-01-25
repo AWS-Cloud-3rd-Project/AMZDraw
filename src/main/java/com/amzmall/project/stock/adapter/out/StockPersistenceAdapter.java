@@ -1,17 +1,16 @@
 package com.amzmall.project.stock.adapter.out;
 
-import com.amzmall.project.stock.application.port.out.FindStockPort;
+import com.amzmall.project.stock.application.port.out.ReadStockPort;
 import com.amzmall.project.stock.application.port.out.WriteStockPort;
 import com.amzmall.project.stock.domain.Stock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class StockPersistenceAdapter implements WriteStockPort, FindStockPort {
+public class StockPersistenceAdapter implements WriteStockPort, ReadStockPort {
 
     private final SpringDataStockRepository stockRepository;
 
@@ -32,6 +31,7 @@ public class StockPersistenceAdapter implements WriteStockPort, FindStockPort {
     public StockJpaEntity addStock(StockJpaEntity addedStockEntity) {
         return stockRepository.save(addedStockEntity);
     }
+
 
     @Override
     public StockJpaEntity findByStockId(String stockId) {
