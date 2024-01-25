@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -26,20 +27,18 @@ public class StockJpaEntity {
     //재고
     private int quantity;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 
     //재고 상태
     private Stock.StockStatus stockStatus;
 
 
-    public StockJpaEntity(String stockId, int quantity, LocalDateTime createdAt, LocalDateTime updatedAt, Stock.StockStatus stockStatus) {
+    public StockJpaEntity(String stockId, int quantity, LocalDateTime createDate, LocalDateTime updateDate, Stock.StockStatus stockStatus) {
         this.stockId = stockId;
         this.quantity = quantity;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
         this.stockStatus = stockStatus;
     }
 }

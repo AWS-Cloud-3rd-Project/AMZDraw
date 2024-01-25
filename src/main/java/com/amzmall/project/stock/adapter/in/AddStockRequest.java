@@ -7,13 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateStockRequest {
+public class AddStockRequest {
 
-    //재고 번호
-    private String stockId;
     //재고
     private int quantity;
-    //판매 가능 재고
-    private int availableQuantity;
 
 }

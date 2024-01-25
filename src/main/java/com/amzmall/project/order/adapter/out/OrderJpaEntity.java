@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,16 +29,20 @@ public class OrderJpaEntity {
     //주문 상태
     private Order.OrderStatus orderStatus;
     //주문 날짜
-    private String orderDate;
+    private LocalDate orderDate;
     //주문자
     private String orderer;
     //주문 수량
-    private String orderQuantity;
+    private int orderQuantity;
     //주문 금액
-    private String orderAmount;
+    private int orderAmount;
 
+    //연관관계 매핑
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "delivery_id")
+    private DeliveryJpaEntity deliveryJpaEntity;
 
-    public OrderJpaEntity(String orderId, Order.OrderStatus orderStatus, String orderDate, String orderer, String orderQuantity, String orderAmount) {
+    public OrderJpaEntity(String orderId, Order.OrderStatus orderStatus, LocalDate orderDate, String orderer, int orderQuantity, int orderAmount) {
         this.orderId = orderId;
         this.orderStatus = orderStatus;
         this.orderDate = orderDate;

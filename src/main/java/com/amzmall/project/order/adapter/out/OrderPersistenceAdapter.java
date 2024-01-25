@@ -1,6 +1,6 @@
 package com.amzmall.project.order.adapter.out;
 
-import com.amzmall.project.order.application.port.out.FindOrderPort;
+import com.amzmall.project.order.application.port.out.ReadOrderPort;
 import com.amzmall.project.order.application.port.out.WriteOrderPort;
 import com.amzmall.project.order.domain.Order;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class OrderPersistenceAdapter implements WriteOrderPort, FindOrderPort {
+public class OrderPersistenceAdapter implements WriteOrderPort, ReadOrderPort {
 
     private final SpringDataOrderRepository orderRepository;
     @Override
@@ -25,6 +25,11 @@ public class OrderPersistenceAdapter implements WriteOrderPort, FindOrderPort {
                         order.getOrderAmount()
                 )
         );
+    }
+
+    @Override
+    public OrderJpaEntity updateOrder(OrderJpaEntity orderEntity) {
+        return orderRepository.save(orderEntity);
     }
 
     @Override

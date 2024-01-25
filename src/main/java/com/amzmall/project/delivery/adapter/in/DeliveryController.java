@@ -21,13 +21,6 @@ public class DeliveryController {
 
         RegisterDeliveryCommand command = RegisterDeliveryCommand.builder()
                 .deliveryId(deliveryRequest.getDeliveryId())
-                .deliveryQuantity(deliveryRequest.getDeliveryQuantity())
-                .waybill(deliveryRequest.getWaybill())
-                .deliveryRequest(deliveryRequest.getDeliveryRequest())
-                .receiveMethod(deliveryRequest.getReceiveMethod())
-                .startDate(deliveryRequest.getStartDate())
-                .type(deliveryRequest.getType())
-                .progress(deliveryRequest.getProgress())
                 .build();
         return writeDeliveryUseCase.registerDelivery(command);
     }

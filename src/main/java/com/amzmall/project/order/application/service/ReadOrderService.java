@@ -3,8 +3,9 @@ package com.amzmall.project.order.application.service;
 import com.amzmall.project.order.adapter.out.OrderJpaEntity;
 import com.amzmall.project.order.application.port.in.FindOrderCommand;
 import com.amzmall.project.order.application.port.in.ReadOrderUseCase;
-import com.amzmall.project.order.application.port.out.FindOrderPort;
+import com.amzmall.project.order.application.port.out.ReadOrderPort;
 import com.amzmall.project.order.domain.OrderDTO;
+import com.amzmall.project.order.domain.OrderStatusDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,18 +15,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReadOrderService implements ReadOrderUseCase {
 
-    private final FindOrderPort findOrderPort;
+    private final ReadOrderPort readOrderPort;
 
     //주문 정보 단건 조회
     @Override
-    public OrderDTO findOrderByOrderId(FindOrderCommand command) {
-        OrderJpaEntity orderJpaEntity = findOrderPort.findByOrderId(command.getOrderId());
+    public OrderDTO findByOrderId(FindOrderCommand command) {
+        OrderJpaEntity orderJpaEntity = readOrderPort.findByOrderId(command.getOrderId());
         return toOrderDto(orderJpaEntity);
     }
 
     @Override
-    public List<OrderDTO> findOrdersByOrderer(FindOrderCommand command) {
-        var orderHistories = findOrderPort.findAllByOrderer(command.getOrderer());
+    public List<OrderDTO> findAllByOrderer(FindOrderCommand command) {
+        var orderHistories = readOrderPort.findAllByOrderer(command.getOrderer());
         return orderHistories.stream()
                 .map(this::toOrderDto)
                 .toList();
@@ -41,6 +42,12 @@ public class ReadOrderService implements ReadOrderUseCase {
                 orderEntity.getOrderer(),
                 orderEntity.getOrderQuantity(),
                 orderEntity.getOrderAmount()
+        );
+    }
+    public OrderStatusDTO toOrderStatusDto(OrderJpaEntity orderEntity) {
+        return new OrderStatusDTO(
+                orderEntity.getOrderId(),
+                orderEntity.getOrderStatus()
         );
     }
 

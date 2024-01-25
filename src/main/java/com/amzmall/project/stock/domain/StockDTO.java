@@ -1,6 +1,5 @@
 package com.amzmall.project.stock.domain;
 
-import com.amzmall.project.stock.adapter.out.StockJpaEntity;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,17 +12,17 @@ public class StockDTO {
     //재고
     private Integer quantity;
     //생성 날짜
-    private LocalDateTime createDat;
+    private LocalDateTime createDate;
     //업데이트 날짜
-    private LocalDateTime updateDat;
+    private LocalDateTime updateDate;
     //재고 상태
     private Stock.StockStatus stockStatus;
 
-    public StockDTO(String stockId, Integer quantity, LocalDateTime createDat, LocalDateTime updateDat, Stock.StockStatus stockStatus) {
+    public StockDTO(String stockId, Integer quantity, LocalDateTime createDate, LocalDateTime updateDate, Stock.StockStatus stockStatus) {
         this.stockId = stockId;
         this.quantity = quantity;
-        this.createDat = createDat;
-        this.updateDat = updateDat;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
         this.stockStatus = stockStatus;
     }
 }

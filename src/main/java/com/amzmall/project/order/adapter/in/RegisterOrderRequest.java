@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterOrderRequest {
     private String orderId;
-    private String orderDate;
     private String orderer;
-    private String orderQuantity;
-    private String orderAmount;
+    private int orderQuantity;
+    private int orderAmount;
 }

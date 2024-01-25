@@ -2,6 +2,8 @@ package com.amzmall.project.order.application.port.in;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -9,9 +11,8 @@ import lombok.*;
 public class RegisterOrderCommand {
 
     private String orderId;
-    private String orderDate;
     private String orderer;
-    private String orderQuantity;
-    private String orderAmount;
+    private int orderQuantity;
+    private int orderAmount;
 
 }

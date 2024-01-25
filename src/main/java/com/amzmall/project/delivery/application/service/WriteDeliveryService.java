@@ -32,6 +32,9 @@ public class WriteDeliveryService implements WriteDeliveryUseCase {
 
     private final ApplicationEventPublisher eventPublisher;
 
+    LocalDate currentDate = LocalDate.now();
+    LocalDateTime currentDateTime = LocalDateTime.now();
+
     @Override
     public DeliveryDTO registerDelivery(RegisterDeliveryCommand command) {
 
@@ -41,15 +44,16 @@ public class WriteDeliveryService implements WriteDeliveryUseCase {
                 .waybill(command.getWaybill())
                 .deliveryRequest(command.getDeliveryRequest())
                 .receiveMethod(command.getReceiveMethod())
-                .startDate(command.getStartDate())
-                .endDate(ETADate(command.getStartDate())) //도착일은 출발일 + 3일
+                .startDate(currentDate)
+                .endDate(ETADate(currentDate)) //도착일은 출발일 + 3일
                 .type(command.getType())
                 .progress(command.getProgress())
+                .createdAt(currentDateTime)
+                .updatedAt(currentDateTime)
                 .deliveryStatus(Delivery.DeliveryStatus.READY)
                 .build();
 
         DeliveryJpaEntity deliveryEntity = writeDeliveryPort.createDelivery(delivery);
-        eventPublisher.publishEvent(new DeliveryCompletedEvent(delivery));
 
         return readDeliveryService.toDeliveryDTO(deliveryEntity);
     }
@@ -59,44 +63,32 @@ public class WriteDeliveryService implements WriteDeliveryUseCase {
 
         DeliveryJpaEntity deliveryEntity = readDeliveryPort.findByDeliveryId(deliveryId);
 
-        Delivery delivery = Delivery.builder()
-                .deliveryId(deliveryEntity.getDeliveryId())
-                .deliveryStatus(Delivery.DeliveryStatus.READY)
-                .build();
+        if (deliveryEntity.getDeliveryStatus() == Delivery.DeliveryStatus.READY) {
+            deliveryEntity.setDeliveryStatus(Delivery.DeliveryStatus.START);
 
-        if (delivery.getDeliveryStatus() == Delivery.DeliveryStatus.READY) {
-            delivery.startDelivery();
+            DeliveryJpaEntity startedDelivery = writeDeliveryPort.updateDelivery(deliveryEntity);
 
-            eventPublisher.publishEvent(new DeliveryStartedEvent(delivery));
-
-            // 상태 변경 후 다시 조회
-            DeliveryJpaEntity updatedDeliveryEntity = readDeliveryPort.findByDeliveryId(deliveryId);
-            return readDeliveryService.toDeliveryStatusDTO(deliveryEntity);
+            return readDeliveryService.toDeliveryStatusDTO(startedDelivery);
         } else {
-            log.info("delivery.getDeliveryStatus() = {}", delivery.getDeliveryStatus());
+            log.info("deliveryEntity.getDeliveryStatus() = {}", deliveryEntity.getDeliveryStatus());
             throw new IllegalArgumentException("배송 시작 이벤트는 READY 상태에서만 발생할 수 있습니다.");
         }
     }
 
     @Override
     public DeliveryStatusDTO changeStatusToComplete(String deliveryId) {
+
         DeliveryJpaEntity deliveryEntity = readDeliveryPort.findByDeliveryId(deliveryId);
 
-        Delivery delivery = Delivery.builder()
-                .deliveryId(deliveryEntity.getDeliveryId())
-                .deliveryStatus(Delivery.DeliveryStatus.START)
-                .build();
-
-        if (delivery.getDeliveryStatus() == Delivery.DeliveryStatus.START) {
-            delivery.completeDelivery();
-
-            eventPublisher.publishEvent(new DeliveryCompletedEvent(delivery));
+        if (deliveryEntity.getDeliveryStatus() == Delivery.DeliveryStatus.START) {
+            deliveryEntity.setDeliveryStatus(Delivery.DeliveryStatus.COMPLETE);
 
             // 상태 변경 후 다시 조회
-            DeliveryJpaEntity updatedDeliveryEntity = readDeliveryPort.findByDeliveryId(deliveryId);
-            return readDeliveryService.toDeliveryStatusDTO(deliveryEntity);
+            DeliveryJpaEntity completedDelivery = writeDeliveryPort.updateDelivery(deliveryEntity);
+            return readDeliveryService.toDeliveryStatusDTO(completedDelivery);
+
         } else {
-            log.info("delivery.getDeliveryStatus() = {}", delivery.getDeliveryStatus());
+            log.info("deliveryEntity.getDeliveryStatus() = {}", deliveryEntity.getDeliveryStatus());
             throw new IllegalArgumentException("배송 완료 이벤트는 START 상태에서만 발생할 수 있습니다.");
         }
     }

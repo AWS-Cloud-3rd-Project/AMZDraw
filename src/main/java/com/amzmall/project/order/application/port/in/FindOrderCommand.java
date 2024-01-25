@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class FindOrderCommand {
+
     private final String orderId;
     private final String orderer;
 

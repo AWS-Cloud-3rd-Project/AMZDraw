@@ -29,13 +29,12 @@ public class Delivery {
     private LocalDate endDate;
     private String type;
     private String progress;
-    @CreatedDate
+
     private LocalDateTime createdAt;
-    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     //배송 상태
-    private DeliveryStatus deliveryStatus; // TODO enum으로 변경 (배송 준비, 배송 시작, 배송 완료)
+    private DeliveryStatus deliveryStatus;
 
     //배송 상태 변경
     public Delivery startDelivery() {

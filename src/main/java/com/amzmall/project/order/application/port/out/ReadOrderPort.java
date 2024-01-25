@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public interface FindOrderPort {
+public interface ReadOrderPort {
 
     OrderJpaEntity findByOrderId(String orderId);
 

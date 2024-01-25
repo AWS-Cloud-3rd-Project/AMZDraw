@@ -9,19 +9,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-@Slf4j
-@Service
-@Transactional
-@RequiredArgsConstructor
-public class StockEventListener {
-
-    private final WriteStockService stockService;
-
-    //TODO 주문 수량 값 int로 변경
-    @EventListener
-    public void onDeliveryReady(OrderCompletedEvent event) {
-        Order order = event.getOrder();
-        stockService.decreaseStock(
-                order.getOrderId(), Integer.parseInt(order.getOrderQuantity()));
-    }
-}
+//@Slf4j
+//@Service
+//@Transactional
+//@RequiredArgsConstructor
+//public class StockEventListener {
+//
+//    private final WriteStockService stockService;
+//
+////    @EventListener
+////    public void onDeliveryReady(OrderCompletedEvent event) {
+////        Order order = event.getOrder();
+////
+////        log.info("received orderCompletedEvent : {}", order);
+////
+////        stockService.decreaseStock(
+////                order.getOrderId(), order.getOrderQuantity());
+////    }
+////}

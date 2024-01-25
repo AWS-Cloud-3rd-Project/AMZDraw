@@ -9,12 +9,15 @@ import com.amzmall.project.stock.domain.Stock;
 import com.amzmall.project.stock.domain.StockDTO;
 import com.amzmall.project.stock.domain.events.StockDecreasedEvent;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class WriteStockService implements WriteStockUseCase {
     private final ReadStockService readService;
 
     private final ApplicationEventPublisher eventPublisher;
+    LocalDateTime currentDateTime = LocalDateTime.now();
 
     @Operation(summary = "재고 등록")
     @Override
@@ -33,32 +37,34 @@ public class WriteStockService implements WriteStockUseCase {
                 .stockId(command.getStockId())
                 .quantity(command.getQuantity())
                 .stockStatus(Stock.StockStatus.IN_STOCK) //재고 상태 초기화
+                .createDate(currentDateTime)
+                .updateDate(currentDateTime)
                 .build();
 
         StockJpaEntity stockEntity = writeStockPort.createStock(stock);
+        //로그
+        log.info("registeredStock : {}", stockEntity);
         return readService.toStockDTO(stockEntity);
     }
 
-    //
-    @Operation(summary = "재고 업데이트")
+    @Operation(summary = "재고 추가")
     @Override
-    public StockDTO updateStock(StockCommand command) {
+    public StockDTO addStock(StockCommand command) {
+            // 재고 정보 조회
+            StockJpaEntity stockEntity = findStockPort.findByStockId(command.getStockId());
 
-        // 재고 정보 조회
-        StockJpaEntity stockEntity = findStockPort.findByStockId(command.getStockId());
+            if (stockEntity == null) {
+                throw new IllegalArgumentException("재고가 존재하지 않습니다.");
+                }
+            stockEntity.setQuantity(stockEntity.getQuantity() + command.getQuantity());
+            stockEntity.setUpdateDate(currentDateTime); // 현재 시간으로 업데이트 날짜 설정
+            log.info("stockQuantity : {}", stockEntity.getQuantity());
 
-        if (command.getQuantity() < 0) {
-            throw new IllegalArgumentException("재고는 0보다 작을 수 없습니다.");
-        }
-        Stock updatedStock = Stock.builder()
-                .stockId(stockEntity.getStockId())
-                .quantity(command.getQuantity())
-                .stockStatus(Stock.StockStatus.IN_STOCK) //재고 상태 업데이트
-                .build();
+            StockJpaEntity addedStockEntity = writeStockPort.addStock(stockEntity);
+            log.info("addedStock : {}", addedStockEntity);
 
-        StockJpaEntity updatedStockEntity = writeStockPort.createStock(updatedStock);
-        // 엔터티를 데이터베이스에 저장
-        return readService.toStockDTO(updatedStockEntity);
+            return readService.toStockDTO(addedStockEntity);
+
     }
 
     @Operation(summary = "재고 감소")
@@ -68,22 +74,23 @@ public class WriteStockService implements WriteStockUseCase {
         // 재고 정보 조회
         StockJpaEntity stockEntity = findStockPort.findByStockId(stockId);
 
+        if (stockEntity.getQuantity() < quantity) {
+            throw new IllegalArgumentException("재고가 부족합니다.");
+        }
         Stock stock = Stock.builder()
                 .stockId(stockEntity.getStockId())
                 .quantity(stockEntity.getQuantity())
-                .stockStatus(stockEntity.getStockStatus())
+                .stockStatus(Stock.StockStatus.IN_STOCK) //재고 상태 초기화
+                .createDate(currentDateTime)
+                .updateDate(currentDateTime)
                 .build();
-
-        if (stock.getQuantity() < quantity) {
-            throw new IllegalArgumentException("재고가 부족합니다.");
-        }
 
         stock.decreaseStock(quantity);
         if (stock.getQuantity() == 0) {
             stock.changeStockStatus(Stock.StockStatus.OUT_OF_STOCK);
         }
+        StockJpaEntity decreasedStockQty = findStockPort.findByStockId(stockId);
 
-        eventPublisher.publishEvent(new StockDecreasedEvent(stock));
-        writeStockPort.updateStock(stock);
+        writeStockPort.addStock(decreasedStockQty);
     }
 }

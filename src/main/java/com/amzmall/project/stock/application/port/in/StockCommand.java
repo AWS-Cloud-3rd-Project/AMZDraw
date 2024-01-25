@@ -13,12 +13,9 @@ public class StockCommand {
     private String stockId;
     //재고
     private int quantity;
-    //판매 가능 재고
-    private int availableQuantity;
 
-    public StockCommand(String stockId, int quantity, int availableQuantity) {
+    public StockCommand(String stockId, int quantity) {
         this.stockId = stockId;
         this.quantity = quantity;
-        this.availableQuantity = availableQuantity;
     }
 }

@@ -4,9 +4,9 @@ import com.amzmall.project.stock.adapter.out.StockJpaEntity;
 import com.amzmall.project.stock.domain.Stock;
 import org.springframework.stereotype.Component;
 
-@Component
 public interface WriteStockPort {
 
     StockJpaEntity createStock(Stock stock);
-    StockJpaEntity updateStock(Stock stock);
+
+    StockJpaEntity addStock(StockJpaEntity addedStockEntity);
 }

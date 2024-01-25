@@ -7,7 +7,7 @@ import java.util.List;
 
 @Component
 public interface ReadOrderUseCase {
-    OrderDTO findOrderByOrderId(FindOrderCommand command);
+    OrderDTO findByOrderId(FindOrderCommand command);
 
-    List<OrderDTO> findOrdersByOrderer(FindOrderCommand command);
+    List<OrderDTO> findAllByOrderer(FindOrderCommand command);
 }

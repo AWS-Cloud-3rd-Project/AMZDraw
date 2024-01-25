@@ -6,6 +6,7 @@ import com.amzmall.project.stock.domain.Stock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -13,30 +14,23 @@ import java.util.List;
 public class StockPersistenceAdapter implements WriteStockPort, FindStockPort {
 
     private final SpringDataStockRepository stockRepository;
+
     @Override
     public StockJpaEntity createStock(Stock stock) {
         return stockRepository.save(
                 new StockJpaEntity(
                         stock.getStockId(),
                         stock.getQuantity(),
-                        stock.getCreateDat(),
-                        stock.getUpdateDat(),
+                        stock.getCreateDate(),
+                        stock.getUpdateDate(),
                         stock.getStockStatus()
                 )
         );
     }
 
     @Override
-    public StockJpaEntity updateStock(Stock stock) {
-        return stockRepository.save(
-                new StockJpaEntity(
-                        stock.getStockId(),
-                        stock.getQuantity(),
-                        stock.getCreateDat(),
-                        stock.getUpdateDat(),
-                        stock.getStockStatus()
-                )
-        );
+    public StockJpaEntity addStock(StockJpaEntity addedStockEntity) {
+        return stockRepository.save(addedStockEntity);
     }
 
     @Override

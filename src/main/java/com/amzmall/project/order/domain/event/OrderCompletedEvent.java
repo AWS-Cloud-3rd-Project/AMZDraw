@@ -1,14 +1,14 @@
 package com.amzmall.project.order.domain.event;
 
-import com.amzmall.project.order.domain.Order;
+import com.amzmall.project.order.adapter.out.OrderJpaEntity;
 import lombok.Getter;
 
 public class OrderCompletedEvent {
 
     @Getter
-    private final Order order;
+    private final OrderJpaEntity orderJpaEntity;
 
-    public OrderCompletedEvent(Order order) {
-        this.order = order;
+    public OrderCompletedEvent(OrderJpaEntity orderJpaEntity) {
+        this.orderJpaEntity = orderJpaEntity;
     }
 }

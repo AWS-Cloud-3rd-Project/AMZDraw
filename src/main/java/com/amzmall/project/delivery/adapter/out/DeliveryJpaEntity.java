@@ -1,6 +1,7 @@
 package com.amzmall.project.delivery.adapter.out;
 
 import com.amzmall.project.delivery.domain.Delivery;
+import com.amzmall.project.order.adapter.out.OrderJpaEntity;
 import com.amzmall.project.stock.adapter.out.StockJpaEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,13 +38,15 @@ public class DeliveryJpaEntity {
     private String type;
     private String progress;
 
-    @CreatedDate
     private LocalDateTime createdAt;
-    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     //배송 상태
     private Delivery.DeliveryStatus deliveryStatus;
+
+    //연관관계 매핑
+    @OneToOne(mappedBy = "deliveryJpaEntity", fetch = FetchType.LAZY)
+    private OrderJpaEntity orderJpaEntity;
 
     public DeliveryJpaEntity(String deliveryId, String waybill, String deliveryRequest, String receiveMethod, LocalDate startDate, LocalDate endDate, String type, String progress, LocalDateTime createdAt, LocalDateTime updatedAt, Delivery.DeliveryStatus deliveryStatus) {
         this.deliveryId = deliveryId;

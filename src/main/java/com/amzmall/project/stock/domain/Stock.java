@@ -18,19 +18,24 @@ public class Stock {
     //재고
     private int quantity;
     //생성 날짜
-    private LocalDateTime createDat;
+    private final LocalDateTime createDate;
     //업데이트 날짜
-    private LocalDateTime updateDat;
+    private final LocalDateTime updateDate;
     //재고 상태
     private StockStatus stockStatus;
 
     @Builder
-    public Stock(String stockId, int quantity, LocalDateTime createDat, LocalDateTime updateDat, StockStatus stockStatus) {
+    public Stock(String stockId, int quantity, LocalDateTime createDate, LocalDateTime updateDate, StockStatus stockStatus) {
         this.stockId = stockId;
         this.quantity = quantity;
-        this.createDat = createDat;
-        this.updateDat = updateDat;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
         this.stockStatus = stockStatus;
+    }
+
+    //재고 증가 로직
+    public void increaseStock(int quantity) {
+        this.quantity += quantity;
     }
 
     //재고 감소 로직
