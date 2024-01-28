@@ -1,9 +1,4 @@
 spring:
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: shop
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/shop
@@ -11,7 +6,7 @@ spring:
     password: 3419
 
 #  Debug
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
