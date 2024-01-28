@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,12 +40,26 @@ public List<CategoryResult> getTopLevelCategories(int depth) {
             .collect(Collectors.toList());
 }
 
-    public List<CategoryResult> getDepthOneCategories(int depth) {
-        List<Category> depthOneCategories = categoryRepository.findAllByDepth(depth);
-        return depthOneCategories.stream()
-                .map(CategoryResult::of)
-                .collect(Collectors.toList());
+    public List<Category> getFirstChildCategories() {
+        // 1차 카테고리 조회
+        List<Category> firstCategories = categoryRepository.findAllByParentIsNull();
+
+        // 첫 번째 1차 카테고리의 자식 카테고리 조회
+        if (!firstCategories.isEmpty()) {
+            Category firstCategory = firstCategories.get(0);
+            List<Category> children = categoryRepository.findByParent(firstCategory);
+            return children;
+        }
+
+        return Collections.emptyList();
     }
+
+//    public List<CategoryResult> getDepthOneCategories(int depth) {
+//        List<Category> depthOneCategories = categoryRepository.findAllByDepth(depth);
+//        return depthOneCategories.stream()
+//                .map(CategoryResult::of)
+//                .collect(Collectors.toList());
+//    }
 
 //    public List<CategoryResult> depthtest(Long parentCategoryId,int targetDepth){
 //        List<CategoryResult> results = categoryRepository.findChildrenByDepth(parentCategoryId,targetDepth).stream().map(CategoryResult::of).collect(Collectors.toList());

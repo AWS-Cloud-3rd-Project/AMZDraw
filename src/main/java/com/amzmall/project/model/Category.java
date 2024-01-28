@@ -14,15 +14,11 @@ import java.util.List;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
-    @Column
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
-    @Column
     private Long depth;
     @OneToMany(mappedBy = "parent")
     private List<Category> children = new ArrayList<>();

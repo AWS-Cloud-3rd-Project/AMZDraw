@@ -23,7 +23,7 @@ public class CategoryController {
     public ResponseEntity<?> test(@PathVariable("depth") int depth) {
 
 
-            return ResponseEntity.ok(categoryService.getDepthOneCategories(depth));
+            return ResponseEntity.ok(categoryService.getTopLevelCategories(depth));
 
 //        else {
 //            Long parentCategoryId = 1L;
