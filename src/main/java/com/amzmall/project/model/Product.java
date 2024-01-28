@@ -1,27 +1,22 @@
 package com.amzmall.project.model;
 
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Builder
 @ToString
 @Getter
 @Setter
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-@Document(collection = "product")
+@Entity
 public class Product {
 
+    @Id
     private String productId ; //상품고유 id 사실상 code와 동일하지 않나?
     private Integer sellerId; //판매자
 //    private Integer categoryId;

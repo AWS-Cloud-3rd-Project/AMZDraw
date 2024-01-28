@@ -1,12 +1,11 @@
 package com.amzmall.project.repository;
 
-import com.amzmall.project.model.Item;
+
 import com.amzmall.project.model.Product;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
 
-public interface ProductRepository extends MongoRepository<Product, String> {
+public interface ProductRepository extends JpaRepository<Product, String> {
 
     Product findProductByProductId(String productId);
 
