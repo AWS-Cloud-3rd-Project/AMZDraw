@@ -35,8 +35,6 @@ public class DatabaseConnectionTest {
 				.orderId(UUID.randomUUID().toString())
 				.customerEmail("test@example.com")
 				.customerName("Test Customer")
-				.successUrl("http://example.com/success")
-				.failUrl("http://example.com/fail")
 				.paySuccessYn(false)
 				.build();
 
