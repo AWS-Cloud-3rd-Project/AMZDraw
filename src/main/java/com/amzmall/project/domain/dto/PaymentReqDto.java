@@ -1,33 +1,38 @@
 package com.amzmall.project.domain.dto;
+
 import com.amzmall.project.domain.entity.PayType;
 import com.amzmall.project.domain.entity.Payment;
-import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter
-@Getter
+import java.sql.Timestamp;
+import java.util.UUID;
+import lombok.*;
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class PaymentReqDto {
 	private PayType payType;
 	private Long amount;
+	private String orderId;
 	private String orderName;
 
-	private String yourSuccessUrl;
-	private String yourFailUrl;
+	private String customerEmail;
+	private String customerName;
 
+	private String successUrl;
+	private String failUrl;
+	private Timestamp createdAt;
+
+	// 프론트에서 입력받는 값
 	public Payment toEntity() {
 		return Payment.builder()
-			.payType(payType)
-			.amount(amount)
-			.orderName(orderName)
-			.orderId(UUID.randomUUID().toString())
-			.paySuccessYN(false)
-			.build();
+				.orderId(UUID.randomUUID().toString())
+				.payType(payType)
+				.amount(amount)
+				.orderName(orderName)
+				.paySuccessYn(true)
+				.createdAt(createdAt)
+				.build();
 	}
 }
