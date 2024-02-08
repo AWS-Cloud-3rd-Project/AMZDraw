@@ -7,7 +7,8 @@ import java.sql.Timestamp;
 import java.util.UUID;
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

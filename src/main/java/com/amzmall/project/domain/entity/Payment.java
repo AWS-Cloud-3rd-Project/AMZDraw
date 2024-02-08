@@ -13,7 +13,8 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "payment")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -27,29 +28,24 @@ public class Payment {
 	private Long paymentId;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "pay_type")
+	@Column(name = "pay_type", nullable = false)
 	private PayType payType;
 
-	@Column(name = "amount")
+	@Column(name = "amount", nullable = false)
 	private Long amount;
 
-	@Column(name = "order_name")
+	@Column(name = "order_name", nullable = false)
 	private String orderName;
 
-	@Column(name = "order_id")
+	@Column(name = "order_id", nullable = false)
 	private String orderId;
 
-	@Column(name = "customer_email")
+	@Column(name = "customer_email", nullable = false)
 	private String customerEmail;
 
-	@Column(name = "customer_name")
+	@Column(name = "customer_name", nullable = false)
 	private String customerName;
 
-	@Column(name = "success_url")
-	private String successUrl;
-
-	@Column(name = "fail_url")
-	private String failUrl;
 
 	@CreatedDate
 	@Column(name = "created_at", updatable = false, nullable = false)
