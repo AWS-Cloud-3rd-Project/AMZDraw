@@ -1,9 +1,6 @@
 package com.amzmall.project.domain.dto;
 
-import java.sql.Timestamp;
-
 import lombok.*;
-
 
 @Getter
 @Setter
@@ -19,10 +16,9 @@ public class PaymentResDto {
 	private String customerEmail;	// 구매자 이메일
 	private String customerName;
 
+	private String paymentKey;		// 결제 고유 키
 	private String successUrl;		// 성공 리다이렉트 URL
 	private String failUrl;			// 실패 리다이렉트 URL
 
-	private Timestamp createdAt;		// 결제 날짜
-	private Timestamp updatedAt;		// 수정 날짜
-
+	private String createdDate;
 }

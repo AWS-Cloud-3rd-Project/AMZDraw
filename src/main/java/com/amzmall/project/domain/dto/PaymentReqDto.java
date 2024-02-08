@@ -3,7 +3,6 @@ package com.amzmall.project.domain.dto;
 import com.amzmall.project.domain.entity.PayType;
 import com.amzmall.project.domain.entity.Payment;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 import lombok.*;
 
@@ -17,13 +16,8 @@ public class PaymentReqDto {
 	private Long amount;
 	private String orderId;
 	private String orderName;
-
 	private String customerEmail;
 	private String customerName;
-
-	private String successUrl;
-	private String failUrl;
-	private Timestamp createdAt;
 
 	// 프론트에서 입력받는 값
 	public Payment toEntity() {
@@ -32,8 +26,9 @@ public class PaymentReqDto {
 				.payType(payType)
 				.amount(amount)
 				.orderName(orderName)
+				.customerEmail(customerEmail)
+				.customerName(customerName)
 				.paySuccessYn(true)
-				.createdAt(createdAt)
 				.build();
 	}
 }

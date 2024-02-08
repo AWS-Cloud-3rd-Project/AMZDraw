@@ -1,5 +1,6 @@
 package com.amzmall.project.domain.entity;
 
+import com.amzmall.project.config.TimeConfig;
 import com.amzmall.project.domain.dto.PaymentResDto;
 import lombok.*;
 
@@ -40,12 +41,14 @@ public class Payment {
 	@Column(name = "order_id", nullable = false)
 	private String orderId;
 
-	@Column(name = "customer_email", nullable = false)
+	@Column(name = "customer_email")
 	private String customerEmail;
 
-	@Column(name = "customer_name", nullable = false)
+	@Column(name = "customer_name")
 	private String customerName;
 
+	@Column(name = "payment_key", nullable = false)
+	private String paymentKey;
 
 	@CreatedDate
 	@Column(name = "created_at", updatable = false, nullable = false)
@@ -57,12 +60,9 @@ public class Payment {
 
 	private boolean paySuccessYn;
 
-	@Setter
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	private Customer customer;
-
-//	@Column(name = "payment_key", unique = true)
-//	private String paymentKey;
+//	@Setter
+//	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//	private Customer customer;
 
 	public PaymentResDto toPaymentDto(){
 		return PaymentResDto.builder()
@@ -72,9 +72,8 @@ public class Payment {
 				.orderName(orderName)
 				.customerName(customerName)
 				.customerEmail(customerEmail)
-				.createdAt(createdAt)
-				.updatedAt(updatedAt)
+				.paymentKey(paymentKey)
+				.createdDate(new TimeConfig().getNowTime())
 				.build();
-
 	}
 }
