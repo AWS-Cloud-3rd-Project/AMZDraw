@@ -1,71 +1,84 @@
 package com.amzmall.project.domain.entity;
+
 import com.amzmall.project.domain.dto.PaymentResDto;
+import lombok.*;
+
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.stereotype.Component;
+
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Builder
+@Table(name = "payment")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
+@Builder
+@EntityListeners(AuditingEntityListener.class)
+@Component
 public class Payment {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "payment_id", nullable = false, unique = true)
+	@Column(name = "payment_id", nullable = false)
 	private Long paymentId;
-	@Column(nullable = false, name = "pay_type")
+
 	@Enumerated(EnumType.STRING)
+	@Column(name = "pay_type")
 	private PayType payType;
-	@Column(nullable = false, name = "pay_amount")
+
+	@Column(name = "amount")
 	private Long amount;
-	@Column(nullable = false, name = "pay_name")
+
+	@Column(name = "order_name")
 	private String orderName;
-	@Column(nullable = false, name = "order_id")
+
+	@Column(name = "order_id")
 	private String orderId;
 
-	private boolean paySuccessYN;
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "user")
-	private User user; //회원과의 관계 (회원은 여러 결제를 가질 수 있음)
-	@Column
-	private String paymentKey;
-	@Column
-	private String failReason;
+	@Column(name = "customer_email")
+	private String customerEmail;
 
-	@Column
-	private boolean cancelYN;
-	@Column
-	private String cancelReason;
+	@Column(name = "customer_name")
+	private String customerName;
 
-	@Column(nullable = false, name = "created_at")
+	@Column(name = "success_url")
+	private String successUrl;
+
+	@Column(name = "fail_url")
+	private String failUrl;
+
+	@CreatedDate
+	@Column(name = "created_at", updatable = false, nullable = false)
 	private Timestamp createdAt;
 
-	@Column(nullable = false, name = "updated_at")
+	@LastModifiedDate
+	@Column(name = "updated_at")
 	private Timestamp updatedAt;
 
-	@Column
-	private Status status;
+	private boolean paySuccessYn;
 
-	public PaymentResDto toPaymentResDto() {
+	@Setter
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	private Customer customer;
+
+//	@Column(name = "payment_key", unique = true)
+//	private String paymentKey;
+
+	public PaymentResDto toPaymentDto(){
 		return PaymentResDto.builder()
-			.payType(payType)
-			.amount(amount)
-			.orderName(orderName)
-			.orderId(orderId)
-			.userEmail(user.getEmail())
-			.userName(user.getName())
-			.createdAt(LocalDateTime.now())
-			.updatedAt(LocalDateTime.now())
-			.cancelYN(cancelYN)
-			.failReason(failReason)
-			.status(status)
-			.build();
+				.payType(payType.getName())
+				.amount(amount)
+				.orderId(orderId)
+				.orderName(orderName)
+				.customerName(customerName)
+				.customerEmail(customerEmail)
+				.createdAt(createdAt)
+				.updatedAt(updatedAt)
+				.build();
+
 	}
 }
