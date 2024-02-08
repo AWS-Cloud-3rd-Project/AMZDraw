@@ -31,8 +31,8 @@ public class Customer {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Payment> payments;
+//    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Payment> payments;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
