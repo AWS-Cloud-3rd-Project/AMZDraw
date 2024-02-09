@@ -30,7 +30,7 @@ public class Payment {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "pay_type", nullable = false)
-	private PayType payType;
+	private PAY_TYPE payType;
 
 	@Column(name = "amount", nullable = false)
 	private Long amount;
@@ -41,13 +41,13 @@ public class Payment {
 	@Column(name = "order_id", nullable = false)
 	private String orderId;
 
-	@Column(name = "customer_email")
+	@Column(name = "customer_email", nullable = false)
 	private String customerEmail;
 
-	@Column(name = "customer_name")
+	@Column(name = "customer_name", nullable = false)
 	private String customerName;
 
-	@Column(name = "payment_key", nullable = false)
+	@Column(name = "payment_key")
 	private String paymentKey;
 
 	@CreatedDate
@@ -60,9 +60,22 @@ public class Payment {
 
 	private boolean paySuccessYn;
 
-//	@Setter
-//	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//	private Customer customer;
+	@Setter
+	@Column
+	private String cardCompany;
+
+	@Setter
+	@Column
+	private String cardNumber;
+
+	@Setter
+	@Column
+	private String cardReceiptUrl;
+
+
+	@Setter
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	private Customer customer;
 
 	public PaymentResDto toPaymentDto(){
 		return PaymentResDto.builder()

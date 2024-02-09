@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,14 @@ public class Customer {
 
 //    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private List<Payment> payments;
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @Builder.Default
+    private List<Payment> payments = new ArrayList<>();
+    public void addPayment(Payment payment) {
+        this.payments.add(payment);
+        payment.setCustomer(this);
+    }
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
