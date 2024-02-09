@@ -1,6 +1,6 @@
 package com.amzmall.project.domain.dto;
 
-import com.amzmall.project.domain.entity.PayType;
+import com.amzmall.project.domain.entity.PAY_TYPE;
 import com.amzmall.project.domain.entity.Payment;
 
 import java.util.UUID;
@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class PaymentReqDto {
-	private PayType payType;
+	private PAY_TYPE payType;
 	private Long amount;
 	private String orderId;
 	private String orderName;
