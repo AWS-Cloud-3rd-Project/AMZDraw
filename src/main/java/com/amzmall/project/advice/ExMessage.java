@@ -6,7 +6,9 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ExMessage {
+
     DB_ERROR_SAVE("객체 저장에 실패했습니다."),
+    CUSTOMER_ERROR_NOT_FOUND("해당 고객은 존재하지 않습니다"),
     PAYMENT_ERROR_ORDER_NAME("주문하신 상품 이름이 잘못되었습니다."),
     PAYMENT_ERROR_ORDER_PRICE("주문하신 상품 금액이 잘못되었습니다."),
     PAYMENT_ERROR_ORDER_PAY_TYPE("결제수단 선택이 잘못되었습니다."),
@@ -15,7 +17,8 @@ public enum ExMessage {
     PAYMENT_ERROR_ORDER_NOTFOUND("해당 결제 내역을 조회할 수 없습니다."),
     PAYMENT_ERROR_NOT_PAY("고객이 아직 결제를 완료하지 않았습니다."),
     PAYMENT_CANCEL_ERROR_NOT_MATCH_AMOUNT("취소 금액과 결제 금액이 다릅니다."),
-    PAYMENT_CANCEL_ERROR_FAIL("알 수 없는 이유로 결제 취소에 실패했습니다.")
+    PAYMENT_CANCEL_ERROR_FAIL("알 수 없는 이유로 결제 취소에 실패했습니다."),
+    NOT_YET_DEFINED_ERROR("아직 정의되지 않은 에러")
     ;
 
     private final String message;
