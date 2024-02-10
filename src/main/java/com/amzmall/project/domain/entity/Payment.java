@@ -29,8 +29,8 @@ public class Payment {
 	private Long paymentId;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "pay_type", nullable = false)
-	private PAY_TYPE payType;
+	@Column(name = "payment_type", nullable = false)
+	private PAYMENT_TYPE paymentType;
 
 	@Column(name = "amount", nullable = false)
 	private Long amount;
@@ -60,17 +60,17 @@ public class Payment {
 
 	private boolean paySuccessYn;
 
-	@Setter
-	@Column
-	private String cardCompany;
-
-	@Setter
-	@Column
-	private String cardNumber;
-
-	@Setter
-	@Column
-	private String cardReceiptUrl;
+//	@Setter
+//	@Column
+//	private String cardCompany;
+//
+//	@Setter
+//	@Column
+//	private String cardNumber;
+//
+//	@Setter
+//	@Column
+//	private String cardReceiptUrl;
 
 
 	@Setter
@@ -79,7 +79,7 @@ public class Payment {
 
 	public PaymentResDto toPaymentDto(){
 		return PaymentResDto.builder()
-				.payType(payType.getName())
+				.paymentType(paymentType.getName())
 				.amount(amount)
 				.orderId(orderId)
 				.orderName(orderName)

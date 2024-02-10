@@ -5,7 +5,7 @@ import com.amzmall.project.domain.dto.PaymentReqDto;
 import com.amzmall.project.domain.dto.PaymentResCardDto;
 import com.amzmall.project.domain.dto.PaymentResDto;
 import com.amzmall.project.domain.dto.PaymentResSuccessDto;
-import com.amzmall.project.domain.entity.PAY_TYPE;
+import com.amzmall.project.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.domain.entity.Payment;
 import com.amzmall.project.config.TossPaymentConfig;
 import com.amzmall.project.exception.BusinessException;
@@ -13,6 +13,7 @@ import com.amzmall.project.repository.CustomerRepository;
 import com.amzmall.project.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,17 +32,21 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final CustomerRepository customerRepository;
     private final TossPaymentConfig tossPaymentConfig;
+
+    @Value("${toss.payments.basic_url}")
+    private String basicUrl;
+
     @Transactional
     public PaymentResDto requestPayments(PaymentReqDto paymentReqDto){
         Long amount = paymentReqDto.getAmount();
-        String payType = paymentReqDto.getPayType().getName();
+        String payType = paymentReqDto.getPaymentType().getName();
         String customerEmail = paymentReqDto.getCustomerEmail();
 
         if (amount == null || amount <= 1000) {
             throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PRICE);
         }
 
-        if (!payType.equals("토스페이") && !payType.equals("카드")) {
+        if (!payType.equals("일반결제") && !payType.equals("브랜드페이")) {
             throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PAY_TYPE);
         }
 
@@ -84,13 +89,13 @@ public class PaymentService {
     @Transactional
     public PaymentResSuccessDto requestFinalPayment(String paymentKey, String orderId, Long amount) {
         // 토스에서 제공한 시크릿 키
-        String testSecretKey = tossPaymentConfig.getTestSecretKey() + ":"; // 시크릿 키는 ":" 을 붙여야 함
+        String testSecretKey = tossPaymentConfig.getTestSecretKey(); // 시크릿 키는 ":" 을 붙여야 함
         // 토스 : 시크릿 키 뒤에 콜론을 추가해서 비밀번호가 없다는 것을 알립니다.
 
         Payment pay = paymentRepository.findByPaymentKey(paymentKey)
                 .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND));
 
-        PAY_TYPE payType = pay.getPayType();
+        PAYMENT_TYPE payType = pay.getPaymentType();
 
         // 토스에서 제공한 시크릿 키를 Basic Authorization 방식으로 인코딩해서 전송
         byte[] encodedKey = Base64.getEncoder()
@@ -107,23 +112,24 @@ public class PaymentService {
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("orderId", orderId);
-        jsonObject.put("orderId", orderId);
+        jsonObject.put("amount", amount);
 
         PaymentResSuccessDto paymentResSuccessDto;
 
+
         // 해당 URL에 POST 요청을 보내고 응답을 엔티티 객체로 받음
         paymentResSuccessDto = restTemplate.postForEntity(
-                tossPaymentConfig.getBasicUrl() + paymentKey,   // 요청 URL 은 basic_url + paymentKey
+                basicUrl + paymentKey,   // 요청 URL 은 basic_url + paymentKey
                     new HttpEntity<>(jsonObject, httpHeaders),      // 요청 데이터에 추가하는 데이터
                     PaymentResSuccessDto.class                                    // 문자열 형태로 응답 받기
             ).getBody();
-
-        if (payType.equals(PAY_TYPE.CARD)) {
+        System.out.println(basicUrl + paymentKey);
+        if (payType.equals(PAYMENT_TYPE.NORMAL)) {
             PaymentResCardDto card = paymentResSuccessDto.getCard();
             paymentRepository.findByOrderId(paymentResSuccessDto.getOrderId())
                     .ifPresent(payment -> {
-                        payment.setCardCompany(card.getCompany());
-                        payment.setCardNumber(card.getNumber());
+//                        payment.setCardCompany(card.getCompany());
+//                        payment.setCardNumber(card.getNumber());
                         payment.setPaySuccessYn(true);
                     });
         }

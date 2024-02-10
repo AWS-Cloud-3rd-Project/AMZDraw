@@ -1,6 +1,6 @@
 package com.amzmall.project;
 
-import com.amzmall.project.domain.entity.PayType;
+import com.amzmall.project.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.domain.entity.Payment;
 import com.amzmall.project.repository.PaymentRepository;
 import com.amzmall.project.service.PaymentService;
@@ -29,12 +29,13 @@ public class DatabaseConnectionTest {
 	public void testSavePayment() {
 		// Given
 		Payment payment = Payment.builder()
-				.payType(PayType.CARD)
+				.paymentType(PAYMENT_TYPE.NORMAL)
 				.amount(23000L)
 				.orderName("김태준")
 				.orderId(UUID.randomUUID().toString())
 				.customerEmail("test@example.com")
 				.customerName("Test Customer")
+				.paymentKey("Test PaymentKey")
 				.paySuccessYn(false)
 				.build();
 

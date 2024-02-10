@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PAY_TYPE {
-	CARD("카드"),
-	TOSSPAY("토스페이");
+public enum PAYMENT_TYPE {
+	BRANDPAY("브랜드페이"),
+	NORMAL("일반결제");
 	private final String name;
 }

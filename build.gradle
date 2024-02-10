@@ -49,6 +49,10 @@ dependencies {
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.4.1'
 
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+	// 스웨거
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
 }
 
 tasks.named('test') {

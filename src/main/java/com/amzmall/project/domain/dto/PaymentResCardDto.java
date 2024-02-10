@@ -6,10 +6,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PaymentResCardDto {
-    String company;						//
-    String number;						//
-    String installmentPlanMonths;		//
-    String approveNo;					//
-    String cardType;					//
-    String ownerType;					//
+    String company;						// "현대",
+    String number;						// "433012******1234",
+    String installmentPlanMonths;		// 0,
+    String isInterestFree;				// false,
+    String approveNo;					// "00000000",
+    String useCardPoint;				// false,
+    String cardType;					// "신용",
+    String ownerType;					// "개인",
+    String acquireStatus;				// "READY",
+    String receiptUrl;
 }
