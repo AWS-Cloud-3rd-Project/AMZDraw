@@ -1,19 +1,16 @@
 package com.amzmall.project.service;
 
 import com.amzmall.project.advice.ExMessage;
-import com.amzmall.project.domain.dto.PaymentReqDto;
-import com.amzmall.project.domain.dto.PaymentResCardDto;
-import com.amzmall.project.domain.dto.PaymentResDto;
-import com.amzmall.project.domain.dto.PaymentResSuccessDto;
+import com.amzmall.project.domain.dto.*;
 import com.amzmall.project.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.domain.entity.Payment;
 import com.amzmall.project.config.TossPaymentConfig;
 import com.amzmall.project.exception.BusinessException;
 import com.amzmall.project.repository.CustomerRepository;
 import com.amzmall.project.repository.PaymentRepository;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,9 +30,6 @@ public class PaymentService {
     private final CustomerRepository customerRepository;
     private final TossPaymentConfig tossPaymentConfig;
 
-    @Value("${toss.payments.basic_url}")
-    private String basicUrl;
-
     @Transactional
     public PaymentResDto requestPayments(PaymentReqDto paymentReqDto){
         Long amount = paymentReqDto.getAmount();
@@ -47,7 +41,7 @@ public class PaymentService {
         }
 
         if (!payType.equals("일반결제") && !payType.equals("브랜드페이")) {
-            throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PAY_TYPE);
+            throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PAYMENT_TYPE);
         }
 
         PaymentResDto paymentResDto;
@@ -93,7 +87,7 @@ public class PaymentService {
         // 토스 : 시크릿 키 뒤에 콜론을 추가해서 비밀번호가 없다는 것을 알립니다.
 
         Payment pay = paymentRepository.findByPaymentKey(paymentKey)
-                .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND));
+                .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
 
         PAYMENT_TYPE payType = pay.getPaymentType();
 
@@ -116,23 +110,62 @@ public class PaymentService {
 
         PaymentResSuccessDto paymentResSuccessDto;
 
-
-        // 해당 URL에 POST 요청을 보내고 응답을 엔티티 객체로 받음
-        paymentResSuccessDto = restTemplate.postForEntity(
-                basicUrl + paymentKey,   // 요청 URL 은 basic_url + paymentKey
+        String requestUrl = tossPaymentConfig.getBasicUrl() + paymentKey;
+        try {
+            System.out.println("requestUrl : " + requestUrl);
+            // 해당 URL에 POST 요청을 보내고 응답을 엔티티 객체로 받음
+            paymentResSuccessDto = restTemplate.postForEntity(
+                    requestUrl,   // 요청 URL 은 basic_url + paymentKey
                     new HttpEntity<>(jsonObject, httpHeaders),      // 요청 데이터에 추가하는 데이터
                     PaymentResSuccessDto.class                                    // 문자열 형태로 응답 받기
             ).getBody();
-        System.out.println(basicUrl + paymentKey);
+            if (paymentResSuccessDto == null) throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER);
+        } catch (Exception e) {
+            String errorMessage = parseErrorMessage(e.getMessage());
+            throw new BusinessException(errorMessage);
+        }
+
+        // 일반 카드 결제 시
         if (payType.equals(PAYMENT_TYPE.NORMAL)) {
             PaymentResCardDto card = paymentResSuccessDto.getCard();
             paymentRepository.findByOrderId(paymentResSuccessDto.getOrderId())
                     .ifPresent(payment -> {
-//                        payment.setCardCompany(card.getCompany());
-//                        payment.setCardNumber(card.getNumber());
-                        payment.setPaySuccessYn(true);
+                        payment.setCardCompany(card.getCompany());
+                        payment.setCardNumber(card.getNumber());
+                        payment.setPaySuccessYn("Y");
+                        // Order 엔티티 추가 시 설정
+                        // Order.setPayYn("Y");
+                        //Order.setPayType(PAY_TYPE.NORMAL);
                     });
         }
         return paymentResSuccessDto;
+    }
+
+    private String parseErrorMessage(String errorMessage) {
+        // 예외 메시지에서 JSON 부분 추출
+        int startIndex = errorMessage.indexOf("{");
+        int endIndex = errorMessage.lastIndexOf("}");
+        String jsonError = errorMessage.substring(startIndex, endIndex + 1);
+
+        // JSON을 TossErrorDto로 변환
+        TossErrorDto tossErrorDto = new Gson().fromJson(jsonError, TossErrorDto.class);
+
+        // TossErrorDto에서 메시지 반환
+        return tossErrorDto.getMessage();
+    }
+
+    @Transactional
+    public PaymentFailDto requestFail(String errorCode, String errorMessage, String orderId) {
+        Payment payment = paymentRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
+        payment.setPaySuccessYn("N");
+        payment.setPayFailReason(errorMessage);
+
+        return PaymentFailDto
+                .builder()
+                .errorCode(errorCode)
+                .errorMessage(errorMessage)
+                .orderId(orderId)
+                .build();
     }
 }

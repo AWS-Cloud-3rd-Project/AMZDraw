@@ -1,6 +1,7 @@
 package com.amzmall.project.controller;
 
 
+import com.amzmall.project.domain.dto.PaymentFailDto;
 import com.amzmall.project.domain.dto.PaymentReqDto;
 import com.amzmall.project.domain.dto.PaymentResDto;
 import com.amzmall.project.domain.dto.PaymentResSuccessDto;
@@ -27,8 +28,7 @@ public class PaymentController {
     @Operation(summary="결제 요청", description="결제 요청에 필요한 값들을 반환합니다.")
     public SingleResult<PaymentResDto> requestPayments(
             @Parameter(name = "PaymentReqDto", description = "요청 객체", required = true)
-            @ModelAttribute PaymentReqDto paymentReqDto
-    ) {
+            @ModelAttribute PaymentReqDto paymentReqDto) {
        try {
            return responseService.getSingleResult(paymentService.requestPayments(paymentReqDto));
        } catch (Exception e){
@@ -38,7 +38,7 @@ public class PaymentController {
     }
 
     @GetMapping("/success")
-    @Operation(summary="결제 성공 리다이렉트", description="결제 성공 시 최종 결제 승인 요청을 보냅니다.")
+    @Operation(summary="결제 성공 리다이렉트 URL", description="결제 성공 시 토스 페이먼츠에 최종 결제 승인 요청을 보냅니다.")
     public SingleResult<PaymentResSuccessDto> requestFinalPayments(
             @Parameter(name = "paymentKey", description = "토스 측 결제 고유 번호", required = true)
             @RequestParam("paymentKey") String paymentKey,
@@ -47,9 +47,8 @@ public class PaymentController {
             @Parameter(name = "amount", description = "실제 결제 금액", required = true)
             @RequestParam("amount") Long amount,
             @Parameter(name = "paymentType", description = "결제 타입")
-            @RequestParam("paymentType") PAYMENT_TYPE paymentType)
-    {
-        try{
+            @RequestParam("paymentType") PAYMENT_TYPE paymentType) {
+        try {
             System.out.println("paymentKey = " + paymentKey);
             System.out.println("orderId = " + orderId);
             System.out.println("amount = " + amount);
@@ -64,7 +63,21 @@ public class PaymentController {
         }
     }
     @GetMapping("/fail")
-    public String r (){
-        return("fail.html");
+    @Operation(summary="결제 실패 리다이렉트 URL", description="결제 실패 시 에러 내역을 보냅니다.")
+    public SingleResult<PaymentFailDto> requestFail (
+            @Parameter(name = "errorCode", description = "에러 코드", required = true)
+            @RequestParam("errorCode") String errorCode,
+            @Parameter(name = "errorMessage", description = "에러 메시지", required = true)
+            @RequestParam("errorMessage") String errorMessage,
+            @Parameter(name = "orderId", description = "주문 고유 번호", required = true)
+            @RequestParam("orderId") String orderId) {
+        try {
+            return responseService.getSingleResult(
+                    paymentService.requestFail(errorCode, errorMessage, orderId)
+            );
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 }
