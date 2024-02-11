@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 public class CustomerDto {
-    private Long id;
+    private Long customerId;
     private String email;
     private String name;
     private Timestamp createdAt;

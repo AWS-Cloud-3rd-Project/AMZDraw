@@ -53,7 +53,7 @@ public class Customer {
 
     public CustomerDto toCustomerDto() {
         return CustomerDto.builder()
-                .id(id)
+                .customerId(id)
                 .email(email)
                 .name(name)
                 .createdAt(createdAt)
