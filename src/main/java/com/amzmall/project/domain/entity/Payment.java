@@ -2,6 +2,7 @@ package com.amzmall.project.domain.entity;
 
 import com.amzmall.project.config.TimeConfig;
 import com.amzmall.project.domain.dto.PaymentResDto;
+import com.amzmall.project.domain.dto.PaymentDto;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -58,19 +59,29 @@ public class Payment {
 	@Column(name = "updated_at")
 	private Timestamp updatedAt;
 
-	private boolean paySuccessYn;
+	@Setter
+	@Column(nullable = false)
+	private String paySuccessYn;			// 결제 성공 여부
 
-//	@Setter
-//	@Column
-//	private String cardCompany;
-//
-//	@Setter
-//	@Column
-//	private String cardNumber;
-//
-//	@Setter
-//	@Column
-//	private String cardReceiptUrl;
+	@Setter
+	@Column(nullable = false)
+	private String cancelYn;				// 결제 취소 여부
+
+	@Setter
+	@Column
+	private String payFailReason;			// 결제 실패 이유
+
+	@Setter
+	@Column
+	private String cardCompany;				// 카드사
+
+	@Setter
+	@Column
+	private String cardNumber;				// 카드 번호
+
+	@Setter
+	@Column
+	private String cardReceiptUrl;			// 영수증 링크
 
 
 	@Setter
@@ -87,6 +98,24 @@ public class Payment {
 				.customerEmail(customerEmail)
 				.paymentKey(paymentKey)
 				.createdDate(new TimeConfig().getNowTime())
+				.build();
+	}
+
+	public PaymentDto toDto() {
+		return PaymentDto.builder()
+				.paymentType(paymentType.getName())
+				.amount(amount)
+				.cardCompany(cardCompany)
+				.cardNumber(cardNumber)
+				.orderId(orderId)
+				.orderName(orderName)
+				.customerEmail(customerEmail)
+				.customerName(customerName)
+				.paymentKey(paymentKey)
+				.paySuccessYn(paySuccessYn)
+				.cancelYn(cancelYn)
+				.payFailReason(payFailReason)
+				.createDate(new TimeConfig().getNowTime())
 				.build();
 	}
 }

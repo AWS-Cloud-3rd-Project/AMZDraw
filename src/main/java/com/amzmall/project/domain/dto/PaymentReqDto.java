@@ -37,7 +37,7 @@ public class PaymentReqDto {
 				.orderName(orderName)
 				.customerEmail(customerEmail)
 				.customerName(customerName)
-				.paySuccessYn(true)
+				.paySuccessYn("Y")
 				.build();
 	}
 }
