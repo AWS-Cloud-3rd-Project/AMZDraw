@@ -9,8 +9,12 @@ import com.amzmall.project.exception.BusinessException;
 import com.amzmall.project.repository.CustomerRepository;
 import com.amzmall.project.repository.PaymentRepository;
 import com.google.gson.Gson;
+import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,7 +35,7 @@ public class PaymentService {
     private final TossPaymentConfig tossPaymentConfig;
 
     @Transactional
-    public PaymentResDto requestPayments(PaymentReqDto paymentReqDto){
+    public PaymentResDto requestPayment(PaymentReqDto paymentReqDto){
         Long amount = paymentReqDto.getAmount();
         String payType = paymentReqDto.getPaymentType().getName();
         String customerEmail = paymentReqDto.getCustomerEmail();
@@ -83,7 +87,7 @@ public class PaymentService {
     @Transactional
     public PaymentResSuccessDto requestFinalPayment(String paymentKey, String orderId, Long amount) {
         // 토스에서 제공한 시크릿 키
-        String testSecretKey = tossPaymentConfig.getTestSecretKey(); // 시크릿 키는 ":" 을 붙여야 함
+        String testSecretKey = tossPaymentConfig.getTestSecretKey() + ":"; // 시크릿 키는 ":" 을 붙여야 함
         // 토스 : 시크릿 키 뒤에 콜론을 추가해서 비밀번호가 없다는 것을 알립니다.
 
         Payment pay = paymentRepository.findByPaymentKey(paymentKey)
@@ -167,5 +171,51 @@ public class PaymentService {
                 .errorMessage(errorMessage)
                 .orderId(orderId)
                 .build();
+    }
+
+    // 결제 객체에 결제 취소 포함 시 서비스
+    @Transactional
+	public String requestCancelPayment(String paymentKey, String cancelReason) {
+        URI uri = URI.create(tossPaymentConfig.getBasicUrl()+paymentKey+"/cancel");
+        String testSecretKey = tossPaymentConfig.getTestSecretKey() + ":"; // 시크릿 키는 ":" 을 붙여야 함
+
+        byte[] encodedKey = Base64.getEncoder()
+            .encode(testSecretKey
+                .getBytes(StandardCharsets.UTF_8));
+
+        String encodedAuth = new String(encodedKey);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        RestTemplate restTemplate = new RestTemplate();
+
+        httpHeaders.setBasicAuth(encodedAuth);  // Base64로 인코딩한 문자열을 HTTP 요청 헤더에 추가하여 인증
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON); // 콘텐츠 유형을 JSON 형식으로 명시
+        httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));   // 서버로부터 JSON 형식의 데이터를 받는 것을 명시
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cancelReason", cancelReason);
+
+        return restTemplate.postForObject( uri, new HttpEntity<>(jsonObject, httpHeaders), String.class);
+	}
+
+    @Transactional(readOnly = true)
+    public List<PaymentDto> getAllPayments(String customerEmail, PageRequest pageRequest) {
+        String email = customerRepository.findByEmail(customerEmail)
+            .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
+            .getEmail();
+
+        return paymentRepository.findAllByCustomerEmail(email, pageRequest)
+            .stream().map(Payment::toDto)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PaymentDto getOnePayment(String memberEmail, String orderId) {
+        String email = customerRepository.findByEmail(memberEmail)
+            .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
+            .getEmail();
+
+        return paymentRepository.findByCustomerEmailAndOrderId(email, orderId)
+            .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND))
+            .toDto();
     }
 }
