@@ -10,7 +10,6 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "customer")
@@ -36,11 +35,20 @@ public class Customer {
 //    private List<Payment> payments;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @Builder.Default
+    @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
     private List<Payment> payments = new ArrayList<>();
     public void addPayment(Payment payment) {
         this.payments.add(payment);
         payment.setCustomer(this);
+    }
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
+    private List<CancelPayment> cancelPayments = new ArrayList<>();
+
+    public void addCancelPayment(CancelPayment cancelPayment) {
+        this.cancelPayments.add(cancelPayment);
+        cancelPayment.setCustomer(this);
     }
 
     @CreatedDate
