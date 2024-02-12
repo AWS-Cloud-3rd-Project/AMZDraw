@@ -1,5 +1,6 @@
 package com.amzmall.project.domain.dto;
 
+import com.amzmall.project.domain.entity.CancelPayment;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,4 +25,22 @@ public class PaymentResSuccessDto {
     String cultureExpense;          // 문화비 지출 여부, 카드 결제는 항상 false
     String type;                    // 결제 타입 정보 (NOMAL, BILLING, CONNECTPAY)
     PaymentResCardDto card;	        // 카드 결제
+
+    PaymentResCancelDto[] cancels;  // 결제 취소 객체
+
+    public CancelPayment toCancelPayment() {
+        return CancelPayment.builder()
+            .orderId(orderId)
+            .orderName(orderName)
+            .paymentKey(paymentKey)
+            .requestedAt(requestedAt)
+            .approvedAt(approvedAt)
+            .cardCompany(card.getCompany())
+            .cardNumber(card.getNumber())
+            .cardReceiptUrl(card.getReceiptUrl())
+            .cancelAmount(cancels[0].getCancelAmount())
+            .cancelDate(cancels[0].getCanceledAt())
+            .cancelReason(cancels[0].getCancelReason())
+            .build();
+    }
 }
