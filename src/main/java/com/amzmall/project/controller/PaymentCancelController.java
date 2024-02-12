@@ -1,13 +1,18 @@
 package com.amzmall.project.controller;
 
+import com.amzmall.project.domain.dto.CancelPaymentResDto;
 import com.amzmall.project.exception.BusinessException;
 import com.amzmall.project.response.CommonResult;
+import com.amzmall.project.response.ListResult;
 import com.amzmall.project.response.ResponseService;
 import com.amzmall.project.service.PaymentCancelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,5 +42,25 @@ public class PaymentCancelController {
 		}
 	}
 
+	@GetMapping
+	@Operation(summary="결제 취소 내역 전체 조회", description = "고객이 취소한 모든 결제 내역을 조회합니다.")
+	public ListResult<CancelPaymentResDto> getAllCancelPayment(
+		@Parameter(name = "customerEmail", description = "고객 이메일", required = true)
+		@RequestParam String customerEmail,
+		@Parameter(name = "page", description = "PAGE 번호 (1부터)", required = true)
+		@RequestParam(defaultValue = "1") int page,
+		@Parameter(name = "size", description = "PAGE 사이즈", required = true)
+		@RequestParam(defaultValue = "10") int size
+	) {
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("cancelDate").descending());
+		try {
+			return responseService.getListResult(
+				paymentCancelService.getAllCancelPayments(customerEmail, pageRequest)
+			);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BusinessException(e.getMessage());
+		}
+	}
 
 }

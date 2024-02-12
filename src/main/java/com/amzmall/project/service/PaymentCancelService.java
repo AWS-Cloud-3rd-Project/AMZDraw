@@ -2,6 +2,7 @@ package com.amzmall.project.service;
 
 import com.amzmall.project.advice.ExMessage;
 import com.amzmall.project.config.TossPaymentConfig;
+import com.amzmall.project.domain.dto.CancelPaymentResDto;
 import com.amzmall.project.domain.dto.PaymentResSuccessDto;
 import com.amzmall.project.domain.entity.CancelPayment;
 import com.amzmall.project.domain.entity.PAYMENT_TYPE;
@@ -13,9 +14,12 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -97,5 +101,14 @@ public class PaymentCancelService {
 			}, () -> {
 				throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND);
 			});
+	}
+
+	@Transactional(readOnly = true)
+	public List<CancelPaymentResDto> getAllCancelPayments(String customerEmail, PageRequest pageRequest) {
+		return cancelPaymentRepository
+			.findAllByCustomerEmail(customerEmail, pageRequest)
+			.stream()
+			.map(CancelPayment::toCancelPaymentResDto)
+			.collect(Collectors.toList());
 	}
 }
