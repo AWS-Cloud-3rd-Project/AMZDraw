@@ -31,7 +31,7 @@ public class PaymentReqDto {
 	// 프론트에서 입력받는 값
 	public Payment toEntity() {
 		return Payment.builder()
-				.orderId(orderId)
+				.orderId(orderId)		// UUID.randomUUID().toString()
 				.paymentType(paymentType)
 				.amount(amount)
 				.orderName(orderName)
