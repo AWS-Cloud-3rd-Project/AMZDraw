@@ -37,15 +37,22 @@ public class PaymentService {
     @Transactional
     public PaymentResDto requestPayment(PaymentReqDto paymentReqDto){
         Long amount = paymentReqDto.getAmount();
-        String payType = paymentReqDto.getPaymentType().getName();
+        String paymentType = paymentReqDto.getPaymentType().getName();
         String customerEmail = paymentReqDto.getCustomerEmail();
+        String customerName = paymentReqDto.getCustomerName();
+        String orderName = paymentReqDto.getOrderName();
+        String orderID = paymentReqDto.getOrderId();
 
         if (amount == null || amount <= 1000) {
             throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PRICE);
         }
 
-        if (!payType.equals("일반결제") && !payType.equals("브랜드페이")) {
+        if (!paymentType.equals("일반결제") && !paymentType.equals("브랜드페이")) {
             throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PAYMENT_TYPE);
+        }
+
+        if (paymentRepository.findByOrderId(orderID).isPresent()) {
+            throw new BusinessException("이미 결제 신청된 건입니다. 결제를 완료해주세요.");
         }
 
         PaymentResDto paymentResDto;
@@ -57,6 +64,7 @@ public class PaymentService {
                             , () -> {
                                 throw new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND);
                             });
+            paymentRepository.save(payment);
             paymentResDto = payment.toPaymentDto();
             paymentResDto.setSuccessUrl(tossPaymentConfig.getSuccessUrl());
             paymentResDto.setFailUrl(tossPaymentConfig.getFailUrl());
