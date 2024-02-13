@@ -36,16 +36,6 @@ dependencies {
 	testAnnotationProcessor('org.projectlombok:lombok')
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	// 회원가입 시 이메일 인증용
-	//implementation 'org.springframework.boot:spring-boot-starter-mail'
-	// 회원가입 시 비밀번호 암호화
-	//implementation 'org.springframework.boot:spring-boot-starter-security'
-	//implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-	// jwt
-	//implementation 'com.auth0:java-jwt:3.19.2'
-	//implementation 'io.jsonwebtoken:jjwt:0.9.1'
-
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.4.1'
 
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
