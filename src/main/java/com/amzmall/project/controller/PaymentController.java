@@ -18,7 +18,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @Tag(name = "payments", description="결제")
 @RestController
@@ -90,13 +96,13 @@ public class PaymentController {
     @Operation(summary="모든 결제 내역 조회", description="고객의 모든 완료된 결제 내역을 조회합니다.")
     public ListResult<PaymentDto> getAllPayments(
         @Parameter(name = "customerEmail", description = "고객 이메일", required = true)
-        @RequestParam String customerEmail,
-        @Parameter(name = "page", description = "PAGE 번호 (1부터)", required = true)
-        @RequestParam(defaultValue = "1") int page,
-        @Parameter(name = "size", description = "PAGE 사이즈", required = true)
-        @RequestParam(defaultValue = "10") int size
+        @RequestParam("customerEmail") String customerEmail,
+        @Parameter(name = "page", description = "페이지 번호 (0부터)", required = true)
+        @RequestParam(name = "page",defaultValue = "0") int page,
+        @Parameter(name = "size", description = "페이지 사이즈", required = true)
+        @RequestParam(name = "size", defaultValue = "10") int size
     ) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createDate").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
         try {
             return responseService.getListResult(
                 paymentService.getAllPayments(customerEmail, pageRequest)
@@ -111,9 +117,9 @@ public class PaymentController {
     @Operation(summary="결제 한 건 조회", description="주문 고유 번호로 고객의 결제 내역을 조회")
     public SingleResult<PaymentDto> getOnePayment(
         @Parameter(name = "customerEmail", description = "고객 이메일", required = true)
-        @RequestParam String customerEmail,
+        @RequestParam("customerEmail") String customerEmail,
         @Parameter(name = "orderId", description = "주문 고유 번호", required = true)
-        @RequestParam String orderId
+        @RequestParam("orderId") String orderId
     ) {
         try {
             return responseService.getSingleResult(

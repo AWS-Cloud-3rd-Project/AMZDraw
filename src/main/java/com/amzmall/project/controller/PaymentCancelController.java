@@ -46,11 +46,11 @@ public class PaymentCancelController {
 	@Operation(summary="결제 취소 내역 전체 조회", description = "고객이 취소한 모든 결제 내역을 조회합니다.")
 	public ListResult<CancelPaymentResDto> getAllCancelPayment(
 		@Parameter(name = "customerEmail", description = "고객 이메일", required = true)
-		@RequestParam String customerEmail,
-		@Parameter(name = "page", description = "PAGE 번호 (1부터)", required = true)
-		@RequestParam(defaultValue = "1") int page,
-		@Parameter(name = "size", description = "PAGE 사이즈", required = true)
-		@RequestParam(defaultValue = "10") int size
+		@RequestParam("customerEmail") String customerEmail,
+		@Parameter(name = "page", description = "페이지 번호 (0부터)", required = true)
+		@RequestParam(name = "page", defaultValue = "0") int page,
+		@Parameter(name = "size", description = "페이지 사이즈", required = true)
+		@RequestParam(name = "size",defaultValue = "10") int size
 	) {
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("cancelDate").descending());
 		try {

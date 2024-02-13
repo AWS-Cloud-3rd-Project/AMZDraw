@@ -199,22 +199,22 @@ public class PaymentService {
 
     @Transactional(readOnly = true)
     public List<PaymentDto> getAllPayments(String customerEmail, PageRequest pageRequest) {
-        String email = customerRepository.findByEmail(customerEmail)
+        String targetEmail = customerRepository.findByEmail(customerEmail)
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
             .getEmail();
 
-        return paymentRepository.findAllByCustomerEmail(email, pageRequest)
+        return paymentRepository.findAllByCustomerEmail(targetEmail, pageRequest)
             .stream().map(Payment::toDto)
             .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public PaymentDto getOnePayment(String memberEmail, String orderId) {
-        String email = customerRepository.findByEmail(memberEmail)
+    public PaymentDto getOnePayment(String customerEmail, String orderId) {
+        String targetEmail = customerRepository.findByEmail(customerEmail)
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
             .getEmail();
 
-        return paymentRepository.findByCustomerEmailAndOrderId(email, orderId)
+        return paymentRepository.findByCustomerEmailAndOrderId(targetEmail, orderId)
             .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND))
             .toDto();
     }
