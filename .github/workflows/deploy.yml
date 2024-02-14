@@ -68,38 +68,38 @@ jobs:
           docker push 009946608368.dkr.ecr.ap-northeast-2.amazonaws.com/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
 
 #  # CD 수행 부분
-#  update-helm-chart:
-#    needs: build-and-push-image
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          repository: 'AWS-Cloud-3rd-Project/AMZMall_Dev_GitOps'
-#          token: ${{ secrets.AMZMALL_DEV_GITOPS_REPO_TOKEN }}
-#
-#      # 아티팩트 다운로드
-#      - name: Download current time artifact
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: current-time
-#          path: artifact
-#
-#      # 아티팩트에서 현재 시간 읽기
-#      - name: Read current time from artifact
-#        id: read-time
-#        run: echo "IMAGE_TAG=$(cat artifact/current-time.txt)" >> $GITHUB_ENV
-#
-#
-#      # 헬름 차트 수정
-#      - name: Update Helm chart values
-#        run: |
-#          sed -i "s/tag: .*/tag: ${{ env.IMAGE_TAG }}/" ./values.yaml
-#
-#      # 변경 사항 커밋 및 푸쉬
-#      - name: Commit and push changes
-#        run: |
-#          git config --global user.email "ehgud9912@naver.com"
-#          git config --global user.name "dhkim1206"
-#          git add values.yaml
-#          git commit -m "Update image tag to latest"
-#          git push
+ update-helm-chart:
+   needs: build-and-push-image
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/checkout@v3
+       with:
+         repository: 'AWS-Cloud-3rd-Project/AMZMall_Dev_GitOps'
+         token: ${{ secrets.AMZMALL_DEV_GITOPS_REPO_TOKEN }}
+
+     # 아티팩트 다운로드
+     - name: Download current time artifact
+       uses: actions/download-artifact@v2
+       with:
+         name: current-time
+         path: artifact
+
+     # 아티팩트에서 현재 시간 읽기
+     - name: Read current time from artifact
+       id: read-time
+       run: echo "IMAGE_TAG=$(cat artifact/current-time.txt)" >> $GITHUB_ENV
+
+
+     # 헬름 차트 수정
+     - name: Update Helm chart values
+       run: |
+         sed -i "s/tag: .*/tag: ${{ env.IMAGE_TAG }}/" ./values.yaml
+
+     # 변경 사항 커밋 및 푸쉬
+     - name: Commit and push changes
+       run: |
+         git config --global user.email "ehgud9912@naver.com"
+         git config --global user.name "dhkim1206"
+         git add values.yaml
+         git commit -m "Update image tag to latest"
+         git push
