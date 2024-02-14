@@ -3,6 +3,7 @@ package com.amzmall.project.admin.controller;
 
 import com.amzmall.project.admin.domain.user.AdminUserDetail;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,5 +27,15 @@ public class HomeController {
         model.addAttribute("username", adminUserDetail.getUsername());
 
         return "index";
+    }
+
+    @GetMapping("/")
+    public String Home(Model model, Authentication authentication){
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = makeEmail(authentication);
+            model.addAttribute("email", email);
+            return "result";
+        }
+        return "home";
     }
 }

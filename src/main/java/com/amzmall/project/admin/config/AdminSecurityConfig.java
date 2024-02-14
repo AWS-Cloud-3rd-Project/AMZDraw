@@ -1,6 +1,6 @@
 package com.amzmall.project.admin.config;
 
-import com.amzmall.project.admin.config.SimpleAuthenticationEntryPoint;
+import com.amzmall.project.admin.config.AdminAuthenticationEntryPoint;
 import com.amzmall.project.admin.service.AdminUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
