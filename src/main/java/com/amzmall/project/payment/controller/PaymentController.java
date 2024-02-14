@@ -3,8 +3,8 @@ package com.amzmall.project.payment.controller;
 
 import com.amzmall.project.payment.domain.dto.PaymentDto;
 import com.amzmall.project.payment.domain.dto.PaymentFailDto;
-import com.amzmall.project.domain.dto.PaymentReqDto;
-import com.amzmall.project.domain.dto.PaymentResDto;
+import com.amzmall.project.payment.domain.dto.PaymentReqDto;
+import com.amzmall.project.payment.domain.dto.PaymentResDto;
 import com.amzmall.project.payment.domain.dto.PaymentResSuccessDto;
 import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.exception.BusinessException;

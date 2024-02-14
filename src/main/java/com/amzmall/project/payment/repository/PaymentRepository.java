@@ -1,6 +1,6 @@
 package com.amzmall.project.payment.repository;
 
-import com.amzmall.project.domain.entity.Payment;
+import com.amzmall.project.payment.domain.entity.Payment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

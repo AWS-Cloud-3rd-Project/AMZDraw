@@ -3,11 +3,13 @@ package com.amzmall.project.payment.service;
 import com.amzmall.project.advice.ExMessage;
 import com.amzmall.project.payment.domain.dto.PaymentDto;
 import com.amzmall.project.payment.domain.dto.PaymentFailDto;
+import com.amzmall.project.payment.domain.dto.PaymentReqDto;
 import com.amzmall.project.payment.domain.dto.PaymentResCardDto;
+import com.amzmall.project.payment.domain.dto.PaymentResDto;
 import com.amzmall.project.payment.domain.dto.PaymentResSuccessDto;
 import com.amzmall.project.payment.domain.dto.TossErrorDto;
 import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
-import com.amzmall.project.domain.entity.Payment;
+import com.amzmall.project.payment.domain.entity.Payment;
 import com.amzmall.project.payment.config.TossPaymentConfig;
 import com.amzmall.project.exception.BusinessException;
 import com.amzmall.project.payment.repository.CustomerRepository;
@@ -38,7 +40,6 @@ public class PaymentService {
     private final CustomerRepository customerRepository;
     private final TossPaymentConfig tossPaymentConfig;
 
-    // 결제 요청
     @Transactional
     public PaymentResDto requestPayment(PaymentReqDto paymentReqDto){
         Long amount = paymentReqDto.getAmount();
@@ -47,17 +48,17 @@ public class PaymentService {
         String customerName = paymentReqDto.getCustomerName();
         String orderName = paymentReqDto.getOrderName();
         String orderID = paymentReqDto.getOrderId();
-        // 유효성 검사
-        if (amount == null || amount <= 1000) { // 결제 금액은 1000 이상
+
+        if (amount == null || amount <= 1000) {
             throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PRICE);
         }
 
-        if (!paymentType.equals("일반결제") && !paymentType.equals("브랜드페이")) {      // 결제 방식은 일반결제 또는 브랜드페이
+        if (!paymentType.equals("일반결제") && !paymentType.equals("브랜드페이")) {
             throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PAYMENT_TYPE);
         }
 
-        if (paymentRepository.findByOrderId(orderID).isPresent()) {     // 중복된 주문 번호 확인
-            throw new BusinessException(ExMessage.PAYMENT_ALREADY_EXIST);
+        if (paymentRepository.findByOrderId(orderID).isPresent()) {
+            throw new BusinessException("이미 결제 신청된 건입니다. 결제를 완료해주세요.");
         }
 
         PaymentResDto paymentResDto;
@@ -70,16 +71,14 @@ public class PaymentService {
                                 throw new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND);
                             });
             paymentRepository.save(payment);
-            paymentResDto = payment.toPaymentResDto();
-            paymentResDto.setSuccessUrl(tossPaymentConfig.getSuccessUrl());     // Success URL 설정
-            paymentResDto.setFailUrl(tossPaymentConfig.getFailUrl());           // Fail URL 설정
+            paymentResDto = payment.toPaymentDto();
+            paymentResDto.setSuccessUrl(tossPaymentConfig.getSuccessUrl());
+            paymentResDto.setFailUrl(tossPaymentConfig.getFailUrl());
             return paymentResDto;
-        } catch (Exception e) {                                                 // DB 저장 오류 예외
+        } catch (Exception e) {
             throw new BusinessException(ExMessage.DB_ERROR_SAVE);
         }
     }
-
-    // 결제 요청 검증
     @Transactional
     public void verifyRequest(String paymentKey, String orderId, Long amount) {
         // 요청한 결제 금액과 실제 토스페이먼츠에서 결제된 금액 일치 검증
@@ -99,7 +98,6 @@ public class PaymentService {
                 );
     }
 
-    // 최종 결제 요청 처리
     @Transactional
     public PaymentResSuccessDto requestFinalPayment(String paymentKey, String orderId, Long amount) {
         // 토스에서 제공한 시크릿 키
@@ -174,13 +172,12 @@ public class PaymentService {
         return tossErrorDto.getMessage();
     }
 
-    // 결제 실패 처리
     @Transactional
     public PaymentFailDto requestFail(String errorCode, String errorMessage, String orderId) {
-        Payment payment = paymentRepository.findByOrderId(orderId)      // 주문 확인
+        Payment payment = paymentRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
-        payment.setPaySuccessYn("N");   // 성공 여부를 N 으로 설정
-        payment.setPayFailReason(errorMessage); // 실패 이유
+        payment.setPaySuccessYn("N");
+        payment.setPayFailReason(errorMessage);
 
         return PaymentFailDto
                 .builder()
@@ -214,7 +211,6 @@ public class PaymentService {
         return restTemplate.postForObject( uri, new HttpEntity<>(jsonObject, httpHeaders), String.class);
 	}
 
-    // 모든 결제 조회
     @Transactional(readOnly = true)
     public List<PaymentDto> getAllPayments(String customerEmail, PageRequest pageRequest) {
         String targetEmail = customerRepository.findByEmail(customerEmail)
@@ -222,11 +218,10 @@ public class PaymentService {
             .getEmail();
 
         return paymentRepository.findAllByCustomerEmail(targetEmail, pageRequest)
-            .stream().map(Payment::toPaymentDto)
+            .stream().map(Payment::toDto)
             .collect(Collectors.toList());
     }
 
-    // 결제 한건 조회
     @Transactional(readOnly = true)
     public PaymentDto getOnePayment(String customerEmail, String orderId) {
         String targetEmail = customerRepository.findByEmail(customerEmail)
@@ -235,6 +230,6 @@ public class PaymentService {
 
         return paymentRepository.findByCustomerEmailAndOrderId(targetEmail, orderId)
             .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND))
-            .toPaymentDto();
+            .toDto();
     }
 }
