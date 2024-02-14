@@ -1,6 +1,6 @@
-package com.amzmall.project.domain.entity;
+package com.amzmall.project.payment.domain.entity;
 
-import com.amzmall.project.domain.dto.CancelPaymentResDto;
+import com.amzmall.project.payment.domain.dto.CancelPaymentResDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

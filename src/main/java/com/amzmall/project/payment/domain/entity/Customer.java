@@ -1,6 +1,6 @@
-package com.amzmall.project.domain.entity;
+package com.amzmall.project.payment.domain.entity;
 
-import com.amzmall.project.domain.dto.CustomerDto;
+import com.amzmall.project.payment.domain.dto.CustomerDto;
 
 import jakarta.persistence.OneToMany;
 import org.springframework.data.annotation.CreatedDate;

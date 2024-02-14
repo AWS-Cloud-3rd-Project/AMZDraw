@@ -1,17 +1,17 @@
-package com.amzmall.project.controller;
+package com.amzmall.project.payment.controller;
 
 
-import com.amzmall.project.domain.dto.PaymentDto;
-import com.amzmall.project.domain.dto.PaymentFailDto;
+import com.amzmall.project.payment.domain.dto.PaymentDto;
+import com.amzmall.project.payment.domain.dto.PaymentFailDto;
 import com.amzmall.project.domain.dto.PaymentReqDto;
 import com.amzmall.project.domain.dto.PaymentResDto;
-import com.amzmall.project.domain.dto.PaymentResSuccessDto;
-import com.amzmall.project.domain.entity.PAYMENT_TYPE;
+import com.amzmall.project.payment.domain.dto.PaymentResSuccessDto;
+import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.exception.BusinessException;
 import com.amzmall.project.response.ListResult;
 import com.amzmall.project.response.ResponseService;
 import com.amzmall.project.response.SingleResult;
-import com.amzmall.project.service.PaymentService;
+import com.amzmall.project.payment.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,6 +1,6 @@
-package com.amzmall.project.domain.dto;
+package com.amzmall.project.payment.domain.dto;
 
-import com.amzmall.project.domain.entity.CancelPayment;
+import com.amzmall.project.payment.domain.entity.CancelPayment;
 import lombok.Getter;
 import lombok.Setter;
 

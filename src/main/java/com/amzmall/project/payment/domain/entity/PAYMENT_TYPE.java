@@ -1,4 +1,4 @@
-package com.amzmall.project.domain.entity;
+package com.amzmall.project.payment.domain.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.amzmall.project.repository;
+package com.amzmall.project.payment.repository;
 
 import com.amzmall.project.domain.entity.Payment;
 import org.springframework.data.domain.Pageable;

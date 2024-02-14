@@ -1,6 +1,6 @@
-package com.amzmall.project.service;
+package com.amzmall.project.payment.service;
 
-import com.amzmall.project.repository.CustomerRepository;
+import com.amzmall.project.payment.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

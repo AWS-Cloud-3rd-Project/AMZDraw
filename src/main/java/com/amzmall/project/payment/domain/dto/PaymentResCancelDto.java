@@ -1,4 +1,4 @@
-package com.amzmall.project.domain.dto;
+package com.amzmall.project.payment.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,9 +1,9 @@
 package com.amzmall.project;
 
-import com.amzmall.project.domain.entity.PAYMENT_TYPE;
+import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.domain.entity.Payment;
-import com.amzmall.project.repository.PaymentRepository;
-import com.amzmall.project.service.PaymentService;
+import com.amzmall.project.payment.repository.PaymentRepository;
+import com.amzmall.project.payment.service.PaymentService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

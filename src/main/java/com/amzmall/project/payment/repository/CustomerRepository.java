@@ -1,6 +1,6 @@
-package com.amzmall.project.repository;
+package com.amzmall.project.payment.repository;
 
-import com.amzmall.project.domain.entity.Customer;
+import com.amzmall.project.payment.domain.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
