@@ -104,7 +104,7 @@ public class Payment {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	private Customer customer;
 
-	public PaymentResDto toPaymentDto(){
+	public PaymentResDto toPaymentResDto(){
 		return PaymentResDto.builder()
 				.paymentType(paymentType.getName())
 				.amount(amount)
@@ -117,7 +117,7 @@ public class Payment {
 				.build();
 	}
 
-	public PaymentDto toDto() {
+	public PaymentDto toPaymentDto() {
 		return PaymentDto.builder()
 				.paymentType(paymentType.getName())
 				.amount(amount)
