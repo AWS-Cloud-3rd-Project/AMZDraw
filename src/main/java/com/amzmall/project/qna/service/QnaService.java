@@ -4,9 +4,10 @@ import com.amzmall.project.advice.ExMessage;
 import com.amzmall.project.exception.BusinessException;
 import com.amzmall.project.qna.domain.dto.QuestionReqDto;
 import com.amzmall.project.qna.domain.entity.Customer;
-import com.amzmall.project.qna.domain.entity.Qna;
+import com.amzmall.project.qna.domain.entity.Question;
+import com.amzmall.project.qna.domain.entity.Reply;
 import com.amzmall.project.qna.repository.CustomerRepository;
-import com.amzmall.project.qna.repository.QnaRepository;
+import com.amzmall.project.qna.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,19 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class QnaService {
-    private final QnaRepository qnaRepository;
+    private final QuestionRepository questionRepository;
     private final CustomerRepository customerRepository;
 
     @Transactional
-    public void registQuestion(QuestionReqDto qnaReqDto) {
-        boolean verify = verifyReq(qnaReqDto);
+    public void registQuestion(QuestionReqDto questionReqDto) {
+        boolean verify = verifyReq(questionReqDto);
         if (!verify) throw new BusinessException("문의글 요청 형식이 잘못되었습니다.");
 
-        Customer customer = customerRepository.findByEmail(qnaReqDto.getCustomerEmail())
+        Customer customer = customerRepository.findByEmail(questionReqDto.getCustomerEmail())
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND));
 
         try {
-            customer.addQna(qnaReqDto.toEntity(customer.getEmail()));
+            customer.addQna(questionReqDto.toEntity(customer.getEmail()));
         } catch (Exception e) {
             throw new BusinessException(ExMessage.DB_ERROR_SAVE);
         }
@@ -38,15 +39,27 @@ public class QnaService {
         if (customerRepository.findByEmail(qnaReqDto.getCustomerEmail()).isEmpty())
             return false;
 
-        // 비밀글 여부가 "Y"인 경우 비밀번호가 반드시 존재해야 함
-        if (qnaReqDto.getSecretQnaYn().equals("Y")){
-            if(qnaReqDto.getQnaPassword() == null || qnaReqDto.getQnaPassword().isEmpty()) {
-                throw new BusinessException("비밀번호를 입력해야 합니다.");
-            }
-            return false;
-        }
         return true;
     }
 
+    @Transactional
+    public void registReply(Long questionId, String adminEmail, String replyContent) {
+        // 질문 조회
+        Question question = questionRepository.findById(questionId)
+            .orElseThrow(() -> new BusinessException("해당 질문을 찾을 수 없습니다."));
+        if (question.isReplied()) {
+            throw new BusinessException("이미 답변 완료된 질문입니다.");
+        }
+        Reply reply = new Reply();
+        reply.setAdmin(adminEmail);
+        reply.setReplyContent(replyContent);
+        question.setReply(reply);
+        // 답변 등록
+        try {
+            questionRepository.save(question);    // 변경된 질문 엔티티 저장
+        } catch (Exception e) {
+            throw new BusinessException(ExMessage.DB_ERROR_SAVE);
+        }
+    }
 
 }

@@ -23,12 +23,12 @@ public class QnaController {
     private final QnaService qnaService;
     private final ResponseService responseService;
     @PostMapping
-    @Operation(summary = "Qna 요청", description = "문의하고 싶은 내역을 Qna 게시판에 등록합니다.")
+    @Operation(summary = "1대1 문의 요청", description = "문의하고 싶은 내역을 Qna 게시판에 등록합니다.")
     public CommonResult requestQna(
-        @Parameter(name = "QnaReqDto", description = "요청 객체", required = true)
-        @ModelAttribute QuestionReqDto qnaReqDto) {
+        @Parameter(name = "QuestionReqDto", description = "요청 객체", required = true)
+        @ModelAttribute QuestionReqDto questionReqDto) {
         try {
-            qnaService.registQuestion(qnaReqDto);
+            qnaService.registQuestion(questionReqDto);
             return responseService.getSuccessResult();
         } catch (Exception e){
             e.printStackTrace();
@@ -36,4 +36,22 @@ public class QnaController {
         }
     }
 
+    @PostMapping("/answer")
+    @Operation(summary = "문의 답글", description = "문의에 대한 대답을 작성합니다.")
+    public CommonResult writeReply(
+        @Parameter(name = "questionId", description = "문의 번호", required = true)
+        @RequestParam("questionId") Long questionId,
+        @Parameter(name = "admin", description = "관리자 이메일", required = true)
+        @RequestParam("adminEmail") String adminEmail,
+        @Parameter(name = "replyContent", description = "답글 내용", required = true)
+        @RequestParam("replyContent") String replyContent
+    ) {
+        try {
+            qnaService.registReply(questionId, adminEmail, replyContent);
+            return responseService.getSuccessResult();
+        }  catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
+    }
 }

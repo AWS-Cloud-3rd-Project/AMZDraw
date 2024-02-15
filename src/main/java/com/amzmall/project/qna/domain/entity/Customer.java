@@ -40,10 +40,10 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
-    private List<Qna> qnas = new ArrayList<>();
+    private List<Question> questions = new ArrayList<>();
 
-    public void addQna(Qna qna) {
-        this.qnas.add(qna);
-        qna.setCustomer(this);
+    public void addQna(Question question) {
+        this.questions.add(question);
+        question.setCustomer(this);
     }
 }

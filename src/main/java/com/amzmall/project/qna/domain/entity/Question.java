@@ -1,6 +1,6 @@
 package com.amzmall.project.qna.domain.entity;
 
-import com.amzmall.project.qna.domain.dto.QnaResDto;
+import com.amzmall.project.qna.domain.dto.QuestionResDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,7 +9,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
@@ -17,14 +19,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.stereotype.Component;
 
 @Entity
-@Table(name = "qna")
+@Table(name = "question")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -32,36 +33,23 @@ import org.springframework.stereotype.Component;
 @Builder
 @EntityListeners(AuditingEntityListener.class)
 @Component
-public class Qna {
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "qnd_id")
-    private Long qnaId;
+    @Column(name = "question_id")
+    private Long questionId;
 
-    @Column(name = "qna_title")
-    private String qnaTitle;
+    @Column(name = "question_title")
+    private String questionTitle;
 
-    @Column(name = "qna_content")
-    private String qnaContent;
+    @Column(name = "question_content", length = 1000)
+    private String questionContent;
 
     @Column(name = "customer_email")
     private String customerEmail;
 
-    @Column(name = "qna_pwd")
-    private String qnaPassword;
-
-    @Column(name = "secret_qna_yn")
-    @ColumnDefault("N")
-    private String secretQnaYn;
-
-    @Column(name = "comment")
-    private String comment;
-
-    @Column(name = "qna_answered_yn")
-    private String qnaAnsweredYn;
-
-    @Column(name = "admin")
-    private String admin;
+    @Column(name = "is_replied")
+    private boolean isReplied;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -71,21 +59,27 @@ public class Qna {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @Setter
+    @OneToOne
+    @Builder.Default
+    @JoinColumn(name="reply_id")
+    private Reply reply = null;
+    public void setReply(Reply reply) {
+        this.reply = reply;
+        reply.setQuestion(this);
+    }
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Customer customer;
 
-    public QnaResDto toQnaResDto(){
-        return QnaResDto.builder()
-            .qnaId(qnaId)
-            .qndTitle(qnaTitle)
-            .qnaContent(qnaContent)
+    public QuestionResDto toQuestionDto(){
+        return QuestionResDto.builder()
+            .questionId(questionId)
+            .questionTitle(questionTitle)
+            .questionContent(questionContent)
             .customerEmail(customerEmail)
-            .qnaPassword(qnaPassword)
-            .secretQnaYn(secretQnaYn)
-            .comment(comment)
+            .isReplied(isReplied)
+            .replyResDto(reply == null ? null : reply.toReplyDto())
             .createdAt(createdAt)
-            .qnaAnsweredYn(qnaAnsweredYn)
             .build();
     }
 }
