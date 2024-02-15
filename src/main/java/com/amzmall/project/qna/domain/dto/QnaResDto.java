@@ -20,5 +20,6 @@ public class QnaResDto {
     private String qnaPassword;     // 비밀 문의 비밀번호
     private String secretQnaYn;     // 비밀 문의 여부
     private String comment;         // 응답글
+    private String qnaAnsweredYn;   // 문의 답변 여부
     private Timestamp createdAt;    // 생성 시기
 }

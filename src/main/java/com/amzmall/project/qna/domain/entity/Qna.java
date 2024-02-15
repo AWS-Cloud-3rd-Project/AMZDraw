@@ -57,6 +57,12 @@ public class Qna {
     @Column(name = "comment")
     private String comment;
 
+    @Column(name = "qna_answered_yn")
+    private String qnaAnsweredYn;
+
+    @Column(name = "admin")
+    private String admin;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
     private Timestamp createdAt;
@@ -79,6 +85,7 @@ public class Qna {
             .secretQnaYn(secretQnaYn)
             .comment(comment)
             .createdAt(createdAt)
+            .qnaAnsweredYn(qnaAnsweredYn)
             .build();
     }
 }
