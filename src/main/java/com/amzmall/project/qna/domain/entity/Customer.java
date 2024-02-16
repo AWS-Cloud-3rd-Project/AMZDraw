@@ -42,7 +42,7 @@ public class Customer {
     @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
     private List<Question> questions = new ArrayList<>();
 
-    public void addQna(Question question) {
+    public void addQuestion(Question question) {
         this.questions.add(question);
         question.setCustomer(this);
     }

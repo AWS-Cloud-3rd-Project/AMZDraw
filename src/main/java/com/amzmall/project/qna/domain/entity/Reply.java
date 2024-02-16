@@ -18,7 +18,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "reply")
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,12 +28,15 @@ public class Reply {
     @Column(name = "reply_id", nullable = false)
     private Long replyId;
 
+    @Setter
     @Column(length = 2000)
     private String replyContent;
 
-    @Column
-    private String admin;
+    @Setter
+    @Column(name = "admin_email")
+    private String adminEmail;
 
+    @Setter
     @OneToOne(mappedBy = "reply")
     private Question question;
 
@@ -42,7 +44,7 @@ public class Reply {
         return ReplyResDto.builder()
             .replyId(replyId)
             .replyContent(replyContent)
-            .admin(admin)
+            .adminEmail(adminEmail)
             .questionId(question.getQuestionId())
             .build();
     }
