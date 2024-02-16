@@ -82,6 +82,17 @@ public class QnaService {
                 }
             );
     }
+    
+    // 문의 전체 조회
+    @Transactional(readOnly = true)
+    public List<QuestionResDto> getAllQuestions(String customerEmail, PageRequest pageRequest) {
+        String targetEmail = customerRepository.findByEmail(customerEmail)
+            .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
+            .getEmail();
 
+        return questionRepository.findAllByCustomerEmail(customerEmail, pageRequest)
+            .stream().map(Question::toQuestionDto)
+            .collect(Collectors.toList());
+    }
 
 }

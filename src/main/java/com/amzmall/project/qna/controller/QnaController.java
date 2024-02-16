@@ -102,5 +102,26 @@ public class QnaController {
             );
         }
     }
+    
+    @GetMapping("/all")
+    @Operation(summary="모든 문의 내역 조회", description="고객의 모든 문의 내역을 조회합니다.")
+    public ListResult<QuestionResDto> getAllPayments(
+        @Parameter(name = "customerEmail", description = "고객 이메일", required = true)
+        @RequestParam("customerEmail") String customerEmail,
+        @Parameter(name = "page", description = "페이지 번호 (0부터)", required = true)
+        @RequestParam(name = "page",defaultValue = "0") int page,
+        @Parameter(name = "size", description = "페이지 사이즈", required = true)
+        @RequestParam(name = "size", defaultValue = "10") int size
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        try {
+            return responseService.getListResult(
+                qnaService.getAllQuestions(customerEmail, pageRequest)
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
+    }
 
 }
