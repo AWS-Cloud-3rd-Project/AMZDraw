@@ -14,6 +14,6 @@ import lombok.Setter;
 public class ReplyResDto {
     private Long replyId;
     private Long questionId;
-    private String admin;
+    private String adminEmail;
     private String replyContent;
 }
