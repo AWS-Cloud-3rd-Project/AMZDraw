@@ -32,7 +32,7 @@ public class QnaController {
     private final ResponseService responseService;
     @PostMapping
     @Operation(summary = "1대1 문의 요청", description = "문의하고 싶은 내역을 Qna 게시판에 등록합니다.")
-    public CommonResult requestQna(
+    public CommonResult requestQuestion(
         @Parameter(name = "QuestionReqDto", description = "요청 객체", required = true)
         @RequestBody QuestionReqDto questionReqDto)
 //      @ModelAttribute QuestionReqDto questionReqDto)
@@ -67,7 +67,7 @@ public class QnaController {
 
     @DeleteMapping
     @Operation(summary = "문의 삭제", description = "문의를 삭제합니다.")
-    public CommonResult removeReview(
+    public CommonResult removeQuestion(
         @Parameter(name = "questionId", description = "문의 번호", required = true)
         @RequestParam("questionId") Long questionId
     ) {
@@ -124,4 +124,23 @@ public class QnaController {
         }
     }
 
+    @PutMapping("/reply")
+    @Operation(summary = "답변 수정", description = "답변을 수정합니다.")
+    public CommonResult updateReply(
+        @Parameter(description = "답변 번호", required = true)
+        @RequestParam("replyId") Long replyId,
+        @Parameter(description = "답변 내용", required = true)
+        @RequestParam("replyContent") String replyContent
+    ) {
+        try {
+            qnaService.updateReply(replyId, replyContent);
+            return responseService.getSuccessResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return responseService.getFailResult(
+                -1,
+                e.getMessage()
+            );
+        }
+    }
 }

@@ -95,4 +95,16 @@ public class QnaService {
             .collect(Collectors.toList());
     }
 
+    // 답변 수정
+    @Transactional
+    public void updateReply(Long replyId, String replyContent) {
+        replyRepository.findByReplyId(replyId)
+            .ifPresentOrElse(
+                R -> R.setReplyContent(replyContent)
+                , () -> {
+                    throw new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND);
+                }
+            );
+    }
+
 }

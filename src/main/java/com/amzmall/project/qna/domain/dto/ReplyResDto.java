@@ -1,5 +1,6 @@
 package com.amzmall.project.qna.domain.dto;
 
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,4 +17,5 @@ public class ReplyResDto {
     private Long questionId;
     private String adminEmail;
     private String replyContent;
+    private Timestamp createdAt;
 }
