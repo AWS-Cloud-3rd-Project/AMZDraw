@@ -19,8 +19,13 @@ public enum ExMessage {
     PAYMENT_CANCEL_ERROR_NOT_MATCH_AMOUNT("취소 금액과 결제 금액이 다릅니다."),
     PAYMENT_CANCEL_ERROR_FAIL("알 수 없는 이유로 결제 취소에 실패했습니다."),
     NOT_YET_DEFINED_ERROR("아직 정의되지 않은 에러"),
-    RESPONSE_NULL("응답값이 비어있습니다.")
+    RESPONSE_NULL("응답값이 비어있습니다."),
+    QUESTION_ERROR_REQUEST_FORM("문의글 요청 형식이 잘못되었습니다."),
+    QUESTION_ERROR_NOT_FOUND("해당 질문을 찾을 수 없습니다."),
+    REPLY_ERROR_ALREADY_REPLIED("이미 답변 완료된 질문입니다.")
     ;
+
+
 
     private final String message;
 }

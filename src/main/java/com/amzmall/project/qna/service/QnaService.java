@@ -21,7 +21,7 @@ public class QnaService {
     @Transactional
     public void registQuestion(QuestionReqDto questionReqDto) {
         boolean verify = verifyReq(questionReqDto);
-        if (!verify) throw new BusinessException("문의글 요청 형식이 잘못되었습니다.");
+        if (!verify) throw new BusinessException(ExMessage.QUESTION_ERROR_REQUEST_FORM);
 
         Customer customer = customerRepository.findByEmail(questionReqDto.getCustomerEmail())
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND));
@@ -46,9 +46,9 @@ public class QnaService {
     public void registReply(Long questionId, String adminEmail, String replyContent) {
         // 질문 조회
         Question question = questionRepository.findById(questionId)
-            .orElseThrow(() -> new BusinessException("해당 질문을 찾을 수 없습니다."));
+            .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
         if (question.isReplied()) {
-            throw new BusinessException("이미 답변 완료된 질문입니다.");
+            throw new BusinessException(ExMessage.REPLY_ERROR_ALREADY_REPLIED);
         }
         Reply reply = new Reply();
         reply.setAdmin(adminEmail);
