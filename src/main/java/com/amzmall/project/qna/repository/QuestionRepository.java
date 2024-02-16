@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long>  {
 	Optional<Question> findByQuestionId(Long questionId);
-    List<Question> findAllByCustomerEmail(String email, Pageable pageable);
+    List<Question> findAllByCustomerEmail(String customerEmail, Pageable pageable);
 }

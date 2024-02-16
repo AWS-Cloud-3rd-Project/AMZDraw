@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 @Entity
 @Table(name = "question")
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -39,18 +38,23 @@ public class Question {
     @Column(name = "question_id")
     private Long questionId;
 
+    @Setter
     @Column(name = "question_title")
     private String questionTitle;
 
+    @Setter
     @Column(name = "question_content", length = 1000)
     private String questionContent;
 
+    @Setter
     @Column(name = "customer_email")
     private String customerEmail;
 
+    @Setter
     @Column(name = "is_replied")
     private boolean isReplied;
 
+    @Setter
     @Column(name = "available")
     private boolean available;
 
@@ -71,6 +75,7 @@ public class Question {
         reply.setQuestion(this);
     }
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Customer customer;
 
