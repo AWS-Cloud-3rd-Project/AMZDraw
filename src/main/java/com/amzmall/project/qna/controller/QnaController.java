@@ -85,14 +85,14 @@ public class QnaController {
 
     @PutMapping
     @Operation(summary = "문의 수정", description = "문의를 수정합니다.")
-    public CommonResult updateReview(
+    public CommonResult updateQuestion(
         @Parameter(description = "문의 번호", required = true)
         @RequestParam("questionId") Long questionId,
         @Parameter(description = "수정 내용", required = true) 
         @RequestParam("questionContent") String questionContent
     ) {
         try {
-            qnaService.updateReview(questionId, questionContent);
+            qnaService.updateQuestion(questionId, questionContent);
             return responseService.getSuccessResult();
         } catch (Exception e) {
             e.printStackTrace();

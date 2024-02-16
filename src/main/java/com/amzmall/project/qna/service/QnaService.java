@@ -73,7 +73,7 @@ public class QnaService {
     }
     // 문의 수정
     @Transactional
-    public void updateReview(Long questionId, String content) {
+    public void updateQuestion(Long questionId, String content) {
         questionRepository.findByQuestionId(questionId)
             .ifPresentOrElse(
                 R -> R.setQuestionContent(content)
