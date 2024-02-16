@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,7 @@ public class QnaController {
         @Parameter(name = "QuestionReqDto", description = "요청 객체", required = true)
         @ModelAttribute QuestionReqDto questionReqDto) {
         try {
-            qnaService.registQuestion(questionReqDto);
+            qnaService.postQuestion(questionReqDto);
             return responseService.getSuccessResult();
         } catch (Exception e){
             e.printStackTrace();
@@ -36,7 +37,7 @@ public class QnaController {
         }
     }
 
-    @PostMapping("/answer")
+    @PostMapping("/reply")
     @Operation(summary = "문의 답글", description = "문의에 대한 대답을 작성합니다.")
     public CommonResult writeReply(
         @Parameter(name = "questionId", description = "문의 번호", required = true)
@@ -47,11 +48,30 @@ public class QnaController {
         @RequestParam("replyContent") String replyContent
     ) {
         try {
-            qnaService.registReply(questionId, adminEmail, replyContent);
+            qnaService.postReply(questionId, adminEmail, replyContent);
             return responseService.getSuccessResult();
         }  catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(e.getMessage());
         }
     }
+
+    @DeleteMapping
+    @Operation(summary = "문의 삭제", description = "문의를 삭제합니다.")
+    public CommonResult removeReview(
+        @Parameter(name = "questionId", description = "문의 번호", required = true)
+        @RequestParam Long questionId
+    ) {
+        try {
+            qnaService.unAvailableQuestion(questionId);
+            return responseService.getSuccessResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return responseService.getFailResult(
+                -1,
+                e.getMessage()
+            );
+        }
+    }
+
 }

@@ -19,7 +19,7 @@ public class QnaService {
     private final CustomerRepository customerRepository;
 
     @Transactional
-    public void registQuestion(QuestionReqDto questionReqDto) {
+    public void postQuestion(QuestionReqDto questionReqDto) {
         boolean verify = verifyReq(questionReqDto);
         if (!verify) throw new BusinessException(ExMessage.QUESTION_ERROR_REQUEST_FORM);
 
@@ -43,7 +43,7 @@ public class QnaService {
     }
 
     @Transactional
-    public void registReply(Long questionId, String adminEmail, String replyContent) {
+    public void postReply(Long questionId, String adminEmail, String replyContent) {
         // 질문 조회
         Question question = questionRepository.findById(questionId)
             .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
@@ -60,6 +60,17 @@ public class QnaService {
         } catch (Exception e) {
             throw new BusinessException(ExMessage.DB_ERROR_SAVE);
         }
+    }
+
+    @Transactional
+    public void unAvailableQuestion(Long questionId) {
+        questionRepository.findByQuestionId(questionId)
+            .ifPresentOrElse(
+                R -> R.setAvailable(false)
+                , () -> {
+                    throw new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND);
+                }
+            );
     }
 
 }

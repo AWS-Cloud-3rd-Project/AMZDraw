@@ -18,6 +18,7 @@ public class QuestionResDto {
     private String questionContent;     // 문의 내용
     private String customerEmail;       // 문의자 이메일
     private Boolean isReplied;           // 문의 답변 여부
+    private Boolean available;           // 문의글 사용 여부
     private ReplyResDto replyResDto;
     private Timestamp createdAt;        // 생성 시기
 }

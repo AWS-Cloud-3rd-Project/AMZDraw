@@ -51,6 +51,9 @@ public class Question {
     @Column(name = "is_replied")
     private boolean isReplied;
 
+    @Column(name = "available")
+    private boolean available;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
     private Timestamp createdAt;
@@ -78,6 +81,7 @@ public class Question {
             .questionContent(questionContent)
             .customerEmail(customerEmail)
             .isReplied(isReplied)
+            .available(available)
             .replyResDto(reply == null ? null : reply.toReplyDto())
             .createdAt(createdAt)
             .build();
