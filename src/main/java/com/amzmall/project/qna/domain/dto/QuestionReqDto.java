@@ -32,7 +32,6 @@ public class QuestionReqDto {
             .questionTitle(questionTitle)
             .questionContent(questionContent)
             .customerEmail(customerEmail)
-            .isReplied(false)
             .available(true)
             .build();
     }

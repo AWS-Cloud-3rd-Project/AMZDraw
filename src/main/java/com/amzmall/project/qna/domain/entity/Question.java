@@ -51,10 +51,6 @@ public class Question {
     private String customerEmail;
 
     @Setter
-    @Column(name = "is_replied")
-    private boolean isReplied;
-
-    @Setter
     @Column(name = "available")
     private boolean available;
 
@@ -85,7 +81,6 @@ public class Question {
             .questionTitle(questionTitle)
             .questionContent(questionContent)
             .customerEmail(customerEmail)
-            .isReplied(isReplied)
             .available(available)
             .replyResDto(reply == null ? null : reply.toReplyDto())
             .createdAt(createdAt)

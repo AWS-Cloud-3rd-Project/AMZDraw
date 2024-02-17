@@ -3,6 +3,7 @@ package com.amzmall.project.qna.controller;
 import com.amzmall.project.exception.BusinessException;
 import com.amzmall.project.qna.domain.dto.QuestionReqDto;
 import com.amzmall.project.qna.domain.dto.QuestionResDto;
+import com.amzmall.project.qna.domain.dto.ReplyReqDto;
 import com.amzmall.project.qna.domain.dto.ReplyResDto;
 import com.amzmall.project.qna.service.QnaService;
 import com.amzmall.project.response.CommonResult;
@@ -108,17 +109,13 @@ public class QnaController {
     }
 
     @PostMapping("/reply")
-    @Operation(summary = "문의 답글", description = "문의에 대한 대답을 작성합니다.")
+    @Operation(summary = "답변 등록", description = "문의에 대한 답변을 등록합니다.")
     public CommonResult writeReply(
-        @Parameter(name = "questionId", description = "문의 번호", required = true)
-        @RequestParam("questionId") Long questionId,
-        @Parameter(name = "adminEmail", description = "관리자 이메일", required = true)
-        @RequestParam("adminEmail") String adminEmail,
-        @Parameter(name = "replyContent", description = "답글 내용", required = true)
-        @RequestParam("replyContent") String replyContent
+        @Parameter(name = "ReplyReqDto", description = "요청 객체", required = true)
+        @RequestBody ReplyReqDto replyReqDto
     ) {
         try {
-            qnaService.postReply(questionId, adminEmail, replyContent);
+            qnaService.postReply(replyReqDto);
             return responseService.getSuccessResult();
         }  catch (Exception e) {
             e.printStackTrace();
@@ -146,7 +143,7 @@ public class QnaController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/reply")
     @Operation(summary = "답변 삭제", description = "답변을 삭제합니다.")
     public CommonResult removeReply(
         @Parameter(name = " replyId", description = "답변 번호", required = true)
