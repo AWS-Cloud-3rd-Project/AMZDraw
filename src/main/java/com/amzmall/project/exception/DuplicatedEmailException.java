@@ -1,0 +1,7 @@
+package com.amzmall.project.exception;
+
+public class DuplicatedEmailException extends RuntimeException {
+    public DuplicatedEmailException(String message) {
+        super(message);
+    }
+}
