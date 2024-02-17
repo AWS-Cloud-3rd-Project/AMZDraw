@@ -145,4 +145,23 @@ public class QnaController {
             );
         }
     }
+
+    @DeleteMapping
+    @Operation(summary = "답변 삭제", description = "답변을 삭제합니다.")
+    public CommonResult removeReply(
+        @Parameter(name = " replyId", description = "답변 번호", required = true)
+        @RequestParam(" replyId") Long replyId
+    ) {
+        try {
+            qnaService.unAvailableReply(replyId);
+            return responseService.getSuccessResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return responseService.getFailResult(
+                -1,
+                e.getMessage()
+            );
+        }
+    }
+
 }

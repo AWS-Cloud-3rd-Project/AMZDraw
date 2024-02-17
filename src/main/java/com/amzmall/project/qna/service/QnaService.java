@@ -101,9 +101,25 @@ public class QnaService {
     // 답변 수정
     @Transactional
     public void updateReply(Long replyId, String replyContent) {
+        if (replyId == null) throw new BusinessException(ExMessage.REPLY_ERROR_FORM);
         replyRepository.findByReplyId(replyId)
             .ifPresentOrElse(
                 R -> R.setReplyContent(replyContent)
+                , () -> {
+                    throw new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND);
+                }
+            );
+    }
+
+    // 답변 비활성화
+    @Transactional
+    public void unAvailableReply(Long replyId) {
+        Question question = questionRepository.findByReplyId(replyId)
+            .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
+        question.setReplied(false);
+        replyRepository.findById(replyId)
+            .ifPresentOrElse(
+                R -> R.setAvailable(false)
                 , () -> {
                     throw new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND);
                 }

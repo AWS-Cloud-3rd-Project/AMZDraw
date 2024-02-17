@@ -23,7 +23,8 @@ public enum ExMessage {
     QUESTION_ERROR_REQUEST_FORM("문의글 요청 형식이 잘못되었습니다."),
     QUESTION_ERROR_NOT_FOUND("해당 질문을 찾을 수 없습니다."),
     REPLY_ERROR_ALREADY_REPLIED("이미 답변 완료된 질문입니다."),
-    REPLY_ERROR_NOT_FOUND("해당 답글을 찾을 수 없습니다.")
+    REPLY_ERROR_NOT_FOUND("해당 답글을 찾을 수 없습니다."),
+    REPLY_ERROR_FORM("답변 입력 형식이 잘못되었습니다.")
     ;
 
     private final String message;
