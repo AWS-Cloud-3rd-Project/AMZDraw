@@ -164,4 +164,17 @@ public class QnaController {
         }
     }
 
+    @GetMapping("/reply")
+    @Operation(summary = "답변 조회", description = "문의 번호로 답변을 조회합니다.")
+    public SingleResult<ReplyResDto> getReplyByQuestionId(
+        @Parameter(name = "questionId", description = "문의 번호", required = true)
+        @RequestParam("questionId") Long questionId
+    ) {
+        try {
+            return responseService.getSingleResult(qnaService.getReplyByQuestionId(questionId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
+    }
 }

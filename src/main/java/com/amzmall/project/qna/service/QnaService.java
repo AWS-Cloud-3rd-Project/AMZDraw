@@ -126,4 +126,14 @@ public class QnaService {
             );
     }
 
+    // 답변 조회
+    @Transactional
+    public ReplyResDto getReplyByQuestionId(Long questionId) {
+        Question question = questionRepository.findById(questionId)
+            .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
+
+        Reply reply = replyRepository.findByQuestionId(questionId)
+            .orElseThrow(() -> new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND));
+        return reply.toReplyDto();
+    }
 }
