@@ -42,6 +42,10 @@ public class Reply {
     @Column(name = "admin_email")
     private String adminEmail;
 
+    @Setter
+    @Column(name = "available")
+    private boolean available;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
     private Timestamp createdAt;
@@ -60,6 +64,8 @@ public class Reply {
             .replyContent(replyContent)
             .adminEmail(adminEmail)
             .questionId(question.getQuestionId())
+            .available(available)
+            .createdAt(createdAt)
             .build();
     }
 }

@@ -3,10 +3,12 @@ package com.amzmall.project.qna.controller;
 import com.amzmall.project.exception.BusinessException;
 import com.amzmall.project.qna.domain.dto.QuestionReqDto;
 import com.amzmall.project.qna.domain.dto.QuestionResDto;
+import com.amzmall.project.qna.domain.dto.ReplyResDto;
 import com.amzmall.project.qna.service.QnaService;
 import com.amzmall.project.response.CommonResult;
 import com.amzmall.project.response.ListResult;
 import com.amzmall.project.response.ResponseService;
+import com.amzmall.project.response.SingleResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,25 +43,6 @@ public class QnaController {
             qnaService.postQuestion(questionReqDto);
             return responseService.getSuccessResult();
         } catch (Exception e){
-            e.printStackTrace();
-            throw new BusinessException(e.getMessage());
-        }
-    }
-
-    @PostMapping("/reply")
-    @Operation(summary = "문의 답글", description = "문의에 대한 대답을 작성합니다.")
-    public CommonResult writeReply(
-        @Parameter(name = "questionId", description = "문의 번호", required = true)
-        @RequestParam("questionId") Long questionId,
-        @Parameter(name = "adminEmail", description = "관리자 이메일", required = true)
-        @RequestParam("adminEmail") String adminEmail,
-        @Parameter(name = "replyContent", description = "답글 내용", required = true)
-        @RequestParam("replyContent") String replyContent
-    ) {
-        try {
-            qnaService.postReply(questionId, adminEmail, replyContent);
-            return responseService.getSuccessResult();
-        }  catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(e.getMessage());
         }
@@ -119,6 +102,25 @@ public class QnaController {
                 qnaService.getAllQuestions(customerEmail, pageRequest)
             );
         } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
+    }
+
+    @PostMapping("/reply")
+    @Operation(summary = "문의 답글", description = "문의에 대한 대답을 작성합니다.")
+    public CommonResult writeReply(
+        @Parameter(name = "questionId", description = "문의 번호", required = true)
+        @RequestParam("questionId") Long questionId,
+        @Parameter(name = "adminEmail", description = "관리자 이메일", required = true)
+        @RequestParam("adminEmail") String adminEmail,
+        @Parameter(name = "replyContent", description = "답글 내용", required = true)
+        @RequestParam("replyContent") String replyContent
+    ) {
+        try {
+            qnaService.postReply(questionId, adminEmail, replyContent);
+            return responseService.getSuccessResult();
+        }  catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(e.getMessage());
         }
