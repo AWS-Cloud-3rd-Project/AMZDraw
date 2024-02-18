@@ -31,6 +31,8 @@ public class QnaService {
     // 문의 등록
     @Transactional
     public void postQuestion(QuestionReqDto questionReqDto) {
+        RequestValidationUtil.validateQuestionRequestForm(questionReqDto);
+
         Customer customer = customerRepository.findByEmail(questionReqDto.getCustomerEmail())
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND));
 
