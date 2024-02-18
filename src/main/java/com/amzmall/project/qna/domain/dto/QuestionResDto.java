@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionResDto {
-    private Long id;            // 문의 번호
+    private Long questionSq;            // 문의 번호
     private String title;       // 문의 제목
     private String content;     // 문의 내용
     private String customerEmail;       // 문의자 이메일

@@ -35,27 +35,27 @@ import org.springframework.stereotype.Component;
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "question_sq")
+    private Long questionSq;
 
     @Column(name = "title")
     private String title;
 
-    @Column(name = "content", length = 1000)
+    @Column(name = "content", length = 1000) // 대문자로 변경
     private String content;
 
-    @Column(name = "customer_email")
+    @Column(name = "customer_email") // 대문자로 변경
     private String customerEmail;
 
-    @Column(name = "available")
+    @Column(name = "available") // 대문자로 변경
     private boolean available;
 
     @CreatedDate
-    @Column(name = "created_at", updatable = false, nullable = false)
+    @Column(name = "created_at", updatable = false, nullable = false) // 대문자로 변경
     private Timestamp createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at")
+    @Column(name = "updated_at") // 대문자로 변경
     private Timestamp updatedAt;
 
     @Setter
@@ -68,7 +68,7 @@ public class Question {
 
     public QuestionResDto toQuestionDto(){
         return QuestionResDto.builder()
-            .id(id)
+            .questionSq(questionSq)
             .title(title)
             .content(content)
             .customerEmail(customerEmail)

@@ -32,8 +32,8 @@ public class Reply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "replyId", nullable = false)
-    private Long replyId;
+    @Column(name = "reply_sq")
+    private Long replySq;
 
     @Column(name = "content", length = 2000)
     private String content;
@@ -52,14 +52,9 @@ public class Reply {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id")
+    @JoinColumn(name = "question_sq")
     private Question question;
-
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
 
     public void update(ReplyReqDto replyReqDto) {
         this.adminEmail = replyReqDto.getAdminEmail();
@@ -82,13 +77,17 @@ public class Reply {
 
     public ReplyResDto toReplyDto() {
         return ReplyResDto.builder()
-            .replyId(replyId)
+            .replySq(replySq)
             .content(content)
             .adminEmail(adminEmail)
-            .questionId(question.getId())
+            .questionId(question.getQuestionSq())
             .available(available)
             .createdAt(createdAt)
             .build();
+    }
+
+    public void updateContent(String modifiedContent) {
+        this.content = modifiedContent;
     }
 }
 

@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReplyResDto {
-    private Long replyId;
+    private Long replySq;
     private Long questionId;
     private String adminEmail;
     private String content;

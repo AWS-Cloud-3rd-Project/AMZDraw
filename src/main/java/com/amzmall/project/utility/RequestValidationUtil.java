@@ -15,7 +15,7 @@ public class RequestValidationUtil {
 
     public static void validateReplyRequestForm(ReplyReqDto replyReqDto) {
         // 요청 폼이 비어있는지 확인
-        if (replyReqDto == null || replyReqDto.getQuestionId() == null || replyReqDto.getAdminEmail() == null || replyReqDto.getContent() == null) {
+        if (replyReqDto == null || replyReqDto.getQuestionSq() == null || replyReqDto.getAdminEmail() == null || replyReqDto.getContent() == null) {
             throw new BusinessException(ExMessage.REPLY_ERROR_REQUEST_FORM);
         }
     }
