@@ -1,13 +1,11 @@
-package com.amzmall.project.service;
+package com.amzmall.project.puduct.service;
 
-import com.amzmall.project.model.Category;
-import com.amzmall.project.model.CategoryResult;
-import com.amzmall.project.repository.CategoryRepository;
+import com.amzmall.project.puduct.domain.entity.Category;
+import com.amzmall.project.puduct.domain.dto.CategoryResult;
+import com.amzmall.project.puduct.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,26 +31,33 @@ public class CategoryService {
 //        List<CategoryResult> results = categoryRepository.findAll().stream().map(CategoryResult::of).collect(Collectors.toList());
 //        return results;
 //    }
-public List<CategoryResult> getTopLevelCategories(int depth) {
+public List<CategoryResult> getTopLevelCategories() {
     List<Category> topLevelCategories = categoryRepository.findAllByParentIsNull();
     return topLevelCategories.stream()
             .map(CategoryResult::of)
             .collect(Collectors.toList());
 }
+public List<CategoryResult>getlowLevelCategories(Long parentId){
 
-    public List<Category> getFirstChildCategories() {
-        // 1차 카테고리 조회
-        List<Category> firstCategories = categoryRepository.findAllByParentIsNull();
+    List<Category> lowLevelCategories = categoryRepository.findByParentIdCustomQuery(parentId);
+    return lowLevelCategories.stream()
+            .map(CategoryResult::of)
+            .collect(Collectors.toList());
+}
 
-        // 첫 번째 1차 카테고리의 자식 카테고리 조회
-        if (!firstCategories.isEmpty()) {
-            Category firstCategory = firstCategories.get(0);
-            List<Category> children = categoryRepository.findByParent(firstCategory);
-            return children;
-        }
-
-        return Collections.emptyList();
-    }
+//    public List<Category> getFirstChildCategories() {
+//        // 1차 카테고리 조회
+//        List<Category> firstCategories = categoryRepository.findAllByParentIsNull();
+//
+//        // 첫 번째 1차 카테고리의 자식 카테고리 조회
+//        if (!firstCategories.isEmpty()) {
+//            Category firstCategory = firstCategories.get(0);
+//            List<Category> children = categoryRepository.findByParent(firstCategory);
+//            return children;
+//        }
+//
+//        return Collections.emptyList();
+//    }
 
 //    public List<CategoryResult> getDepthOneCategories(int depth) {
 //        List<Category> depthOneCategories = categoryRepository.findAllByDepth(depth);

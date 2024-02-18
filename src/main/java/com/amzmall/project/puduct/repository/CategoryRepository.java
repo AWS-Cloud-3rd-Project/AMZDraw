@@ -1,19 +1,21 @@
-package com.amzmall.project.repository;
+package com.amzmall.project.puduct.repository;
 
-import com.amzmall.project.model.Category;
-import com.amzmall.project.model.CategoryResult;
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
+import com.amzmall.project.puduct.domain.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findAllByParentIsNull();
 
-    List<Category> findByParent(Category parent);
+    @Query("SELECT c FROM Category c WHERE c.parent.id = :parentId")
+    List<Category> findByParentIdCustomQuery(Long parentId);
+
+//    List<Category> findByParent(Category parent);
+
+
 //    List<Category> findAllByDepth(Integer depth);
 //    private final EntityManager em;
 

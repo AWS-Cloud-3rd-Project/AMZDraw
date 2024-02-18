@@ -1,12 +1,12 @@
-package com.amzmall.project.model;
+package com.amzmall.project.puduct.domain.dto;
 
+import com.amzmall.project.puduct.domain.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -29,10 +29,10 @@ public class CategoryResult {
 
         if(category.getDepth()==1) {
             categoryResult.setChildren(null);
-        }else {
-
+        }else if(category.getDepth()==2) {
+            categoryResult.setChildren(null);
             //문제 발생?
-            categoryResult.setChildren(category.getChildren().stream().map(CategoryResult::of).collect(Collectors.toList()));
+//            categoryResult.setChildren(category.getChildren().stream().map(CategoryResult::of).collect(Collectors.toList()));
 
         }
         return categoryResult;
