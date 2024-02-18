@@ -35,22 +35,18 @@ import org.springframework.stereotype.Component;
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "question_id")
-    private Long questionId;
+    @Column(name = "id")
+    private Long id;
 
-    @Setter
-    @Column(name = "question_title")
-    private String questionTitle;
+    @Column(name = "title")
+    private String title;
 
-    @Setter
-    @Column(name = "question_content", length = 1000)
-    private String questionContent;
+    @Column(name = "content", length = 1000)
+    private String content;
 
-    @Setter
     @Column(name = "customer_email")
     private String customerEmail;
 
-    @Setter
     @Column(name = "available")
     private boolean available;
 
@@ -62,14 +58,9 @@ public class Question {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @OneToOne
-    @Builder.Default
-    @JoinColumn(name="reply_id")
-    private Reply reply = null;
-    public void setReply(Reply reply) {
-        this.reply = reply;
-        reply.setQuestion(this);
-    }
+    @Setter
+    @OneToOne(mappedBy = "question", cascade = CascadeType.ALL)
+    private Reply reply;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -77,13 +68,21 @@ public class Question {
 
     public QuestionResDto toQuestionDto(){
         return QuestionResDto.builder()
-            .questionId(questionId)
-            .questionTitle(questionTitle)
-            .questionContent(questionContent)
+            .id(id)
+            .title(title)
+            .content(content)
             .customerEmail(customerEmail)
             .available(available)
             .replyResDto(reply == null ? null : reply.toReplyDto())
             .createdAt(createdAt)
             .build();
+    }
+
+    public void deactivate() {
+        this.available = false;
+    }
+
+    public void update(String updatedContent) {
+        this.content = updatedContent;
     }
 }

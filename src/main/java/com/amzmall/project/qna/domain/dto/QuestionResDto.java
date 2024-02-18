@@ -13,9 +13,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionResDto {
-    private Long questionId;            // 문의 번호
-    private String questionTitle;       // 문의 제목
-    private String questionContent;     // 문의 내용
+    private Long id;            // 문의 번호
+    private String title;       // 문의 제목
+    private String content;     // 문의 내용
     private String customerEmail;       // 문의자 이메일
     private Boolean isReplied;           // 문의 답변 여부
     private Boolean available;           // 문의글 사용 여부

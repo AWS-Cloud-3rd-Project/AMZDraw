@@ -18,19 +18,19 @@ import lombok.Setter;
 public class QuestionReqDto {
     @NotNull
     @Schema(description = "문의 제목")
-    private String questionTitle;
+    private String title;
     @NotNull
     @Size(max = 1000, message = "문의 내용은 1000자를 초과할 수 없습니다.")
     @Schema(description = "문의 내용(1000자 까지)")
-    private String questionContent;
+    private String content;
     @NotNull
     @Schema(description = "고객 이메일")
     private String customerEmail;
 
     public Question toEntity(String customerEmail) {
         return Question.builder()
-            .questionTitle(questionTitle)
-            .questionContent(questionContent)
+            .title(title)
+            .content(content)
             .customerEmail(customerEmail)
             .available(true)
             .build();

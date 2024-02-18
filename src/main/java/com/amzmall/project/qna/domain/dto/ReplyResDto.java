@@ -16,7 +16,7 @@ public class ReplyResDto {
     private Long replyId;
     private Long questionId;
     private String adminEmail;
-    private String replyContent;
+    private String content;
     private boolean available;
     private Timestamp createdAt;
 }

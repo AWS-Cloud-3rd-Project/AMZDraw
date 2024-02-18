@@ -12,7 +12,9 @@ import com.amzmall.project.qna.domain.entity.Reply;
 import com.amzmall.project.qna.repository.CustomerRepository;
 import com.amzmall.project.qna.repository.QuestionRepository;
 import com.amzmall.project.qna.repository.ReplyRepository;
+import com.amzmall.project.utility.RequestValidationUtil;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -43,30 +45,33 @@ public class QnaService {
     // 문의 비활성화
     @Transactional
     public void unAvailableQuestion(Long questionId) {
-        questionRepository.findByQuestionId(questionId)
-            .ifPresentOrElse(
-                R -> R.setAvailable(false)
-                , () -> {
-                    throw new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND);
-                }
-            );
+        // 문의 조회
+        Question question = questionRepository.findById(questionId)
+            .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
+
+        // 이미 비활성화된 문의인지 확인
+        if (!question.isAvailable()) {
+            throw new BusinessException(ExMessage.QUESTION_ERROR_NOT_AVAILABLE);
+        }
+
+        // 문의 비활성화
+        question.deactivate();
     }
+    
     // 문의 수정
     @Transactional
-    public void updateQuestion(Long questionId, String content) {
-        questionRepository.findByQuestionId(questionId)
-            .ifPresentOrElse(
-                Q -> {
-                    if (!Q.isAvailable()) {
-                        throw new BusinessException("삭제된 문의입니다.");
-                    }
-                    Q.setQuestionContent(content);
-                }
-                ,
-                () -> {
-                    throw new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND);
-                }
-            );
+    public void updateQuestion(Long questionId, String updatedContent) {
+        // 문의 조회
+        Question question = questionRepository.findById(questionId)
+            .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
+
+        // 이미 답변이 등록되어 있고, 답변이 available이 true인 경우 예외 처리
+        if (question.getReply() != null && question.getReply().isAvailable()) {
+            throw new BusinessException(ExMessage.REPLY_ERROR_ALREADY_REPLIED);
+        }
+
+        // 문의 수정
+        question.update(updatedContent);
     }
     
     // 문의 전체 조회
@@ -74,24 +79,91 @@ public class QnaService {
     public List<QuestionResDto> getAllQuestions(String customerEmail, PageRequest pageRequest) {
         Customer customer = customerRepository.findByEmail(customerEmail)
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND));
+
         return customer.getQuestions()
             .stream().filter(Question::isAvailable)
             .map(Question::toQuestionDto)
             .collect(Collectors.toList());
     }
 
-    // 답변 등록
     @Transactional
     public void postReply(ReplyReqDto replyReqDto) {
+        RequestValidationUtil.validateReplyRequestForm(replyReqDto);
         // 질문 조회
         Question question = questionRepository.findById(replyReqDto.getQuestionId())
             .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
-        if (replyRepository.findByQuestionQuestionId(replyReqDto.getQuestionId()).isPresent()) {
-            throw new BusinessException(ExMessage.REPLY_ERROR_ALREADY_REPLIED);
+
+        // 질문의 available 확인
+        if (!question.isAvailable()) {
+            throw new BusinessException(ExMessage.QUESTION_ERROR_NOT_AVAILABLE);
         }
-        // 답변 등록
-        Reply reply = replyReqDto.toEntity();
-        question.setReply(reply);
+
+        // 이미 답변이 있는지 확인
+        Optional<Reply> existingReplyOptional = replyRepository.findByQuestionId(replyReqDto.getQuestionId());
+        if (existingReplyOptional.isPresent()) {
+            Reply existingReply = existingReplyOptional.get();
+            if (!existingReply.isAvailable()) {
+                // 기존 답변이 존재하고 available이 false인 경우 기존 답변을 업데이트하여 새로운 답변으로 대체
+                existingReply.update(replyReqDto);
+            } else {
+                // 기존 답변이 존재하고 available이 true인 경우 이미 답변이 등록되어 있음을 알림
+                throw new BusinessException(ExMessage.REPLY_ERROR_ALREADY_REPLIED);
+            }
+        } else {
+            // 기존 답변이 없을 경우 새로운 답변을 등록
+            Reply newReply = Reply.createNew(replyReqDto, question);
+            question.setReply(newReply);
+            try {
+                replyRepository.save(newReply);
+            } catch (Exception e) {
+                throw new BusinessException(ExMessage.DB_ERROR_SAVE);
+            }
+        }
+    }
+
+    @Transactional
+    public void updateReply(Long questionId, ReplyReqDto replyReqDto) {
+        // 질문 조회
+        Question question = questionRepository.findById(questionId)
+            .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
+
+        // 질문의 available 확인
+        if (!question.isAvailable()) {
+            throw new BusinessException(ExMessage.QUESTION_ERROR_NOT_AVAILABLE);
+        }
+
+        // 답변 조회
+        Reply reply = replyRepository.findByQuestionId(questionId)
+            .orElseThrow(() -> new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND));
+
+        // 기존 답변이 존재하고 available이 true인 경우에만 수정 가능
+        if (reply.isAvailable()) {
+            reply.update(replyReqDto);          // 엔티티 객체에 수정 내용을 반영
+            try {
+                replyRepository.save(reply);    // 수정된 엔티티 객체를 데이터베이스에 저장
+            } catch (Exception e) {
+                throw new BusinessException(ExMessage.DB_ERROR_SAVE);
+            }
+        } else {                                                                            // 이미 해당 질문에 대한 답변이 존재하지 않는 경우
+            throw new BusinessException(ExMessage.REPLY_ERROR_NOT_AVAILABLE_FOR_UPDATE);    // 해당 질문에 대한 답변이 존재하지만 available 속성이 false로 설정되어 수정할 수 없는 경우
+        }
+    }
+
+    // 답변 비활성화
+    @Transactional
+    public void unAvailableReply(Long replyId) {
+        // 답변 조회
+        Reply reply = replyRepository.findById(replyId)
+            .orElseThrow(() -> new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND));
+
+        // 이미 비활성화된 답변인지 확인
+        if (!reply.isAvailable()) {
+            throw new BusinessException(ExMessage.REPLY_ERROR_ALREADY_DEACTIVATED);
+        }
+
+        // 답변 비활성화
+        reply.deactivate();
+
         try {
             replyRepository.save(reply);
         } catch (Exception e) {
@@ -99,38 +171,10 @@ public class QnaService {
         }
     }
 
-    // 답변 수정
-    @Transactional
-    public void updateReply(Long replyId, String replyContent) {
-        if (replyId == null) {
-            throw new BusinessException(ExMessage.REPLY_ERROR_FORM);
-        }
-
-        replyRepository.findByReplyId(replyId)
-            .ifPresentOrElse(
-                R -> R.setReplyContent(replyContent),
-                () -> {
-                    throw new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND);
-                }
-            );
-    }
-
-    // 답변 비활성화
-    @Transactional
-    public void unAvailableReply(Long replyId) {
-        replyRepository.findById(replyId)
-            .ifPresentOrElse(
-                R -> R.setAvailable(false)
-                , () -> {
-                    throw new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND);
-                }
-            );
-    }
-
     // 답변 조회
     @Transactional
     public ReplyResDto getReplyByQuestionId(Long questionId) {
-        Reply reply = replyRepository.findByQuestionQuestionId(questionId)
+        Reply reply = replyRepository.findByQuestionId(questionId)
             .orElseThrow(() -> new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND));
 
         return reply.toReplyDto();

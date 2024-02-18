@@ -1,9 +1,11 @@
 package com.amzmall.project.qna.domain.entity;
 
+import com.amzmall.project.qna.domain.dto.ReplyReqDto;
 import com.amzmall.project.qna.domain.dto.ReplyResDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -31,18 +32,15 @@ public class Reply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reply_id", nullable = false)
+    @Column(name = "replyId", nullable = false)
     private Long replyId;
 
-    @Setter
-    @Column(length = 2000)
-    private String replyContent;
+    @Column(name = "content", length = 2000)
+    private String content;
 
-    @Setter
     @Column(name = "admin_email")
     private String adminEmail;
 
-    @Setter
     @Column(name = "available")
     private boolean available;
 
@@ -54,16 +52,40 @@ public class Reply {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @Setter
-    @OneToOne(mappedBy = "reply")
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
     private Question question;
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public void update(ReplyReqDto replyReqDto) {
+        this.adminEmail = replyReqDto.getAdminEmail();
+        this.content = replyReqDto.getContent();
+        this.available = true; // 새로운 답변으로 업데이트
+    }
+
+    public static Reply createNew(ReplyReqDto replyReqDto, Question question) {
+        Reply reply = new Reply();
+        reply.question = question;
+        reply.adminEmail = replyReqDto.getAdminEmail();
+        reply.content = replyReqDto.getContent();
+        reply.available = true;
+        return reply;
+    }
+
+    public void deactivate() {
+        this.available = false;
+    }
 
     public ReplyResDto toReplyDto() {
         return ReplyResDto.builder()
             .replyId(replyId)
-            .replyContent(replyContent)
+            .content(content)
             .adminEmail(adminEmail)
-            .questionId(question.getQuestionId())
+            .questionId(question.getId())
             .available(available)
             .createdAt(createdAt)
             .build();

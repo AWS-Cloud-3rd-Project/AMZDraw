@@ -52,11 +52,11 @@ public class QnaController {
     @DeleteMapping
     @Operation(summary = "문의 삭제", description = "문의를 삭제합니다.")
     public CommonResult removeQuestion(
-        @Parameter(name = "questionId", description = "문의 번호", required = true)
-        @RequestParam("questionId") Long questionId
+        @Parameter(name = "id", description = "문의 번호", required = true)
+        @RequestParam("id") Long id
     ) {
         try {
-            qnaService.unAvailableQuestion(questionId);
+            qnaService.unAvailableQuestion(id);
             return responseService.getSuccessResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,12 +71,12 @@ public class QnaController {
     @Operation(summary = "문의 수정", description = "문의를 수정합니다.")
     public CommonResult updateQuestion(
         @Parameter(description = "문의 번호", required = true)
-        @RequestParam("questionId") Long questionId,
+        @RequestParam("id") Long id,
         @Parameter(description = "수정 내용", required = true) 
-        @RequestParam("questionContent") String questionContent
+        @RequestParam("content") String content
     ) {
         try {
-            qnaService.updateQuestion(questionId, questionContent);
+            qnaService.updateQuestion(id, content);
             return responseService.getSuccessResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,11 +128,11 @@ public class QnaController {
     public CommonResult updateReply(
         @Parameter(description = "답변 번호", required = true)
         @RequestParam("replyId") Long replyId,
-        @Parameter(description = "답변 내용", required = true)
-        @RequestParam("replyContent") String replyContent
+        @Parameter(name = "ReplyReqDto", description = "요청 객체", required = true)
+        @RequestBody ReplyReqDto replyReqDto
     ) {
         try {
-            qnaService.updateReply(replyId, replyContent);
+            qnaService.updateReply(replyId, replyReqDto);
             return responseService.getSuccessResult();
         } catch (Exception e) {
             e.printStackTrace();
