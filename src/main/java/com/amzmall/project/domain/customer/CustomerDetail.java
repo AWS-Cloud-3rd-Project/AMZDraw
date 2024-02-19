@@ -20,9 +20,9 @@ public class CustomerDetail implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        // 퍼미션 목록
-        GrantedAuthority permissionAuthority = new SimpleGrantedAuthority(this.customer.getPermission().name());
-        authorities.add(permissionAuthority);
+
+        //  GrantedAuthority permissionAuthority = new SimpleGrantedAuthority(this.customer.getPermission().name());
+        // authorities.add(permissionAuthority);
 
         // 역할 목록
         GrantedAuthority roleAuthority = new SimpleGrantedAuthority("ROLE_" + this.customer.getRole().name());
@@ -43,21 +43,22 @@ public class CustomerDetail implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.customer.isActivated();
+        return false;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.customer.isActivated();
+        return false;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.customer.isActivated();
+        return false;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.customer.isActivated();
+        return false;
     }
 }
+

@@ -1,6 +1,6 @@
 package com.amzmall.project.controller.checkout;
 
-import ch.qos.logback.core.model.Model;
+import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.amzmall.project.controller.dto.customer.CustomerDTO;
@@ -30,27 +30,27 @@ public class CheckoutController {
     private final CartService cartService;
    // private final ProductService productService;
 
-    @GetMapping(value = "/checkout/direct-checkout")
-    public String directCheckout(@AuthenticationPrincipal CustomerDetail customerDetail, @RequestParam("productId") Long productId, Model model) {
-        // Direct Purchase
-        log.info(">>> Handle payment for customer, {}", customerDetail);
-        if (Objects.isNull(customerDetail)) {
-            throw new NotFoundCustomerException("고객 정보를 찾을 수 없습니다.");
-        }
-        Customer customer = customerDetail.getCustomer();
-
-        """Optional<Product> optionalProduct = this.productService.findById(productId);
-        if (optionalProduct.isEmpty()) {
-            throw new NotFoundProductException("해당 상품 정보가 없습니다.");
-        }
-        Product product = optionalProduct.get();
-
-        model.addAttribute("product", ProductDTO.of(product));
-        model.addAttribute("customer", CustomerDTO.of(customer));
-        model.addAttribute("totalAmount", product.getPrice());
-
-        return "/checkout/direct-checkout";
-    }  """
+//    @GetMapping(value = "/checkout/direct-checkout")
+//    public String directCheckout(@AuthenticationPrincipal CustomerDetail customerDetail, @RequestParam("productId") Long productId, Model model) {
+//        // Direct Purchase
+//        log.info(">>> Handle payment for customer, {}", customerDetail);
+//        if (Objects.isNull(customerDetail)) {
+//            throw new NotFoundCustomerException("고객 정보를 찾을 수 없습니다.");
+//        }
+//        Customer customer = customerDetail.getCustomer();
+//
+//        Optional<Product> optionalProduct = this.productService.findById(productId);
+//        if (optionalProduct.isEmpty()) {
+//            throw new NotFoundProductException("해당 상품 정보가 없습니다.");
+//        }
+//        Product product = optionalProduct.get();
+//
+//        model.addAttribute("product", ProductDTO.of(product));
+//        model.addAttribute("customer", CustomerDTO.of(customer));
+//        model.addAttribute("totalAmount", product.getPrice());
+//
+//        return "/checkout/direct-checkout";
+//    }
 
     @GetMapping(value = "/checkout/order-checkout")
     public String orderCheckout(@AuthenticationPrincipal CustomerDetail customerDetail, @RequestParam("cartId") Long cartId, Model model) {

@@ -1,6 +1,6 @@
 package com.amzmall.project.controller.cart;
 
-import ch.qos.logback.core.model.Model;
+import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.amzmall.project.domain.cart.Cart;
