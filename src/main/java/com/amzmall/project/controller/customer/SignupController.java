@@ -32,7 +32,7 @@ public class SignupController {
 
         customerService.validateDuplicatedCustomer(customerRegisterDTO.getEmail());
 
-        Customer generalCustomer = Customer.createGeneralCustomer(customerRegisterDTO, passwordEncoder);
+        Customer generalCustomer = Customer.createCustomer(customerRegisterDTO, passwordEncoder);
         customerService.save(generalCustomer);
 
         redirectAttributes.addAttribute("customer", customerRegisterDTO.getEmail());
