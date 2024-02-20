@@ -28,7 +28,8 @@ public enum ExMessage {
     REPLY_ERROR_FORM("답변 입력 형식이 잘못되었습니다."),
     REPLY_ERROR_NOT_AVAILABLE_FOR_UPDATE("답변이 수정할 수 없는 상태입니다."),
     REPLY_ERROR_ALREADY_DEACTIVATED("비활성화 된 답변입니다. 새로 답변을 등록해주세요."),
-    REPLY_ERROR_REQUEST_FORM("답글 요청 형식이 잘못되었습니다.")
+    REPLY_ERROR_REQUEST_FORM("답글 요청 형식이 잘못되었습니다."),
+    RESPONSE_NULL("응답값이 비어있습니다.")
     ;
 
     private final String message;
