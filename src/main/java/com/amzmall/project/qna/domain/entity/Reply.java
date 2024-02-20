@@ -35,13 +35,13 @@ public class Reply {
     @Column(name = "reply_sq")
     private Long replySq;
 
-    @Column(name = "content", length = 2000)
+    @Column(name = "content", length = 2000, nullable = false)
     private String content;
 
-    @Column(name = "admin_email")
+    @Column(name = "admin_email", nullable = false)
     private String adminEmail;
 
-    @Column(name = "available")
+    @Column(name = "available", nullable = false)
     private boolean available;
 
     @CreatedDate

@@ -38,19 +38,19 @@ public class Question {
     @Column(name = "question_sq")
     private Long questionSq;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "content", length = 1000)
     private String content;
 
-    @Column(name = "customer_email")
+    @Column(name = "customer_email", nullable = false)
     private String customerEmail;
 
-    @Column(name = "available")
+    @Column(name = "available", nullable = false)
     private boolean available;
 
-    @Column(name = "is_replied")
+    @Column(name = "is_replied", nullable = false)
     private boolean isReplied;
 
     @CreatedDate
@@ -95,4 +95,5 @@ public class Question {
     public void updateIsReplied(boolean isAnswered) {
         this.isReplied = isAnswered;
     }
+
 }
