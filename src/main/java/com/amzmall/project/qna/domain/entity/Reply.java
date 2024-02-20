@@ -62,7 +62,7 @@ public class Reply {
         this.available = true; // 새로운 답변으로 업데이트
     }
 
-    public static Reply createNew(ReplyReqDto replyReqDto, Question question) {
+    public static Reply createNewReply(ReplyReqDto replyReqDto, Question question) {
         Reply reply = new Reply();
         reply.question = question;
         reply.adminEmail = replyReqDto.getAdminEmail();

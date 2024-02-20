@@ -41,7 +41,6 @@ public class QnaService {
         } catch (Exception e) {
             throw new BusinessException(ExMessage.DB_ERROR_SAVE);
         }
-
     }
 
     // 문의 비활성화
@@ -66,12 +65,10 @@ public class QnaService {
         // 문의 조회
         Question question = questionRepository.findByQuestionSq(questionSq)
             .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
-
         // 이미 답변이 등록되어 있고, 답변이 available이 true인 경우 예외 처리
-        if (question.getReply() != null && question.getReply().isAvailable()) {
+        if (question.getReply() != null && question.isReplied()) {
             throw new BusinessException(ExMessage.REPLY_ERROR_ALREADY_REPLIED);
         }
-
         // 문의 수정
         question.update(updatedContent);
     }
@@ -94,12 +91,10 @@ public class QnaService {
         // 질문 조회
         Question question = questionRepository.findByQuestionSq(replyReqDto.getQuestionSq())
             .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
-
         // 질문의 available 확인
         if (!question.isAvailable()) {
             throw new BusinessException(ExMessage.QUESTION_ERROR_NOT_AVAILABLE);
         }
-
         // 이미 답변이 있는지 확인
         Optional<Reply> existingReplyOptional = replyRepository.findByQuestionQuestionSq(replyReqDto.getQuestionSq());
         if (existingReplyOptional.isPresent()) {
@@ -113,8 +108,9 @@ public class QnaService {
             }
         } else {
             // 기존 답변이 없을 경우 새로운 답변을 등록
-            Reply newReply = Reply.createNew(replyReqDto, question);
-            question.setReply(newReply);
+            Reply newReply = Reply.createNewReply(replyReqDto, question);
+            question.updateReply(newReply);
+            question.updateIsReplied(true);
             try {
                 replyRepository.save(newReply);
             } catch (Exception e) {

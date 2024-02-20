@@ -41,26 +41,31 @@ public class Question {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "content", length = 1000) // 대문자로 변경
+    @Column(name = "content", length = 1000)
     private String content;
 
-    @Column(name = "customer_email") // 대문자로 변경
+    @Column(name = "customer_email")
     private String customerEmail;
 
-    @Column(name = "available") // 대문자로 변경
+    @Column(name = "available")
     private boolean available;
+
+    @Column(name = "is_replied")
+    private boolean isReplied;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false) // 대문자로 변경
     private Timestamp createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at") // 대문자로 변경
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @Setter
-    @OneToOne(mappedBy = "question", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Reply reply;
+    public void updateReply(Reply reply){
+        this.reply = reply;
+    }
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -74,6 +79,7 @@ public class Question {
             .customerEmail(customerEmail)
             .available(available)
             .replyResDto(reply == null ? null : reply.toReplyDto())
+            .isReplied(false)
             .createdAt(createdAt)
             .build();
     }
@@ -84,5 +90,9 @@ public class Question {
 
     public void update(String updatedContent) {
         this.content = updatedContent;
+    }
+
+    public void updateIsReplied(boolean isAnswered) {
+        this.isReplied = isAnswered;
     }
 }
