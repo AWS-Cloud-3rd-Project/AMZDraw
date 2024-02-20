@@ -125,6 +125,11 @@ public class QnaService {
         Reply reply = replyRepository.findById(replySq)
             .orElseThrow(() -> new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND));
 
+        // 질문의 available이 false이면 수정할 수 없음
+        if (!reply.getQuestion().isAvailable()) {
+            throw new BusinessException(ExMessage.QUESTION_ERROR_NOT_AVAILABLE);
+        }
+
         // 기존 답변이 존재하고 available이 true인 경우에만 수정 가능
         if (reply.isAvailable()) {
             // 엔티티 객체에 수정 내용을 반영
