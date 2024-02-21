@@ -1,4 +1,4 @@
-package com.amzmall.project.payment.domain.dto;
+package com.amzmall.project.customer.domain.dto;
 
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;

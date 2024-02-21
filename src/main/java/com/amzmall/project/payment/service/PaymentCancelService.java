@@ -9,7 +9,7 @@ import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.payment.domain.entity.Payment;
 import com.amzmall.project.exception.BusinessException;
 import com.amzmall.project.payment.repository.CancelPaymentRepository;
-import com.amzmall.project.payment.repository.CustomerRepository;
+import com.amzmall.project.customer.repository.CustomerRepository;
 import com.amzmall.project.payment.repository.PaymentRepository;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;

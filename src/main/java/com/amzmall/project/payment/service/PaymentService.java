@@ -1,6 +1,7 @@
 package com.amzmall.project.payment.service;
 
 import com.amzmall.project.advice.ExMessage;
+import com.amzmall.project.customer.service.CustomerService;
 import com.amzmall.project.payment.domain.dto.PaymentDto;
 import com.amzmall.project.payment.domain.dto.PaymentFailDto;
 import com.amzmall.project.payment.domain.dto.PaymentReqDto;
@@ -12,7 +13,7 @@ import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.payment.domain.entity.Payment;
 import com.amzmall.project.payment.config.TossPaymentConfig;
 import com.amzmall.project.exception.BusinessException;
-import com.amzmall.project.payment.repository.CustomerRepository;
+import com.amzmall.project.customer.repository.CustomerRepository;
 import com.amzmall.project.payment.repository.PaymentRepository;
 import com.google.gson.Gson;
 import java.net.URI;

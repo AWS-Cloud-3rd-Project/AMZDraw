@@ -1,5 +1,6 @@
-package com.amzmall.project.qna.repository;
-import com.amzmall.project.qna.domain.entity.Customer;
+package com.amzmall.project.customer.repository;
+
+import com.amzmall.project.customer.domain.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

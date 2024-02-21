@@ -1,5 +1,5 @@
 package com.amzmall.project.qna.domain.entity;
-
+import com.amzmall.project.customer.domain.entity.Customer;
 import com.amzmall.project.qna.domain.dto.QuestionResDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -9,7 +9,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -69,7 +68,7 @@ public class Question {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private Customer customer;
+    public Customer customer;
 
     public QuestionResDto toQuestionDto(){
         return QuestionResDto.builder()
