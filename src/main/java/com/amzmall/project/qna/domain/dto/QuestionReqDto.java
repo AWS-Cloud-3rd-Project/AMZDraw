@@ -32,7 +32,7 @@ public class QuestionReqDto {
             .questionTitle(questionTitle)
             .questionContent(questionContent)
             .customerEmail(customerEmail)
-            .isAvailable(true)
+            .isActive(true)
             .build();
     }
 }
