@@ -92,7 +92,7 @@ jobs:
       # 헬름 차트 수정
       - name: Update Helm chart values
         run: |
-          sed -i "s/tag: .*/tag: ${{ env.IMAGE_TAG }}/" ./values.yaml
+          sed -i "s/tag: .*/tag: ${{ env.IMAGE_TAG }}/" ./backend/values.yaml
 
       # 변경 사항 커밋 및 푸쉬
       - name: Commit and push changes
