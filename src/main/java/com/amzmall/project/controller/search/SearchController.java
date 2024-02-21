@@ -1,6 +1,5 @@
 package com.amzmall.project.controller.search;
 
-import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.amzmall.project.controller.cart.CartModelAttributeKeys;
@@ -12,7 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.ui.Model;
 import java.util.List;
 import java.util.Objects;
 
