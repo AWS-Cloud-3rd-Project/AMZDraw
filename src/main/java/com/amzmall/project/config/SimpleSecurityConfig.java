@@ -45,8 +45,9 @@ public class SimpleSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/customer/").authenticated()
-                        .cors().disable();
+                        .requestMatchers("/customer/","/customer/login","customer/signup").authenticated());
+                //customer의 메인페이지, 로그인 페이지, 회원가입 페이지는 로그인없이 접근 가능
+                        //.cors().disable();
 
         http
                 .formLogin()
@@ -66,11 +67,6 @@ public class SimpleSecurityConfig {
                         .requestMatchers("/**").permitAll());
 
         http.exceptionHandling().authenticationEntryPoint(new SimpleAuthenticationEntryPoint());
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Override
