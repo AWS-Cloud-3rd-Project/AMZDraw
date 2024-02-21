@@ -41,14 +41,14 @@ public class SimpleSecurityConfig {
     //
     //protected void configure(HttpSecurity httpSecurity) throws Exception {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        //csrf 설정
         http
-                //html공격 막기 위한 csrf 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/customer/")
+                        .requestMatchers("/customer/").authenticated()
                         .cors().disable();
 
-        httpSecurity
+        http
                 .formLogin()
                 .loginPage("/customer/login")
                 .defaultSuccessUrl("/")
@@ -60,12 +60,12 @@ public class SimpleSecurityConfig {
                 .invalidateHttpSession(true)
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/cart/**").hasRole(String.valueOf(ECommerceRole.CUSTOMER))
-                        .antMatchers("/checkout/**").hasRole(String.valueOf(ECommerceRole.CUSTOMER))
-                        .antMatchers("/customer/my-page*").hasRole(String.valueOf(ECommerceRole.CUSTOMER))
-                        .antMatchers("/**").permitAll());
+                        .requestMatchers("/cart/**").hasRole(String.valueOf(ECommerceRole.CUSTOMER))
+                        .requestMatchers("/checkout/**").hasRole(String.valueOf(ECommerceRole.CUSTOMER))
+                        .requestMatchers("/customer/my-page*").hasRole(String.valueOf(ECommerceRole.CUSTOMER))
+                        .requestMatchers("/**").permitAll());
 
-        httpSecurity.exceptionHandling().authenticationEntryPoint(new SimpleAuthenticationEntryPoint());
+        http.exceptionHandling().authenticationEntryPoint(new SimpleAuthenticationEntryPoint());
     }
 
     @Bean
