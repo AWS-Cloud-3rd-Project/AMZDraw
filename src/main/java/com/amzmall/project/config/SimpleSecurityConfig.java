@@ -51,15 +51,15 @@ public class SimpleSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authz) -> authz
-                      //  .anyRequest().authenticated()
-                        .requestMatchers("/customer/","/customer/login","customer/signup").authenticated()
+                        //  .anyRequest().authenticated()
+                        .requestMatchers("/customer/", "/customer/login", "customer/signup").authenticated()
                 )
                 //customer의 메인페이지, 로그인 페이지, 회원가입 페이지는 로그인없이 접근 가능
-                        //.cors().disable();
+                //.cors().disable();
                 .formLogin(formLogin -> formLogin
-                .loginPage("/customer/login")
-                .defaultSuccessUrl("/")
-                .usernameParameter("email")
+                        .loginPage("/customer/login")
+                        .defaultSuccessUrl("/")
+                        .usernameParameter("email")
                         .successHandler(new AuthenticationSuccessHandler() {
                             @Override
                             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -67,7 +67,7 @@ public class SimpleSecurityConfig {
                                 response.sendRedirect("/");
                             }
                         })
-                .failureUrl("/customer/login?error=true"))
+                        .failureUrl("/customer/login?error=true"))
                 .logout()
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
@@ -79,10 +79,11 @@ public class SimpleSecurityConfig {
                         .requestMatchers("/**").permitAll());
 
         http.exceptionHandling().authenticationEntryPoint(new SimpleAuthenticationEntryPoint());
+
     }
 
-    @Override
+    @Bean
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customerDetailService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(customerDetailService).passwordEncoder(new BCryptPasswordEncoder());
     }
 }
