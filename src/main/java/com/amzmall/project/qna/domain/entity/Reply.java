@@ -35,14 +35,14 @@ public class Reply {
     @Column(name = "reply_sq")
     private Long replySq;
 
-    @Column(name = "content", length = 2000, nullable = false)
-    private String content;
+    @Column(name = "reply_content", length = 2000, nullable = false)
+    private String replyContent;
 
     @Column(name = "admin_email", nullable = false)
     private String adminEmail;
 
-    @Column(name = "available", nullable = false)
-    private boolean available;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -56,38 +56,38 @@ public class Reply {
     @JoinColumn(name = "question_sq")
     private Question question;
 
+    public ReplyResDto toReplyDto() {
+        return ReplyResDto.builder()
+            .replySq(replySq)
+            .replyContent(replyContent)
+            .adminEmail(adminEmail)
+            .questionId(question.getQuestionSq())
+            .isActive(isActive)
+            .createdAt(createdAt)
+            .build();
+    }
+
     public void update(ReplyReqDto replyReqDto) {
         this.adminEmail = replyReqDto.getAdminEmail();
-        this.content = replyReqDto.getContent();
-        this.available = true; // 새로운 답변으로 업데이트
+        this.replyContent = replyReqDto.getReplyContent();
+        this.isActive = true; // 새로운 답변으로 업데이트
     }
 
     public static Reply createNewReply(ReplyReqDto replyReqDto, Question question) {
         Reply reply = new Reply();
         reply.question = question;
         reply.adminEmail = replyReqDto.getAdminEmail();
-        reply.content = replyReqDto.getContent();
-        reply.available = true;
+        reply.replyContent = replyReqDto.getReplyContent();
+        reply.isActive = true;
         return reply;
     }
 
     public void deactivate() {
-        this.available = false;
-    }
-
-    public ReplyResDto toReplyDto() {
-        return ReplyResDto.builder()
-            .replySq(replySq)
-            .content(content)
-            .adminEmail(adminEmail)
-            .questionId(question.getQuestionSq())
-            .available(available)
-            .createdAt(createdAt)
-            .build();
+        this.isActive = false;
     }
 
     public void updateContent(String modifiedContent) {
-        this.content = modifiedContent;
+        this.replyContent = modifiedContent;
     }
 }
 

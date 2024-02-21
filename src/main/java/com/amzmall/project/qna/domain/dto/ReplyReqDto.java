@@ -25,12 +25,12 @@ public class ReplyReqDto {
     @NotNull
     @Size(max = 1000, message = "답변 내용은 1000자를 초과할 수 없습니다.")
     @Schema(description = "답변 내용(1000자 까지)")
-    private String content;
+    private String replyContent;
     public Reply toEntity() {
         return Reply.builder()
-            .content(content)
+            .replyContent(replyContent)
             .adminEmail(adminEmail)
-            .available(true)
+            .isActive(true)
             .build();
     }
 }

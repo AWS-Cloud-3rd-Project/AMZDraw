@@ -37,17 +37,17 @@ public class Question {
     @Column(name = "question_sq")
     private Long questionSq;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "question_title", nullable = false)
+    private String questionTitle;
 
-    @Column(name = "content", length = 1000)
-    private String content;
+    @Column(name = "question_content", length = 1000)
+    private String questionContent;
 
     @Column(name = "customer_email", nullable = false)
     private String customerEmail;
 
-    @Column(name = "available", nullable = false)
-    private boolean available;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 
     @Column(name = "is_replied", nullable = false)
     private boolean isReplied;
@@ -73,10 +73,10 @@ public class Question {
     public QuestionResDto toQuestionDto(){
         return QuestionResDto.builder()
             .questionSq(questionSq)
-            .title(title)
-            .content(content)
+            .questionTitle(questionTitle)
+            .questionContent(questionContent)
             .customerEmail(customerEmail)
-            .available(available)
+            .isActive(isActive)
             .replyResDto(reply == null ? null : reply.toReplyDto())
             .isReplied(false)
             .createdAt(createdAt)
@@ -84,15 +84,15 @@ public class Question {
     }
 
     public void deactivate() {
-        this.available = false;
+        this.isActive = false;
     }
 
-    public void update(String updatedContent) {
-        this.content = updatedContent;
+    public void update(String updatedQuestionContent) {
+        this.questionContent = updatedQuestionContent;
     }
 
-    public void updateIsReplied(boolean isAnswered) {
-        this.isReplied = isAnswered;
+    public void updateIsReplied(boolean isReplied) {
+        this.isReplied = isReplied;
     }
 
 }

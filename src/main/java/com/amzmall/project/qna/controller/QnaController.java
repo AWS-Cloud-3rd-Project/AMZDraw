@@ -73,10 +73,10 @@ public class QnaController {
         @Parameter(description = "문의 번호", required = true)
         @RequestParam("questionSq") Long questionSq,
         @Parameter(description = "수정 내용", required = true) 
-        @RequestParam("content") String content
+        @RequestParam("questionContent") String questionContent
     ) {
         try {
-            qnaService.updateQuestion(questionSq, content);
+            qnaService.updateQuestion(questionSq, questionContent);
             return responseService.getSuccessResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,10 +129,10 @@ public class QnaController {
         @Parameter(description = "답변 번호", required = true)
         @RequestParam("replySq") Long replySq,
         @Parameter(description = "수정된 답변 내용", required = true)
-        @RequestParam("modifiedContent") String modifiedContent
+        @RequestParam("modifiedReplyContent") String modifiedReplyContent
     ) {
         try {
-            qnaService.updateReply(replySq, modifiedContent);
+            qnaService.updateReply(replySq, modifiedReplyContent);
             return responseService.getSuccessResult();
         } catch (Exception e) {
             e.printStackTrace();
