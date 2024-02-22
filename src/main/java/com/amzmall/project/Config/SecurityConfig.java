@@ -29,23 +29,24 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder(); //해시 알고리즘 생성 후 반환(해시 기반 암호화)
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .requestMatchers("/public/**", "/v3/api-docs/**", "/swagger-ui/**",
+                        "/swagger-resources/**").permitAll()
+                .requestMatchers("/api/**").authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .oauth2ResourceServer()
+                .jwt().jwtAuthenticationConverter(jwtAuthConverter);
+        return http.build();
     }
-    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.csrf(Customizer.withDefaults())
-//                //.and()
-//                .authorizeRequests(authz -> authz.requestMatchers("/")
-//                        .permitAll()
-//                        .anyRequest()
-//                        .authenticated())
-//                .oauth2Login(Customizer.withDefaults())
-//                //.and()
-//                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.logoutSuccessUrl("/"));
-//        return http.build();
-//    }
-//}
+}
+
 
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
