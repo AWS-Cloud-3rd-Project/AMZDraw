@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,10 +26,13 @@ public class CustomerDetailService implements UserDetailsService {
             throw new NotFoundCustomerException("회원 정보를 찾을 수 없습니다." + email);
         }
 
-        CustomerDetail customerDetail = new CustomerDetail();
-        customerDetail.setCustomer(customer);
+        return new org.springframework.security.core.userdetails.User(customer.getEmail(),
+                customer.getPassword(), new ArrayList<>());
 
-        return customerDetail;
+        //CustomerDetail customerDetail = new CustomerDetail();
+        //customerDetail.setCustomer(customer);
+
+      //  return customerDetail;
     }
 }
 
