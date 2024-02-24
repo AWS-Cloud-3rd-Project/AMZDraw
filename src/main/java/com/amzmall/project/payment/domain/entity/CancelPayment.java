@@ -32,7 +32,7 @@ public class CancelPayment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cancel_payment_id", nullable = false)
-	private Long cancelPaymentId;
+	private int cancelPaymentId;
 
 	@Column(nullable = false)
 	private String orderId;					// 우리 결제 고유 번호
@@ -65,7 +65,7 @@ public class CancelPayment {
 	private String cancelDate;				// 결제 취소 날짜
 
 	@Column(nullable = false)
-	private Long cancelAmount;				// 결제 취소 금액
+	private int cancelAmount;				// 결제 취소 금액
 
 	@CreatedDate
 	@Column(name = "created_at", updatable = false, nullable = false)

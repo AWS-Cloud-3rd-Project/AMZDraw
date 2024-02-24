@@ -32,8 +32,8 @@ public class Reply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reply_sq")
-    private Long replySq;
+    @Column(name = "reply_id")
+    private int replyId;
 
     @Column(name = "reply_content", length = 2000, nullable = false)
     private String replyContent;
@@ -58,10 +58,10 @@ public class Reply {
 
     public ReplyResDto toReplyDto() {
         return ReplyResDto.builder()
-            .replySq(replySq)
+            .replyId(replyId)
             .replyContent(replyContent)
             .adminEmail(adminEmail)
-            .questionId(question.getQuestionSq())
+            .questionId(question.getQuestionId())
             .isActive(isActive)
             .createdAt(createdAt)
             .build();

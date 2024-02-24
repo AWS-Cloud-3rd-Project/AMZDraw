@@ -18,7 +18,7 @@ import lombok.Setter;
 public class ReplyReqDto {
     @NotNull
     @Schema(description = "문의 번호")
-    private Long questionSq;
+    private int questionId;
     @NotNull
     @Schema(description = "관리자")
     private String adminEmail;

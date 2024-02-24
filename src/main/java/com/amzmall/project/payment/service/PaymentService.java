@@ -43,14 +43,14 @@ public class PaymentService {
 
     @Transactional
     public PaymentResDto requestPayment(PaymentReqDto paymentReqDto){
-        Long amount = paymentReqDto.getAmount();
+        int amount = paymentReqDto.getAmount();
         String paymentType = paymentReqDto.getPaymentType().getName();
         String customerEmail = paymentReqDto.getCustomerEmail();
         String customerName = paymentReqDto.getCustomerName();
         String orderName = paymentReqDto.getOrderName();
         String orderID = paymentReqDto.getOrderId();
 
-        if (amount == null || amount <= 1000) {
+        if (amount <= 1000) {
             throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PRICE);
         }
 
@@ -81,14 +81,14 @@ public class PaymentService {
         }
     }
     @Transactional
-    public void verifyRequest(String paymentKey, String orderId, Long amount) {
+    public void verifyRequest(String paymentKey, String orderId, int amount) {
         // 요청한 결제 금액과 실제 토스페이먼츠에서 결제된 금액 일치 검증
         // 조회는 orderId 기준
         // 추후 결제 조회/취소를 위한 paymentKey 설정
         paymentRepository.findByOrderId(orderId)
                 .ifPresentOrElse(
                         P -> {
-                            if (P.getAmount().equals(amount)) {
+                            if (P.getAmount() == amount) {
                                 P.setPaymentKey(paymentKey);
                             } else {
                                 throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PRICE);
@@ -100,7 +100,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public PaymentResSuccessDto requestFinalPayment(String paymentKey, String orderId, Long amount) {
+    public PaymentResSuccessDto requestFinalPayment(String paymentKey, String orderId, int amount) {
         // 토스에서 제공한 시크릿 키
         String testSecretKey = tossPaymentConfig.getTestSecretKey() + ":"; // 시크릿 키는 ":" 을 붙여야 함
         // 토스 : 시크릿 키 뒤에 콜론을 추가해서 비밀번호가 없다는 것을 알립니다.

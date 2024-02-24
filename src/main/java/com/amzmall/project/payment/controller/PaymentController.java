@@ -56,7 +56,7 @@ public class PaymentController {
             @Parameter(name = "orderId", description = "상점 측 주문 고유 번호", required = true)
             @RequestParam("orderId") String orderId,
             @Parameter(name = "amount", description = "실제 결제 금액", required = true)
-            @RequestParam("amount") Long amount,
+            @RequestParam("amount") int amount,
             @Parameter(name = "paymentType", description = "결제 타입")
             @RequestParam("paymentType") PAYMENT_TYPE paymentType) {
         try {

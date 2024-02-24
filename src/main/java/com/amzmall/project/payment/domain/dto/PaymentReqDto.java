@@ -18,7 +18,7 @@ public class PaymentReqDto {
     @Schema(description = "결제 방식")
     private PAYMENT_TYPE paymentType;
     @Schema(description = "결제 금액")
-    private Long amount;
+    private int amount;
     @Schema(description = "주문 ID")
     private String orderId;
     @Schema(description = "주문 이름")

@@ -52,11 +52,11 @@ public class QnaController {
     @DeleteMapping
     @Operation(summary = "문의 삭제", description = "문의를 삭제합니다.")
     public CommonResult removeQuestion(
-        @Parameter(name = "questionSq", description = "문의 번호", required = true)
-        @RequestParam("questionSq") Long questionSq
+        @Parameter(name = "questionId", description = "문의 번호", required = true)
+        @RequestParam("questionId") int questionId
     ) {
         try {
-            qnaService.unAvailableQuestion(questionSq);
+            qnaService.unAvailableQuestion(questionId);
             return responseService.getSuccessResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,12 +71,12 @@ public class QnaController {
     @Operation(summary = "문의 수정", description = "문의를 수정합니다.")
     public CommonResult updateQuestion(
         @Parameter(description = "문의 번호", required = true)
-        @RequestParam("questionSq") Long questionSq,
+        @RequestParam("questionId") int questionId,
         @Parameter(description = "수정 내용", required = true) 
         @RequestParam("questionContent") String questionContent
     ) {
         try {
-            qnaService.updateQuestion(questionSq, questionContent);
+            qnaService.updateQuestion(questionId, questionContent);
             return responseService.getSuccessResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,12 +127,12 @@ public class QnaController {
     @Operation(summary = "답변 수정", description = "답변을 수정합니다.")
     public CommonResult updateReply(
         @Parameter(description = "답변 번호", required = true)
-        @RequestParam("replySq") Long replySq,
+        @RequestParam("replyId") int replyId,
         @Parameter(description = "수정된 답변 내용", required = true)
         @RequestParam("modifiedReplyContent") String modifiedReplyContent
     ) {
         try {
-            qnaService.updateReply(replySq, modifiedReplyContent);
+            qnaService.updateReply(replyId, modifiedReplyContent);
             return responseService.getSuccessResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -146,11 +146,11 @@ public class QnaController {
     @DeleteMapping("/reply")
     @Operation(summary = "답변 삭제", description = "답변을 삭제합니다.")
     public CommonResult removeReply(
-        @Parameter(name = " replySq", description = "답변 번호", required = true)
-        @RequestParam(" replySq") Long replySq
+        @Parameter(name = " replyId", description = "답변 번호", required = true)
+        @RequestParam(" replyId") int replyId
     ) {
         try {
-            qnaService.unAvailableReply(replySq);
+            qnaService.unAvailableReply(replyId);
             return responseService.getSuccessResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -163,12 +163,12 @@ public class QnaController {
 
     @GetMapping("/reply")
     @Operation(summary = "답변 조회", description = "문의 번호로 답변을 조회합니다.")
-    public SingleResult<ReplyResDto> getReplyByQuestionSq(
-        @Parameter(name = "questionSq", description = "문의 번호", required = true)
-        @RequestParam("questionSq") Long questionSq
+    public SingleResult<ReplyResDto> getReplyByQuestionId(
+        @Parameter(name = "questionId", description = "문의 번호", required = true)
+        @RequestParam("questionId") int questionId
     ) {
         try {
-            return responseService.getSingleResult(qnaService.getReplyByQuestionSq(questionSq));
+            return responseService.getSingleResult(qnaService.getReplyByQuestionId(questionId));
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(e.getMessage());

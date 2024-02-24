@@ -44,14 +44,14 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id", nullable = false)
-    private Long paymentId;
+    private int paymentId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_type", nullable = false)
     private PAYMENT_TYPE paymentType;
 
     @Column(name = "amount", nullable = false)
-    private Long amount;
+    private int amount;
 
     @Column(name = "order_name", nullable = false)
     private String orderName;

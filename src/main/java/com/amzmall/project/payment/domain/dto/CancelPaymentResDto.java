@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CancelPaymentResDto {
-	private Long cancelPaymentId;
+	private int cancelPaymentId;
 	private String orderId;
 	private String paymentKey;
 	private String orderName;
@@ -22,5 +22,5 @@ public class CancelPaymentResDto {
 	private String cardNumber;
 	private String receiptUrl;
 	private String cancelReason;
-	private Long cancelAmount;
+	private int cancelAmount;
 }

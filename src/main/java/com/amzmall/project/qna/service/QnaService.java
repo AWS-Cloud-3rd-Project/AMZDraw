@@ -45,9 +45,9 @@ public class QnaService {
 
     // 문의 비활성화
     @Transactional
-    public void unAvailableQuestion(Long questionSq) {
+    public void unAvailableQuestion(int questionId) {
         // 문의 조회
-        Question question = questionRepository.findByQuestionSq(questionSq)
+        Question question = questionRepository.findByQuestionId(questionId)
             .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
 
         // 이미 비활성화된 문의인지 확인
@@ -61,9 +61,9 @@ public class QnaService {
     
     // 문의 수정
     @Transactional
-    public void updateQuestion(Long questionSq, String updatedQuestionContent) {
+    public void updateQuestion(int questionId, String updatedQuestionContent) {
         // 문의 조회
-        Question question = questionRepository.findByQuestionSq(questionSq)
+        Question question = questionRepository.findByQuestionId(questionId)
             .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
         // 이미 답변이 등록되어 있고, 답변이 available이 true인 경우 예외 처리
         if (question.getReply() != null && question.isReplied()) {
@@ -89,14 +89,14 @@ public class QnaService {
     public void postReply(ReplyReqDto replyReqDto) {
         RequestValidationUtil.validateReplyRequestForm(replyReqDto);
         // 질문 조회
-        Question question = questionRepository.findByQuestionSq(replyReqDto.getQuestionSq())
+        Question question = questionRepository.findByQuestionId(replyReqDto.getQuestionId())
             .orElseThrow(() -> new BusinessException(ExMessage.QUESTION_ERROR_NOT_FOUND));
         // 질문의 available 확인
         if (!question.isActive()) {
             throw new BusinessException(ExMessage.QUESTION_ERROR_NOT_AVAILABLE);
         }
         // 이미 답변이 있는지 확인
-        Optional<Reply> existingReplyOptional = replyRepository.findByQuestionQuestionSq(replyReqDto.getQuestionSq());
+        Optional<Reply> existingReplyOptional = replyRepository.findByQuestionQuestionId(replyReqDto.getQuestionId());
         if (existingReplyOptional.isPresent()) {
             Reply existingReply = existingReplyOptional.get();
             if (!existingReply.isActive()) {
@@ -120,9 +120,9 @@ public class QnaService {
     }
 
     @Transactional
-    public void updateReply(Long replySq, String modifiedContent) {
+    public void updateReply(int replyId, String modifiedContent) {
         // 답변 조회
-        Reply reply = replyRepository.findById(replySq)
+        Reply reply = replyRepository.findByReplyId(replyId)
             .orElseThrow(() -> new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND));
 
         // 질문의 available이 false이면 수정할 수 없음
@@ -148,9 +148,9 @@ public class QnaService {
 
     // 답변 비활성화
     @Transactional
-    public void unAvailableReply(Long replySq) {
+    public void unAvailableReply(int replyId) {
         // 답변 조회
-        Reply reply = replyRepository.findByReplySq(replySq)
+        Reply reply = replyRepository.findByReplyId(replyId)
             .orElseThrow(() -> new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND));
 
         // 이미 비활성화된 답변인지 확인
@@ -170,8 +170,8 @@ public class QnaService {
 
     // 답변 조회
     @Transactional
-    public ReplyResDto getReplyByQuestionSq(Long questionSq) {
-        Reply reply = replyRepository.findByQuestionQuestionSq(questionSq)
+    public ReplyResDto getReplyByQuestionId(int questionId) {
+        Reply reply = replyRepository.findByQuestionQuestionId(questionId)
             .orElseThrow(() -> new BusinessException(ExMessage.REPLY_ERROR_NOT_FOUND));
 
         return reply.toReplyDto();

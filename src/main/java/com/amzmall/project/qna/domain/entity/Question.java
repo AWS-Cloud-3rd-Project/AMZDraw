@@ -34,8 +34,8 @@ import org.springframework.stereotype.Component;
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "question_sq")
-    private Long questionSq;
+    @Column(name = "question_id")
+    private int questionId;
 
     @Column(name = "question_title", nullable = false)
     private String questionTitle;
@@ -72,7 +72,7 @@ public class Question {
 
     public QuestionResDto toQuestionDto(){
         return QuestionResDto.builder()
-            .questionSq(questionSq)
+            .questionId(questionId)
             .questionTitle(questionTitle)
             .questionContent(questionContent)
             .customerEmail(customerEmail)

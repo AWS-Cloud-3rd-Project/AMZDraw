@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class PaymentDto {
     private String paymentType;
-    private Long amount;
+    private int amount;
     private String cardCompany;
     private String cardNumber;
     private String orderId;

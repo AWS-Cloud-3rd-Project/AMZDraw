@@ -13,8 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReplyResDto {
-    private Long replySq;
-    private Long questionId;
+    private int replyId;
+    private int questionId;
     private String adminEmail;
     private String replyContent;
     private boolean isActive;
