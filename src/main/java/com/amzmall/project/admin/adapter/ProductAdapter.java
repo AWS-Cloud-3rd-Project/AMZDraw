@@ -1,10 +1,6 @@
 package com.amzmall.project.admin.adapter;
 
 import com.amzmall.project.admin.service.dto.ProductDTO;
-import com.netflix.graphql.dgs.client.CustomGraphQLClient;
-import com.netflix.graphql.dgs.client.GraphQLClient;
-import com.netflix.graphql.dgs.client.GraphQLResponse;
-import com.netflix.graphql.dgs.client.HttpResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
