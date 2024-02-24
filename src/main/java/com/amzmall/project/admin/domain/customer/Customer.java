@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+
 import java.time.OffsetDateTime;
 
 @Entity
@@ -26,8 +27,6 @@ public class Customer {
     @Column(name = "address")
     private String address;
     @Enumerated(EnumType.STRING)
-    @Column(name = "grade")
-    private CustomerStatus status;
     @Column(name = "is_deleted")
     private boolean isDeleted;
     @CreatedDate
@@ -40,7 +39,4 @@ public class Customer {
     private OffsetDateTime updatedAt;
     @Column(name = "updated_by")
     private String updatedBy;
-
-    public CustomerStatus getStatus() {
-    }
 }

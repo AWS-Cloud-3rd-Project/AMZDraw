@@ -20,11 +20,9 @@ public class AdminUserDetail implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        // 권한 목록 - 실습용 권한은 1개
         GrantedAuthority permissionAuthority = new SimpleGrantedAuthority(this.adminUser.getPermission().name());
         authorities.add(permissionAuthority);
 
-        // 역할 목록 - 실습용 역할은 1개
         GrantedAuthority roleAuthority = new SimpleGrantedAuthority("ROLE_" + this.adminUser.getRole().name());
         authorities.add(roleAuthority);
 

@@ -1,13 +1,11 @@
 package com.amzmall.project.admin.config;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 
-public class AdminAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class SimpleAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     public static final String XML_HTTP_REQUEST_VALUE = "XMLHttpRequest";
     public static final String X_REQUESTED_WITH_HEADER_KEY = "x-requested-with";

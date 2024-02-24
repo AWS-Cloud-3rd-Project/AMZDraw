@@ -29,7 +29,7 @@ public class AdminUserDetailService implements UserDetailsService {
         if (optionalAdminUser.isPresent()) {
             throw new DuplicatedAdminUserException("Already register admin user, {}" + adminUser.getEmail());
         }
-        return this.adminUserRepository.save(adminUser);
+        return (AdminUser) this.adminUserRepository.save(adminUser);
     }
 
     @Override

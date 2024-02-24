@@ -1,60 +1,59 @@
 package com.amzmall.project.admin.config;
-
-import com.amzmall.project.admin.config.AdminAuthenticationEntryPoint;
-import com.amzmall.project.admin.service.AdminUserDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class AdminSecurityConfig {
+@EnableWebSecurity
+public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static final String DEFAULT_HOME_URL = "/";
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AdminUserDetailService adminUserDetailService) throws Exception {
-        http
+    @Autowired
+    AdminUserDetailService adminUserDetailService;
+
+    @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
                 .csrf().disable()
-                .cors().disable()
-                .authorizeRequests(authorizeRequests ->
-                        authorizeRequests
-                                .antMatchers(
-                                        "/img/**", "/js/**", "/css/**", "/scss/**", "/vendor/**",
-                                        "/users/sign-up", "/users/login", "/error",
-                                        "/hello",
-                                        "/users/register"
-                                ).permitAll()
-                                .anyRequest().authenticated()
-                )
-                .formLogin(formLogin ->
-                        formLogin
-                                .loginPage("/users/login")
-                                .defaultSuccessUrl(DEFAULT_HOME_URL)
-                                .usernameParameter("email")
-                                .failureUrl("/users/login?error=true")
-                                .permitAll()
-                )
-                .logout(logout ->
-                        logout
-                                .logoutSuccessUrl("/users/login")
-                                .invalidateHttpSession(true)
-                )
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling
-                                .authenticationEntryPoint(new AdminAuthenticationEntryPoint())
-                );
+                .cors().disable();
 
-        http.userDetailsService(adminUserDetailService)
-                .passwordEncoder(passwordEncoder());
+        httpSecurity
+                .authorizeRequests()
+                .antMatchers("/img/**", "/js/**", "/css/**", "/scss/**", "/vendor/**",
+                        "/users/sign-up", "/users/login", "/error",
+                        "/hello",
+                        "/users/register"
+                )
+                .permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/users/login")
+                .defaultSuccessUrl(DEFAULT_HOME_URL)
+                .usernameParameter("email")
+                .failureUrl("/users/login?error=true")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutSuccessUrl("/users/login")
+                .invalidateHttpSession(true);
 
-        return http.build();
+        httpSecurity.exceptionHandling().authenticationEntryPoint(new SimpleAuthenticationEntryPoint());
+    }
+    @Bean
+    public PasswordEncoder bPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(adminUserDetailService).passwordEncoder(bPasswordEncoder());
     }
 }

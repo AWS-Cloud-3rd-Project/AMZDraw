@@ -1,6 +1,6 @@
 package com.amzmall.project.admin.repository;
 
-import com.fastcampus.ecommerce.admin.domain.user.AdminUser;
+import com.amzmall.project.admin.domain.user.AdminUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
