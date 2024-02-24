@@ -78,11 +78,11 @@ public class Payment {
 
     @Setter
     @Column(nullable = false)
-    private String paySuccessYn;			// 결제 성공 여부
+    private boolean isPaySuccess;			// 결제 성공 여부
 
     @Setter
     @Column(nullable = false)
-    private String cancelYn;				// 결제 취소 여부
+    private boolean isPayCancled;				// 결제 취소 여부
 
     @Setter
     @Column
@@ -129,8 +129,8 @@ public class Payment {
             .customerEmail(customerEmail)
             .customerName(customerName)
             .paymentKey(paymentKey)
-            .paySuccessYn(paySuccessYn)
-            .cancelYn(cancelYn)
+            .isPaySuccess(isPaySuccess)
+            .isPayCancled(isPayCancled)
             .payFailReason(payFailReason)
             .createDate(new TimeConfig().getNowTime())
             .build();

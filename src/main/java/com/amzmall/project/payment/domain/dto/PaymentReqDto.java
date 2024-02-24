@@ -37,7 +37,8 @@ public class PaymentReqDto {
             .orderName(orderName)
             .customerEmail(customerEmail)
             .customerName(customerName)
-            .paySuccessYn("Y")
+            .isPaySuccess(false)
+            .isPayCancled(false)
             .build();
     }
 }

@@ -74,7 +74,7 @@ public class PaymentCancelService {
 		Payment payment = paymentRepository.findByPaymentKey(paymentKey)
 			.orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
 
-		Long cancelAmount = paymentResCancelDto.getCancels()[0].getCancelAmount();
+		int cancelAmount = paymentResCancelDto.getCancels()[0].getCancelAmount();
 		try {
 			cancelPaymentSave(
 				payment.getPaymentType(), paymentKey, paymentResCancelDto, cancelAmount);
@@ -84,10 +84,10 @@ public class PaymentCancelService {
 		}
 	}
 
-	private void cancelPaymentSave( PAYMENT_TYPE paymentType, String paymentKey, PaymentResSuccessDto paymentCancelResDto, Long cancelAmount) {
+	private void cancelPaymentSave( PAYMENT_TYPE paymentType, String paymentKey, PaymentResSuccessDto paymentCancelResDto, int cancelAmount) {
 		paymentRepository
 			.findByPaymentKey(paymentKey)						// 결제 정보를 찾기
-			.filter(P -> P.getAmount().equals(cancelAmount))	// 결제 금액이 취소 금액과 일치하는지 확인
+			.filter(P -> P.getAmount() == cancelAmount)	// 결제 금액이 취소 금액과 일치하는지 확인
 			.ifPresentOrElse(P -> {
 				log.info("결제 취소 고객 이력에 추가");
 				CancelPayment cancelPayment;
@@ -99,7 +99,7 @@ public class PaymentCancelService {
 					.filter(p -> p.getPaymentKey().equals(paymentKey))
 					.findFirst()
 					.orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND))
-					.setCancelYn("Y");
+					.setPayCancled(true);
 				log.info("결제 취소 완료");
 			}, () -> {
 				throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND);

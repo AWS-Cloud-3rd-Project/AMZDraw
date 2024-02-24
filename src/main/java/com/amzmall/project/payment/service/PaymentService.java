@@ -151,7 +151,7 @@ public class PaymentService {
                     .ifPresent(payment -> {
                         payment.setCardCompany(card.getCompany());
                         payment.setCardNumber(card.getNumber());
-                        payment.setPaySuccessYn("Y");
+                        payment.setPaySuccess(true);
                         // Order 엔티티 추가 시 설정
                         // Order.setPayYn("Y");
                         //Order.setPayType(PAY_TYPE.NORMAL);
@@ -177,7 +177,7 @@ public class PaymentService {
     public PaymentFailDto requestFail(String errorCode, String errorMessage, String orderId) {
         Payment payment = paymentRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
-        payment.setPaySuccessYn("N");
+        payment.setPaySuccess(false);
         payment.setPayFailReason(errorMessage);
 
         return PaymentFailDto

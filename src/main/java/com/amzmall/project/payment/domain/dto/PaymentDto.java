@@ -17,8 +17,8 @@ public class PaymentDto {
     private String customerEmail;
     private String customerName;
     private String paymentKey;
-    private String paySuccessYn;
+    private boolean isPaySuccess;
     private String payFailReason;
-    private String cancelYn;
+    private boolean isPayCancled;
     private String createDate;
 }
