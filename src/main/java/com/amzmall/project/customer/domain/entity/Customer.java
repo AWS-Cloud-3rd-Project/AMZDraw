@@ -39,7 +39,7 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int customerId;
 
     @Column(name = "email", nullable = false)
     private String email;
@@ -81,7 +81,7 @@ public class Customer {
 
     public CustomerDto toCustomerDto() {
         return CustomerDto.builder()
-                .customerId(id)
+                .customerId(customerId)
                 .email(email)
                 .name(name)
                 .createdAt(createdAt)
