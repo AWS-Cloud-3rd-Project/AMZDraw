@@ -37,6 +37,17 @@ springdoc:
     path: /swagger-ui.html
 
 
+# AWS S3
+aws:
+  s3:
+    bucket: 버킷이름
+    accessKey: accessKey값
+    secretKey: secretKey값
+    client: client이름
+    region: 지역
+
+
+
 #    logging:
 #      level:
 #        org:
