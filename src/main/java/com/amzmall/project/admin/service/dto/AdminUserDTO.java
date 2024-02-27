@@ -10,7 +10,7 @@ public class AdminUserDTO {
     private String username;
     private String password;
     private String email;
-    private AdminUserRole role = AdminUserRole.ADMIN;
+    private AdminUserRole role = AdminUserRole.SUPER_AD;
     private AdminUserPermission permission = AdminUserPermission.ALL;
     private boolean isDeleted = false;
     private boolean isActivated = true;
