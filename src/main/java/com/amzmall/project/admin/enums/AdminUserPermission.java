@@ -1,4 +1,4 @@
-package com.amzmall.project.admin.domain.user;
+package com.amzmall.project.admin.enums;
 
 public enum AdminUserPermission {
     READ, WRITE, ALL

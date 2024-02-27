@@ -2,7 +2,6 @@ package com.amzmall.project.admin.service;
 
 import com.amzmall.project.admin.domain.user.AdminUser;
 import com.amzmall.project.admin.domain.user.AdminUserDetail;
-import com.amzmall.project.admin.exception.DuplicatedAdminUserException;
 import com.amzmall.project.admin.exception.NotFoundAdminUserException;
 import com.amzmall.project.admin.repository.AdminUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +23,10 @@ public class AdminUserDetailService implements UserDetailsService {
 
     private final AdminUserRepository adminUserRepository;
 
-    public AdminUser save(AdminUser adminUser) {
-        Optional<AdminUser> optionalAdminUser = this.adminUserRepository.findByEmailAndIsActivated(adminUser.getEmail(), true);
-        if (optionalAdminUser.isPresent()) {
-            throw new DuplicatedAdminUserException("Already register admin user, {}" + adminUser.getEmail());
-        }
-        return (AdminUser) this.adminUserRepository.save(adminUser);
-    }
-
     @Override
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
         log.info(">>> loadUserByUsername, {}", userEmail);
+        //DaoAuthenticationProvider 방식: 데이터베이스에서 정보를 가져와 UserDetailsService에게 전달
         Optional<AdminUser> optionalAdminUser = this.adminUserRepository.findByEmailAndIsActivated(userEmail, true);
         if (optionalAdminUser.isEmpty()) {
             throw new NotFoundAdminUserException("Not found admin user with " + userEmail);

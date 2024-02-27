@@ -1,69 +1,87 @@
 package com.amzmall.project.admin.config;
+
+import com.amzmall.project.admin.enums.AdminUserRole;
 import com.amzmall.project.admin.service.AdminUserDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class AdminSecurityConfig {
 
-    public static final String DEFAULT_HOME_URL = "/";
-
-    @Autowired
-    private AdminUserDetailService adminUserDetailService;
-
+    //권한 계층 설정
     @Bean
-    protected DefaultSecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf(csrf -> csrf.disable()
-                .cors(cors -> {
-                    try {
-                        cors.disable()
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
 
-                        .authorizeRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/img/**", "/js/**", "/css/**", "/scss/**", "/vendor/**",
-                                "/users/sign-up", "/users/login", "/error",
-                                "/hello",
-                                "/users/register"
-                        )
-                        .permitAll()
-                        .anyRequest().authenticated())
-                        .formLogin(formLogin->formLogin
-                        .loginPage("/users/login")
-                        .defaultSuccessUrl(DEFAULT_HOME_URL)
-                        .usernameParameter("email")
-                        .failureUrl("/users/login?error=true")
-                        .permitAll())
+        roleHierarchy.setHierarchy("ROLE_SUPER_AD > ROLE_PRODUCT_AD and ROLE_SUPER_AD > ROLE_MEMBER_AD and ROLE_SUPER_AD > ROLE_ORDER_AD");
 
-                        .logout(logout -> logout
-                        .logoutSuccessUrl("/users/login")
-                        .invalidateHttpSession(true)
-                        )
-                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
-                );
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                };
-
-                return httpSecurity.build();
+        return roleHierarchy;
     }
+
+    private final AdminUserDetailService adminUserDetailService;
+
     @Bean
-    public PasswordEncoder bPasswordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(adminUserDetailService).passwordEncoder(bPasswordEncoder());
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http
+                .csrf((csrfConfig) ->
+                        csrfConfig.disable()
+                )
+                .headers((headerConfig) ->
+                        headerConfig.frameOptions(frameOptionsConfig ->
+                                frameOptionsConfig.disable()
+                        )
+                )
+                .authorizeHttpRequests((authorizeRequests) ->
+                        authorizeRequests
+                                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                                .requestMatchers("/", "/login/**").permitAll()
+                                .requestMatchers("/product_admin/**").hasRole(String.valueOf(AdminUserRole.PRODUCT_AD))
+                                .requestMatchers("/order_admin/**").hasRole(String.valueOf(AdminUserRole.ORDER_AD))
+                                .requestMatchers("/member_admin/**").hasRole(String.valueOf(AdminUserRole.MEMBER_AD))
+                                .requestMatchers("/","/super_admin/**","/admin").hasRole(String.valueOf(AdminUserRole.SUPER_AD))
+                                .anyRequest().authenticated()
+                )
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/")
+                                .defaultSuccessUrl("/admin")
+                                .usernameParameter("email")
+                                .failureUrl("/login?error=true")
+                                .permitAll()
+                )
+                .logout(logout ->
+                        logout
+                                .logoutSuccessUrl("/")
+                                .invalidateHttpSession(true)
+                )
+                .exceptionHandling((exceptionConfig) ->
+                        exceptionConfig
+                                .authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
+                                .accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/accessDenied")
+                ));
+        return http.build();
     }
+
+//    @Bean
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(adminUserDetailService).passwordEncoder(passwordEncoder())
+//                .roleHierarchy(roleHierarchy());
+//    }
 }

@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "vendors", schema = "ecommerce")
+@Table(name = "vendors", schema = "amzmall")
 @Getter
 @Setter
 public class Vendor {

@@ -1,5 +1,7 @@
 package com.amzmall.project.admin.domain.user;
 
+import com.amzmall.project.admin.enums.AdminUserPermission;
+import com.amzmall.project.admin.enums.AdminUserRole;
 import com.amzmall.project.admin.service.dto.AdminUserFormDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -39,20 +41,4 @@ public class AdminUser {
     private OffsetDateTime createdAt;
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
-
-    public static com.amzmall.project.admin.domain.user.AdminUser createAdminUser(AdminUserFormDTO adminUserDTO, PasswordEncoder passwordEncoder) {
-        com.amzmall.project.admin.domain.user.AdminUser adminUser = new com.amzmall.project.admin.domain.user.AdminUser();
-        adminUser.setUsername(adminUserDTO.getUsername());
-        adminUser.setPassword(passwordEncoder.encode(adminUserDTO.getPassword1()));
-        adminUser.setEmail(adminUserDTO.getEmail());
-        adminUser.setRole(AdminUserRole.USER);
-        adminUser.setPermission(AdminUserPermission.ALL);
-
-        OffsetDateTime now = OffsetDateTime.now();
-        adminUser.setCreatedAt(now);
-        adminUser.setUpdatedAt(now);
-        adminUser.setActivated(true);
-
-        return adminUser;
-    }
 }

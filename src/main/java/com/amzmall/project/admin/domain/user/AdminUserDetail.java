@@ -1,5 +1,7 @@
 package com.amzmall.project.admin.domain.user;
 
+import com.amzmall.project.admin.enums.AdminUserPermission;
+import com.amzmall.project.admin.enums.AdminUserRole;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,18 +15,21 @@ import java.util.stream.Collectors;
 @Data
 public class AdminUserDetail implements UserDetails {
     private AdminUser adminUser;
-    private List<AdminUserRole> roles;
-    private List<AdminUserPermission> permissions;
+    private List<AdminUserRole> roles; //역할
+    private List<AdminUserPermission> permissions; //접근(권한)
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities() { //해당 유저의 권한 목록
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        GrantedAuthority permissionAuthority = new SimpleGrantedAuthority(this.adminUser.getPermission().name());
-        authorities.add(permissionAuthority);
-
-        GrantedAuthority roleAuthority = new SimpleGrantedAuthority("ROLE_" + this.adminUser.getRole().name());
-        authorities.add(roleAuthority);
+        for (AdminUserPermission permission : permissions) {
+            GrantedAuthority permissionAuthority = new SimpleGrantedAuthority(permission.name());
+            authorities.add(permissionAuthority);
+        }
+        for (AdminUserRole role : roles) {
+            GrantedAuthority roleAuthority = new SimpleGrantedAuthority("ROLE_" + role.name());
+            authorities.add(roleAuthority);
+        }
 
         return authorities;
     }
@@ -59,10 +64,10 @@ public class AdminUserDetail implements UserDetails {
     }
 
     public Iterable<String> getPermissionList() {
-        return roles.stream().map(r -> r.name()).collect(Collectors.toList());
+        return permissions.stream().map(p -> p.name()).collect(Collectors.toList());
     }
 
     public Iterable<String> getRoleList() {
-        return permissions.stream().map(p -> p.name()).collect(Collectors.toList());
+        return roles.stream().map(r -> r.name()).collect(Collectors.toList());
     }
 }

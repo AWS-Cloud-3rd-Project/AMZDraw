@@ -1,6 +1,5 @@
 package com.amzmall.project.admin.domain.customer;
 
-import com.amzmall.project.admin.enums.CustomerStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

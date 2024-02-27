@@ -1,6 +1,6 @@
 package com.amzmall.project.admin.service.dto;
 
-import com.amzmall.project.admin.enums.CustomerStatus;
+import com.amzmall.project.admin.domain.customer.CustomerStatus;
 import lombok.Data;
 
 import java.time.OffsetDateTime;

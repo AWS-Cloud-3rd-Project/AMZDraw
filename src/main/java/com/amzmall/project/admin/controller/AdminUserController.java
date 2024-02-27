@@ -14,32 +14,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
-@RequiredArgsConstructor
 public class AdminUserController {
 
-    private final AdminUserDetailService adminUserDetailService;
-    private final PasswordEncoder passwordEncoder;
 
-    @GetMapping(value = "/users/sign-up")
-    public String adminUserForm(Model model) {
-        log.info(">>> 회원 가입 폼");
-        return "/users/sign-up";
+    @GetMapping("/admin")
+    public String admin(){
+        return "admin";
     }
 
-    @PostMapping(value = "/users/register")
-    public String create(AdminUserFormDTO adminUserFormDTO) {
-        log.info(">>> 회원 가입 진행, {}", adminUserFormDTO);
-        AdminUser newAdminUser = AdminUser.createAdminUser(adminUserFormDTO, passwordEncoder);
-        AdminUser savedAdminuser = adminUserDetailService.save(newAdminUser);
-        return "redirect:/";
+    @GetMapping("/superadmin")
+    public String superadmin(){
+        return "superadmin";
     }
 
-    @GetMapping(value = "/users/login")
+    @GetMapping("/accessDenied")
+    public String accessDenied(){
+        return "accessDenied";
+    }
+    @GetMapping(value = "/admin/login")
     public String loginForm(@RequestParam(value = "error", defaultValue = "false") boolean error, Model model) {
         if (error) {
             model.addAttribute("loginFailure", true);
             model.addAttribute("loginFailureMessage", "아이디와 패스워드를 확인하시고 다시 로그인해주세요.");
         }
-        return "/users/login";
+        return "/admin/login";
     }
 }
