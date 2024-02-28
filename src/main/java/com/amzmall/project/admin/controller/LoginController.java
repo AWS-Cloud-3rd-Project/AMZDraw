@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Slf4j
 @Controller
 public class LoginController {
-    @GetMapping({"/", ""})
-    public String loginForm(){
-        return "/loginForm";
+
+    private static final String LOGIN_FORM_PAGE = "loginForm";
+
+    @GetMapping("/")
+    public String loginForm() {
+        return LOGIN_FORM_PAGE;
     }
 }

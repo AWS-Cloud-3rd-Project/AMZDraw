@@ -38,4 +38,8 @@ public class Customer {
     private OffsetDateTime updatedAt;
     @Column(name = "updated_by")
     private String updatedBy;
+
+    public CustomerStatus getStatus() {
+        return getStatus();
+    }
 }

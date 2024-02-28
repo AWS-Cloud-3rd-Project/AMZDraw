@@ -16,7 +16,7 @@ public class SimpleAuthenticationEntryPoint implements AuthenticationEntryPoint 
     private final ObjectMapper objectMapper = new ObjectMapper();
     public static final String XML_HTTP_REQUEST_VALUE = "XMLHttpRequest";
     public static final String X_REQUESTED_WITH_HEADER_KEY = "x-requested-with";
-    public static final String CUSTOMER_LOGIN = "/users/login";
+    public static final String ADMIN_LOGIN = "/admin/login";
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
@@ -24,6 +24,6 @@ public class SimpleAuthenticationEntryPoint implements AuthenticationEntryPoint 
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        response.sendRedirect(CUSTOMER_LOGIN);
+        response.sendRedirect(ADMIN_LOGIN);
     }
 }
