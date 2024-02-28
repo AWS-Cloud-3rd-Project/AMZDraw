@@ -37,6 +37,8 @@ public class Product {
 //    private String manufacturer; //제조사 필요한지 체크가 필요하다
     private String productDesc;
 
+    private ProductStatus status; //1이면 판매중 0이면 판매중단
+
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate

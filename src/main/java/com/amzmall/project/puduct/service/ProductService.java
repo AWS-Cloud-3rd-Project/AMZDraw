@@ -93,7 +93,12 @@ public class ProductService {
     }
 
 
-
+    @Transactional
+    public void deleteProduct(String productId){
+        Optional<Product> Product = productRepository.findById(productId);
+        Product product = Product.get();
+        productRepository.delete(product);
+    }
 
 
 
