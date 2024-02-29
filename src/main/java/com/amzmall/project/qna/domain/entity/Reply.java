@@ -53,7 +53,7 @@ public class Reply {
     private Timestamp updatedAt;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_sq")
+    @JoinColumn(name = "question_id")
     private Question question;
 
     public ReplyResDto toReplyDto() {
