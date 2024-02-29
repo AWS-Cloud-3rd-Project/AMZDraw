@@ -1,2 +1,2 @@
 ﻿# AMZMall
-CI/CD TEST ver 8.0
+CI/CD TEST ver 9.0
