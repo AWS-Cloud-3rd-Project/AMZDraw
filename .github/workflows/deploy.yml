@@ -92,13 +92,13 @@ jobs:
       # 헬름 차트 수정
       - name: Update Helm chart values
         run: |
-          sed -i "s/tag: .*/tag: ${{ env.IMAGE_TAG }}/" ./values.yaml
+          sed -i "s/tag: .*/tag: ${{ env.IMAGE_TAG }}/" ./backend/values.yaml
 
       # 변경 사항 커밋 및 푸쉬
       - name: Commit and push changes
         run: |
           git config --global user.email "ehgud9912@naver.com"
           git config --global user.name "dhkim1206"
-          git add values.yaml
+          git add ./backend/values.yaml
           git commit -m "Update image tag to latest"
           git push
