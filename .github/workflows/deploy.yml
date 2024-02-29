@@ -26,15 +26,15 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      
+
       ## gradlew 의 권한을 줍니다.
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-       
+
       ## gradle build
       - name: Build with Gradle
         run: ./gradlew clean build --debug
-     ## 이미지 태그에 시간 설정을 하기위해서 현재 시간(current-time)을 가져옵니다. 이후 이를 steps.current-time.outputs.formattedTime로 사용합니다.  
+      ## 이미지 태그에 시간 설정을 하기위해서 현재 시간(current-time)을 가져옵니다. 이후 이를 steps.current-time.outputs.formattedTime로 사용합니다.
       - name: Get current time
         uses: 1466587594/get-current-time@v2
         id: current-time
@@ -64,7 +64,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
-          
+
       ## ECR에 로그인합니다
       - name: Login to Amazon ECR
         id: login-ecr
