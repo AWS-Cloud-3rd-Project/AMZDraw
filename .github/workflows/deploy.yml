@@ -15,6 +15,18 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      ## 캐시 설정을 추가하여 의존성 패키지를 변경 시에만 재 다운로드 하도록 설정
+      - name: Cache Gradle Wrapper and dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/wrapper
+            ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
       ## gradlew 의 권한을 줍니다.
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
