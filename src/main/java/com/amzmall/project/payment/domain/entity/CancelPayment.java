@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
@@ -77,6 +78,7 @@ public class CancelPayment {
 ;
 	@Setter
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
 	private Customer customer;
 
 	public CancelPaymentResDto toCancelPaymentResDto() {
