@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category Selection</title>
+</head>
+<body>
+
+<form id="category_Form">
+  <select id="category_1" name="category">
+    <!-- 옵션은 여기에 동적으로 추가될 것입니다. -->
+  </select>
+
+  <select id="category_2" name="category">
+    <!-- 옵션은 여기에 동적으로 추가될 것입니다. -->
+  </select>
+
+  <select id="category_3" name="category">
+    <!-- 옵션은 여기에 동적으로 추가될 것입니다. -->
+  </select>
+  <!--    <div id="mySelectContainer"></div>-->
+</form>
+
+<script>
+
+  select_first(); //1차 카테고리를 불러오기 위한 javascript 함수
+// GET: categorys/1
+function select_first() {
+  fetch('/categorys/1') // 예시 URL, 실제 프로젝트에 맞게 수정
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log(data)
+            const selectElement = document.getElementById('category_1');
+            // 옵션 초기화
+            selectElement.innerHTML = '';
+
+            // 데이터를 이용하여 옵션 동적으로 추가
+            data.forEach(category => {
+              const option = document.createElement('option');
+              option.value = category.id;
+              option.text = `id: ${category.id}, name: ${category.name}, depth: ${category.depth}`;
+              selectElement.add(option);
+            });
+          })
+          .catch(error => {
+            console.error('fetch Error', error);
+          });
+}
+
+
+
+</script>
+</body>
+</html>
