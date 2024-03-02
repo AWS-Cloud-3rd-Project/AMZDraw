@@ -26,9 +26,6 @@ public class ProductDTO {
     //재고
     private int stockQuantity;
 
-
-
-
     public Product toEntity() {
         return Product.builder()
                 .productId(UUID.randomUUID().toString())

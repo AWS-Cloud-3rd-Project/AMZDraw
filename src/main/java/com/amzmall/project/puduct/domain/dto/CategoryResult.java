@@ -13,10 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryResult {
-    private Long id;
+    private int id;
     private String name;
-    private Long depth;
-    private Long parent;
+    private int depth;
+    private int parent;
     private List<CategoryResult> children;
 
     public static CategoryResult of(Category category){
