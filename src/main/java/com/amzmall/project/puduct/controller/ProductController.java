@@ -38,7 +38,7 @@ public class ProductController {
             @RequestParam("stockquantity") int stockQuantity,
             @RequestParam("photo") MultipartFile photo
     ){
-
+        //S3과련 업로드 수정
         ProductDTO productDTO = new ProductDTO(name,price,isDiscount,discountPrice,vat,stockQuantity);
         productService.registerProduct(productDTO,photo);
     }

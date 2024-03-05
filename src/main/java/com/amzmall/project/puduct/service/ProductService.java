@@ -19,6 +19,10 @@ public class ProductService {
 
 
     private final ProductRepository productRepository;
+
+    @Autowired
+    private S3Uploader s3Uploader;
+
     @Autowired
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -34,33 +38,46 @@ public class ProductService {
 //        System.out.println(productDTO.toEntity().toString());
 
         Product product = productDTO.toEntity();
+        //임시 엘라스틱서치용 데이터저장폼
         ES es = ES.builder()
                 .id(product.getProductId())
                 .name(product.getName())
                 .build();
 
-        //저장할 이미지 명
-        String originImg = photo.getOriginalFilename();
-        //실제 디렉토리 저장 파일 명
-        String savedFileName = product.getProductId()+ "_" + originImg;
+//        //저장할 이미지 명
+//        String originImg = photo.getOriginalFilename();
+//        //실제 디렉토리 저장 파일 명
+//        String savedFileName = product.getProductId()+ "_" + originImg;
+        System.out.println("프로덕트 저장 확인용이에용");
+        if(!photo.isEmpty()){
 
-        //저장경로
-        String projectPath = "C:/work/AMZMall/image/";
-//        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/";
-        File saveFile = new File(projectPath, savedFileName);
-
-        try {
-            photo.transferTo(saveFile);
-        } catch (IOException e) {
-            //이미지 저장 실패
-            e.printStackTrace();
+            try {
+                String storedFileName = s3Uploader.upload(photo, "photos");
+                product.setImgpath(storedFileName);
+            } catch (IOException e) {
+                // 예외를 처리하거나 로깅합니다.
+                e.printStackTrace(); // 또는 SLF4J 또는 log4j와 같은 로깅 프레임워크를 사용합니다.
+            }
+            //사진 이미지 url = Imgpath
         }
-        product.setImg(savedFileName);
-        product.setImgpath(projectPath+savedFileName);
+
+//        //저장경로
+//        String projectPath = "C:/work/AMZMall/image/";
+////        String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/files/";
+//        File saveFile = new File(projectPath, savedFileName);
+//
+//        try {
+//            photo.transferTo(saveFile);
+//        } catch (IOException e) {
+//            //이미지 저장 실패
+//            e.printStackTrace();
+//        }
+//        product.setImg(savedFileName);
+//        product.setImgpath(projectPath+savedFileName); //ima
 
 
 
-
+        //저장
         try {
             // 성공적으로 파일 저장 후 데이터베이스에 저장
             productRepository.save(product);

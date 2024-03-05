@@ -6,7 +6,14 @@ spring:
     username: root
     password: 3419
 
-#  Debug
+#  autoconfigure:
+#    exclude:
+#      - org.springframework.cloud.aws.autoconfigure.context.ContextInstanceDataAutoConfiguration
+#      - org.springframework.cloud.aws.autoconfigure.context.ContextStackAutoConfiguration
+#      - org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration
+
+
+  #  Debug
   jpa:
     hibernate:
       ddl-auto: update
@@ -38,15 +45,29 @@ springdoc:
 
 
 # AWS S3
-aws:
-  s3:
-    bucket: 버킷이름
-    accessKey: accessKey값
-    secretKey: secretKey값
-    client: client이름
-    region: 지역
+#cloud:
+#  aws:
+#    credentials:
+#      accessKey: AKIAQEUG5GLYJB6LVDTX
+#      secretKey: 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
+#    s3:
+#      bucket: amzamll.temp
+#      region:
+#        static: ap-northeast-2
+#    stack:
+#      auto : false
 
-
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIAQEUG5GLYJB6LVDTX
+      secretKey: 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
+    s3:
+      bucket: amzamll.temp
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 
 #    logging:
 #      level:
