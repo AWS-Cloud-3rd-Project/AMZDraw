@@ -73,13 +73,4 @@ public class Customer {
 
         return customer;
     }
-
-    public String getzipCode() {
-        return zipCode;
-    }
-
-    public void setUsername(String username) {
-    }
 }
-
-

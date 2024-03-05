@@ -1,5 +1,6 @@
-package com.amzmall.project.domain.customer;
+package com.amzmall.project.service.customer;
 
+import com.amzmall.project.domain.customer.Customer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.amzmall.project.exception.NotFoundCustomerException;

@@ -17,8 +17,8 @@ import java.util.Optional;
 public class CustomerService {
     private final CustomerRepository customerRepository;
 
-    public Customer save(Customer customer) {
-        return customerRepository.save(customer);
+    public void save(Customer customer) {
+        customerRepository.save(customer);
     }
 
     public void validateDuplicatedCustomer(String email) {
