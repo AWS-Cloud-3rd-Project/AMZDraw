@@ -77,6 +77,9 @@ public class Customer {
     public String getzipCode() {
         return zipCode;
     }
+
+    public void setUsername(String username) {
+    }
 }
 
 

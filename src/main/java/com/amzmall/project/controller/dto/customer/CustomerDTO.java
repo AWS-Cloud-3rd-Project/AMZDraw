@@ -2,7 +2,7 @@ package com.amzmall.project.controller.dto.customer;
 
 import lombok.Data;
 import com.amzmall.project.domain.customer.Customer;
-
+import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 
 @Data(staticConstructor = "of")
@@ -26,4 +26,5 @@ public class CustomerDTO {
                 customer.getBirth(),
                 customer.getzipCode());
     }
+
 }

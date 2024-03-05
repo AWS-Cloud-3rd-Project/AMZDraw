@@ -45,13 +45,22 @@ public class SimpleSecurityConfig {
                                 .loginPage("/customer/login")
                                 .defaultSuccessUrl("/")
                                 .usernameParameter("email")
-                                .successHandler((request, response, authentication) -> response.sendRedirect("/"))
+                                .successHandler((request, response, authentication) -> {
+                                    request.getSession().setMaxInactiveInterval(1800); // Set session timeout (seconds)
+                                    response.sendRedirect("/");
+                                })
                                 .failureUrl("/customer/login?error=true")
                 )
                 .logout(logout ->
                         logout
                                 .logoutSuccessUrl("/")
                                 .invalidateHttpSession(true)
+                )
+                .sessionManagement(sessionManagement ->
+                        sessionManagement
+                                .maximumSessions(1) // Allow only one session per user
+                                .maxSessionsPreventsLogin(true)
+                                .expiredUrl("/customer/login?expired=true")
                 )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(new SimpleAuthenticationEntryPoint())

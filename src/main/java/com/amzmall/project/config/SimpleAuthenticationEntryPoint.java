@@ -23,12 +23,23 @@ public class SimpleAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     //사용자가 인증되지 않은 경우의 메서드
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+            throws IOException, ServletException {
         if (XML_HTTP_REQUEST_VALUE.equals(request.getHeader(X_REQUESTED_WITH_HEADER_KEY))) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+        } else {
+            String redirectUrl = determineRedirectUrl(request);
+            response.sendRedirect(redirectUrl);
         } //http요청 헤더 중 xmlhttprequest인지를 나타냄 (주로 ajax요청에서 사용됨)
-        response.sendRedirect(CUSTOMER_LOGIN);
     }//요청이 Ajax 요청 -> 401 Unauthorized 상태 코드 응답 후 종료
-    //그렇지 않은 경우 -> /customer/login으로 redirect
+
+    private String determineRedirectUrl(HttpServletRequest request) {
+        String redirectUrl = CUSTOMER_LOGIN;
+
+        if (request.getSession(false) != null && request.getSession(false).getAttribute("customerEmail") != null) {
+            redirectUrl = "/"; // Redirect to the home page for authenticated users
+        }
+        return redirectUrl;
+    }
 }
+    //그렇지 않은 경우 -> /customer/login으로 redirect
