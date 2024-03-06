@@ -35,7 +35,7 @@ public class SimpleSecurityConfig {
                                 .requestMatchers("/customer/", "/customer/login", "/customer/signup").authenticated()
                                 .requestMatchers("/cart/**").hasRole(ECommerceRole.CUSTOMER.name())
                                 .requestMatchers("/checkout/**").hasRole(ECommerceRole.CUSTOMER.name())
-                                .requestMatchers("/customer/my-page*").hasRole(ECommerceRole.CUSTOMER.name())
+                                .requestMatchers("/customer/my-page").hasRole(ECommerceRole.CUSTOMER.name())
                                 .requestMatchers("/**").permitAll()
                 )
                 .formLogin(formLogin ->
