@@ -4,21 +4,18 @@ import com.amzmall.project.entity.User;
 import com.amzmall.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
-
-import org.springframework.stereotype.Service;
 import software.amazon.awssdk.utils.ImmutableMap;
 
 @Service
 public class CognitoService {
     @Value("${aws.cognito.pool-id}")
-    private final String userPoolId = "ap-northeast-2_Xx93tSQOS";
+    private final String userPoolId = "ap-northeast-2_qD0HzA3fK";
 
     @Value("${aws.cognito.client-id}")
-    private final String clientId = "n43oboi66tqoftirt7iboneos";
+    private final String clientId = "70aa9cojdarvlrj6e2hubvcckh";
 
     @Autowired
     private UserRepository userRepository;
