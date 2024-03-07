@@ -11,7 +11,7 @@ import com.amzmall.project.payment.domain.dto.PaymentResSuccessDto;
 import com.amzmall.project.payment.domain.dto.TossErrorDto;
 import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.payment.domain.entity.Payment;
-import com.amzmall.project.payment.config.TossPaymentConfig;
+import com.amzmall.project.config.TossPaymentConfig;
 import com.amzmall.project.exception.BusinessException;
 import com.amzmall.project.customer.repository.CustomerRepository;
 import com.amzmall.project.payment.repository.PaymentRepository;

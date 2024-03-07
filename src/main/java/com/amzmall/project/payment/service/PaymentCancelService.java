@@ -1,7 +1,7 @@
 package com.amzmall.project.payment.service;
 
 import com.amzmall.project.advice.ExMessage;
-import com.amzmall.project.payment.config.TossPaymentConfig;
+import com.amzmall.project.config.TossPaymentConfig;
 import com.amzmall.project.payment.domain.dto.CancelPaymentResDto;
 import com.amzmall.project.payment.domain.dto.PaymentResSuccessDto;
 import com.amzmall.project.payment.domain.entity.CancelPayment;

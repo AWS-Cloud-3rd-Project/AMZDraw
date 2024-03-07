@@ -1,4 +1,4 @@
-package com.amzmall.project.payment.config;
+package com.amzmall.project.config;
 
 import org.springframework.context.annotation.Configuration;
 

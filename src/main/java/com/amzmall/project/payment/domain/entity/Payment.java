@@ -1,7 +1,7 @@
 package com.amzmall.project.payment.domain.entity;
 
 import com.amzmall.project.customer.domain.entity.Customer;
-import com.amzmall.project.payment.config.TimeConfig;
+import com.amzmall.project.config.TimeConfig;
 import com.amzmall.project.payment.domain.dto.PaymentResDto;
 import com.amzmall.project.payment.domain.dto.PaymentDto;
 

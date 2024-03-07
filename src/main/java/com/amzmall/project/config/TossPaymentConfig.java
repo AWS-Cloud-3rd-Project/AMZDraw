@@ -1,4 +1,4 @@
-package com.amzmall.project.payment.config;
+package com.amzmall.project.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
