@@ -1,7 +1,7 @@
 package com.amzmall.project.product.controller;
 
 import com.amzmall.project.product.domain.entity.Product;
-import com.amzmall.project.product.domain.dto.ProductDTO;
+import com.amzmall.project.product.domain.dto.ProductDto;
 import com.amzmall.project.product.repository.ProductRepository;
 import com.amzmall.project.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +39,7 @@ public class ProductController {
             @RequestParam("photo") MultipartFile photo
     ){
 
-        ProductDTO productDTO = new ProductDTO(name,price,isDiscount,discountPrice,vat,stockQuantity);
+        ProductDto productDTO = new ProductDto(name,price,isDiscount,discountPrice,vat,stockQuantity);
         productService.registerProduct(productDTO,photo);
     }
 

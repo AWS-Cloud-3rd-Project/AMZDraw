@@ -37,7 +37,6 @@ public class PaymentResSuccessDto {
             .approvedAt(approvedAt)
             .cardCompany(card.getCompany())
             .cardNumber(card.getNumber())
-            .cardReceiptUrl(card.getReceiptUrl())
             .cancelAmount(cancels[0].getCancelAmount())
             .cancelDate(cancels[0].getCanceledAt())
             .cancelReason(cancels[0].getCancelReason())

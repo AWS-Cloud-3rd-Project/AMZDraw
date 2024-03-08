@@ -2,7 +2,6 @@ package com.amzmall.project.customer.domain.entity;
 
 import com.amzmall.project.customer.domain.dto.CustomerDto;
 
-import com.amzmall.project.customer.enums.ECommerceRole;
 import com.amzmall.project.payment.domain.entity.CancelPayment;
 import com.amzmall.project.payment.domain.entity.Payment;
 import com.amzmall.project.qna.domain.entity.Question;

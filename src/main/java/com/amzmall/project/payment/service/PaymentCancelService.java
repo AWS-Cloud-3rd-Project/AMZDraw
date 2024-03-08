@@ -60,7 +60,7 @@ public class PaymentCancelService {
 		PaymentResSuccessDto paymentResCancelDto;
 
 		try {
-			System.out.println("cancel uri  : " + cancelUri);
+			log.info("cancelUri : {}", cancelUri);
 			paymentResCancelDto = restTemplate.postForObject(
 				cancelUri,
 				new HttpEntity<>(jsonObject, httpHeaders),

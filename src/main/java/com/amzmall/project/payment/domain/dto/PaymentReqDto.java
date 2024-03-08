@@ -3,8 +3,6 @@ package com.amzmall.project.payment.domain.dto;
 import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.payment.domain.entity.Payment;
 
-import java.util.UUID;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

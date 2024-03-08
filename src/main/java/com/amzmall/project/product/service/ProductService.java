@@ -2,7 +2,7 @@ package com.amzmall.project.product.service;
 
 import com.amzmall.project.product.domain.entity.ES;
 import com.amzmall.project.product.domain.entity.Product;
-import com.amzmall.project.product.domain.dto.ProductDTO;
+import com.amzmall.project.product.domain.dto.ProductDto;
 import com.amzmall.project.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ProductService {
 
     //상품 등록
     @Transactional
-    public void registerProduct(ProductDTO productDTO, MultipartFile photo){
+    public void registerProduct(ProductDto productDTO, MultipartFile photo){
         //debug
 //        System.out.println(productDTO.toString());
 //        System.out.println(productDTO.toEntity().toString());

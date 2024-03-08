@@ -91,16 +91,7 @@ public class Payment {
 
     @Setter
     @Column
-    private String cardCompany;				// 카드사
-
-    @Setter
-    @Column
     private String cardNumber;				// 카드 번호
-
-    @Setter
-    @Column
-    private String cardReceiptUrl;			// 영수증 링크
-
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -124,7 +115,6 @@ public class Payment {
         return PaymentDto.builder()
             .paymentType(paymentType.getName())
             .amount(amount)
-            .cardCompany(cardCompany)
             .cardNumber(cardNumber)
             .orderId(orderId)
             .orderName(orderName)

@@ -34,7 +34,7 @@ public class Category {
     private int depth;
 
     @Column(name = "status", nullable = false)
-    private CategoryStatus status; //status
+    private CategoryStatus status;
 
     @OneToMany(mappedBy = "parent")
     private List<Category> children = new ArrayList<>();

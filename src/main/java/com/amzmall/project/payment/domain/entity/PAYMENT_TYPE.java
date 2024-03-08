@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum PAYMENT_TYPE {
-	BRANDPAY("브랜드페이"),
-	NORMAL("일반결제");
+	NORMAL("일반결제"),
+	BRANDPAY("브랜드페이");
 	private final String name;
 }

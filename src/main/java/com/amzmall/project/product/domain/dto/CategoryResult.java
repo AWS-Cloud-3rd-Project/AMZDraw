@@ -19,13 +19,12 @@ public class CategoryResult {
     private int parent;
     private List<CategoryResult> children;
 
-    public static CategoryResult of(Category category){
+    public static CategoryResult of(Category category) {
         CategoryResult categoryResult = new CategoryResult();
         categoryResult.setId(category.getId());
         categoryResult.setName(category.getName());
         categoryResult.setDepth(category.getDepth());
         categoryResult.setParent(categoryResult.getParent());
-
 
         if(category.getDepth()==1) {
             categoryResult.setChildren(null);

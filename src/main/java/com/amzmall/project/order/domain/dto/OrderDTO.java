@@ -10,7 +10,7 @@ public class OrderDTO {
     //주문 번호
     private String orderId;
     //주문 상태
-    private String orderStatus; // TODO enum으로 변경 (주문 대기, 주문 완료, 주문 취소)
+    private String orderStatus;
     //주문 날짜
     private String orderDate;
     //주문자

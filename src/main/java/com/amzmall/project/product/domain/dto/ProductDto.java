@@ -13,17 +13,12 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
-    //폼 형식으로 입력받는 내용
+public class ProductDto {
     private String name;
-    //가격
     private int price;
     private boolean isDiscount;
-    //할인가
     private int discountPrice;
-    //부가세
     private double vat;
-    //재고
     private int stockQuantity;
 
     public Product toEntity() {
