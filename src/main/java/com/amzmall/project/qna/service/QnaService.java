@@ -1,7 +1,7 @@
 package com.amzmall.project.qna.service;
 
-import com.amzmall.project.advice.ExMessage;
-import com.amzmall.project.exception.BusinessException;
+import com.amzmall.project.util.advice.ExMessage;
+import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.qna.domain.dto.QuestionReqDto;
 import com.amzmall.project.qna.domain.dto.QuestionResDto;
 import com.amzmall.project.qna.domain.dto.ReplyReqDto;
@@ -12,7 +12,7 @@ import com.amzmall.project.qna.domain.entity.Reply;
 import com.amzmall.project.customer.repository.CustomerRepository;
 import com.amzmall.project.qna.repository.QuestionRepository;
 import com.amzmall.project.qna.repository.ReplyRepository;
-import com.amzmall.project.utility.RequestValidationUtil;
+import com.amzmall.project.util.RequestValidationUtil;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
