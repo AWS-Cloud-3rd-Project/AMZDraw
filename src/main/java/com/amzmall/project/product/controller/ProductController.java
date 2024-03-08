@@ -38,9 +38,8 @@ public class ProductController {
             @RequestParam("stockquantity") int stockQuantity,
             @RequestParam("photo") MultipartFile photo
     ){
-
-        ProductDto productDTO = new ProductDto(name,price,isDiscount,discountPrice,vat,stockQuantity);
-        productService.registerProduct(productDTO,photo);
+        ProductDto productDto = new ProductDto(name, price, isDiscount, discountPrice, vat, stockQuantity);
+        productService.registerProduct(productDto,photo);
     }
 
     //product 전부 조회
@@ -51,28 +50,28 @@ public class ProductController {
     }
 
     //product id 값을 참고하여 조회
-    @GetMapping("/find/{productid}")
+    @GetMapping("/find/{productId}")
     @Operation(summary="상품 id로 조회", description="해당하는 id의 상품을 찾습니다.")
-    public Product findProduct(@PathVariable ("productid")String productid){
-        System.out.println(productid); //debug
-        return productRepository.findProductByProductId(productid);
+    public Product findProduct(@PathVariable ("productId")int productId){
+        System.out.println(productId); //debug
+        return productRepository.findProductByProductId(productId);
     }
 
     //Product 삭제 ---전부 삭제의 경우 고려하지 않음.
-    @PostMapping("/delete/{productid}")
+    @PostMapping("/delete/{productId}")
     @Operation(summary="상품 삭제", description="상품을 삭제합니다.")
-    public void delete(@PathVariable ("productid") String productid){
-        System.out.println(productid);
-        productService.deleteProduct(productid);
+    public void delete(@PathVariable ("productId") int productId){
+        System.out.println(productId);
+        productService.deleteProduct(productId);
     }
 
     //Product 수정 ---02/28 추후 테스트 필요.
-    @PostMapping("/update/{productid}")
+    @PostMapping("/update/{productId}")
     @Operation(summary="상품 수정", description="상품을 수정합니다.")
-    public void update(@PathVariable ("productid") String productid, @RequestBody Product newProduct){
-        System.out.println(productid);
+    public void update(@PathVariable ("productId") int productId, @RequestBody Product newProduct){
+        System.out.println(productId);
         System.out.println(newProduct);
-        productService.updateProduct(productid,newProduct);
+        productService.updateProduct(productId, newProduct);
 
     }
 

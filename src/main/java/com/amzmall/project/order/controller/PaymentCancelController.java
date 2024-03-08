@@ -1,11 +1,11 @@
-package com.amzmall.project.payment.controller;
+package com.amzmall.project.order.controller;
 
-import com.amzmall.project.payment.domain.dto.CancelPaymentResDto;
+import com.amzmall.project.order.domain.dto.CancelPaymentResDto;
 import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.util.dto.CommonResult;
 import com.amzmall.project.util.dto.ListResult;
 import com.amzmall.project.util.service.ResponseService;
-import com.amzmall.project.payment.service.PaymentCancelService;
+import com.amzmall.project.order.service.PaymentCancelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

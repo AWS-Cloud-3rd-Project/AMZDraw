@@ -1,20 +1,20 @@
-package com.amzmall.project.payment.service;
+package com.amzmall.project.order.service;
 
+import com.amzmall.project.order.domain.entity.Order;
 import com.amzmall.project.util.advice.ExMessage;
 import com.amzmall.project.customer.service.CustomerService;
-import com.amzmall.project.payment.domain.dto.PaymentDto;
-import com.amzmall.project.payment.domain.dto.PaymentFailDto;
-import com.amzmall.project.payment.domain.dto.PaymentReqDto;
-import com.amzmall.project.payment.domain.dto.PaymentResCardDto;
-import com.amzmall.project.payment.domain.dto.PaymentResDto;
-import com.amzmall.project.payment.domain.dto.PaymentResSuccessDto;
-import com.amzmall.project.payment.domain.dto.TossErrorDto;
-import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
-import com.amzmall.project.payment.domain.entity.Payment;
-import com.amzmall.project.payment.config.TossPaymentConfig;
+import com.amzmall.project.order.domain.dto.PaymentDto;
+import com.amzmall.project.order.domain.dto.PaymentFailDto;
+import com.amzmall.project.order.domain.dto.PaymentReqDto;
+import com.amzmall.project.order.domain.dto.PaymentResCardDto;
+import com.amzmall.project.order.domain.dto.PaymentResDto;
+import com.amzmall.project.order.domain.dto.PaymentResSuccessDto;
+import com.amzmall.project.order.domain.dto.TossErrorDto;
+import com.amzmall.project.order.domain.entity.PAYMENT_TYPE;
+import com.amzmall.project.order.config.TossPaymentConfig;
 import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.customer.repository.CustomerRepository;
-import com.amzmall.project.payment.repository.PaymentRepository;
+import com.amzmall.project.order.repository.PaymentRepository;
 import com.google.gson.Gson;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,15 +65,15 @@ public class PaymentService {
 
         PaymentResDto paymentResDto;
         try {
-            Payment payment = paymentReqDto.toEntity();
+            Order order = paymentReqDto.toEntity();
             customerRepository.findByEmail(customerEmail)
                     .ifPresentOrElse(
-                            C -> C.addPayment(payment)
+                            C -> C.addPayment(order)
                             , () -> {
                                 throw new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND);
                             });
-            paymentRepository.save(payment);
-            paymentResDto = payment.toPaymentDto();
+            paymentRepository.save(order);
+            paymentResDto = order.toPaymentDto();
             paymentResDto.setSuccessUrl(tossPaymentConfig.getSuccessUrl());
             paymentResDto.setFailUrl(tossPaymentConfig.getFailUrl());
 
@@ -107,10 +107,10 @@ public class PaymentService {
         String testSecretKey = tossPaymentConfig.getTestSecretKey() + ":"; // 시크릿 키는 ":" 을 붙여야 함
         // 토스 : 시크릿 키 뒤에 콜론을 추가해서 비밀번호가 없다는 것을 알립니다.
 
-        Payment payment = paymentRepository.findByPaymentKey(paymentKey)
+        Order order = paymentRepository.findByPaymentKey(paymentKey)
                 .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
 
-        PAYMENT_TYPE payType = payment.getPaymentType();
+        PAYMENT_TYPE payType = order.getPaymentType();
 
         // 토스에서 제공한 시크릿 키를 Basic Authorization 방식으로 인코딩해서 전송
         byte[] encodedKey = Base64.getEncoder()
@@ -175,10 +175,10 @@ public class PaymentService {
 
     @Transactional
     public PaymentFailDto requestFail(String errorCode, String errorMessage, String orderId) {
-        Payment payment = paymentRepository.findByOrderId(orderId)
+        Order order = paymentRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
-        payment.setPaySuccess(false);
-        payment.setPayFailReason(errorMessage);
+        order.setPaySuccess(false);
+        order.setPayFailReason(errorMessage);
 
         return PaymentFailDto
                 .builder()
@@ -195,7 +195,7 @@ public class PaymentService {
             .getEmail();
 
         return paymentRepository.findAllByCustomerEmail(targetEmail, pageRequest)
-            .stream().map(Payment::toDto)
+            .stream().map(Order::toDto)
             .collect(Collectors.toList());
     }
 

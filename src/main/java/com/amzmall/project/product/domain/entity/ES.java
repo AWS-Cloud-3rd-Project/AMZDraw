@@ -12,7 +12,7 @@ import lombok.*;
 @Entity
 public class ES {
     @Id
-    private String id ;
+    private int id ;
     private String name;
     private String itemdesc;
     //상품설명 등 매칭

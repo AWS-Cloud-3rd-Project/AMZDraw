@@ -1,16 +1,16 @@
-package com.amzmall.project.payment.service;
+package com.amzmall.project.order.service;
 
 import com.amzmall.project.util.advice.ExMessage;
-import com.amzmall.project.payment.config.TossPaymentConfig;
-import com.amzmall.project.payment.domain.dto.CancelPaymentResDto;
-import com.amzmall.project.payment.domain.dto.PaymentResSuccessDto;
-import com.amzmall.project.payment.domain.entity.CancelPayment;
-import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
-import com.amzmall.project.payment.domain.entity.Payment;
+import com.amzmall.project.order.config.TossPaymentConfig;
+import com.amzmall.project.order.domain.dto.CancelPaymentResDto;
+import com.amzmall.project.order.domain.dto.PaymentResSuccessDto;
+import com.amzmall.project.order.domain.entity.CancelOrder;
+import com.amzmall.project.order.domain.entity.PAYMENT_TYPE;
+import com.amzmall.project.order.domain.entity.Order;
 import com.amzmall.project.util.exception.BusinessException;
-import com.amzmall.project.payment.repository.CancelPaymentRepository;
+import com.amzmall.project.order.repository.CancelOrderRepository;
 import com.amzmall.project.customer.repository.CustomerRepository;
-import com.amzmall.project.payment.repository.PaymentRepository;
+import com.amzmall.project.order.repository.PaymentRepository;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -34,7 +34,7 @@ import org.springframework.web.client.RestTemplate;
 public class PaymentCancelService {
 	private final PaymentRepository paymentRepository;
 	private final TossPaymentConfig tossPaymentConfig;
-	private final CancelPaymentRepository cancelPaymentRepository;
+	private final CancelOrderRepository cancelOrderRepository;
 	private final CustomerRepository customerRepository;
 	@Transactional
 	public void requestCancelPayment(String paymentKey, String cancelReason) {
@@ -71,13 +71,13 @@ public class PaymentCancelService {
 
 		if (paymentResCancelDto == null) throw new BusinessException(ExMessage.RESPONSE_NULL);
 
-		Payment payment = paymentRepository.findByPaymentKey(paymentKey)
+		Order order = paymentRepository.findByPaymentKey(paymentKey)
 			.orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
 
 		int cancelAmount = paymentResCancelDto.getCancels()[0].getCancelAmount();
 		try {
 			cancelPaymentSave(
-				payment.getPaymentType(), paymentKey, paymentResCancelDto, cancelAmount);
+				order.getPaymentType(), paymentKey, paymentResCancelDto, cancelAmount);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BusinessException(e.getMessage());
@@ -90,11 +90,11 @@ public class PaymentCancelService {
 			.filter(P -> P.getAmount() == cancelAmount)	// 결제 금액이 취소 금액과 일치하는지 확인
 			.ifPresentOrElse(P -> {
 				log.info("결제 취소 고객 이력에 추가");
-				CancelPayment cancelPayment;
-				cancelPayment = paymentCancelResDto.toCancelPayment();
-				P.getCustomer().addCancelPayment(cancelPayment);
+				CancelOrder cancelOrder;
+				cancelOrder = paymentCancelResDto.toCancelPayment();
+				P.getCustomer().addCancelPayment(cancelOrder);
 				log.info("결제 취소 준비");
-				P.getCustomer().getPayments()
+				P.getCustomer().getOrders()
 					.stream()
 					.filter(p -> p.getPaymentKey().equals(paymentKey))
 					.findFirst()
@@ -112,10 +112,10 @@ public class PaymentCancelService {
 			.orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
 			.getEmail();
 
-		return cancelPaymentRepository
+		return cancelOrderRepository
 			.findAllByCustomerEmail(targetEmail, pageRequest)
 			.stream()
-			.map(CancelPayment::toCancelPaymentResDto)
+			.map(CancelOrder::toCancelPaymentResDto)
 			.collect(Collectors.toList());
 	}
 }

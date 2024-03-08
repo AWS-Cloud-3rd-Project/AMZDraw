@@ -59,8 +59,6 @@ public class ProductService {
         product.setImgpath(projectPath+savedFileName);
 
 
-
-
         try {
             // 성공적으로 파일 저장 후 데이터베이스에 저장
             productRepository.save(product);
@@ -74,18 +72,14 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(String productId, Product newProduct){
+    public void updateProduct(int productId, Product newProduct){
 
         Optional<Product> Product = productRepository.findById(productId);
-
         Product product = Product.get();
-
 
             // 변경된 필드만 수정
             if (!Product.equals(newProduct)) {
                 productRepository.save(newProduct);
-
-            // productRepository.save(product); // save 메소드를 호출하지 않아도 변경사항이 트랜잭션 종료 시에 자동으로 반영됨
         } else {
             throw new EntityNotFoundException("수정 실패!");
         }
@@ -94,7 +88,7 @@ public class ProductService {
 
 
     @Transactional
-    public void deleteProduct(String productId){
+    public void deleteProduct(int productId){
         Optional<Product> Product = productRepository.findById(productId);
         Product product = Product.get();
         productRepository.delete(product);

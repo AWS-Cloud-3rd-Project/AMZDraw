@@ -1,7 +1,7 @@
-package com.amzmall.project.payment.domain.entity;
+package com.amzmall.project.order.domain.entity;
 
 import com.amzmall.project.customer.domain.entity.Customer;
-import com.amzmall.project.payment.domain.dto.CancelPaymentResDto;
+import com.amzmall.project.order.domain.dto.CancelPaymentResDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,10 +29,10 @@ import org.springframework.data.annotation.LastModifiedDate;
 @NoArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class CancelPayment {
+public class CancelOrder {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cancel_payment_id", nullable = false)
+	@Column(name = "cancel_order_id", nullable = false)
 	private int cancelPaymentId;
 
 	@Column(nullable = false)

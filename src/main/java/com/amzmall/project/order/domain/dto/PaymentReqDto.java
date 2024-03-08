@@ -1,7 +1,7 @@
-package com.amzmall.project.payment.domain.dto;
+package com.amzmall.project.order.domain.dto;
 
-import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
-import com.amzmall.project.payment.domain.entity.Payment;
+import com.amzmall.project.order.domain.entity.PAYMENT_TYPE;
+import com.amzmall.project.order.domain.entity.Order;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -27,8 +27,8 @@ public class PaymentReqDto {
     private String customerName;
 
     // 프론트에서 입력받는 값
-    public Payment toEntity() {
-        return Payment.builder()
+    public Order toEntity() {
+        return Order.builder()
             .orderId(orderId)		// UUID.randomUUID().toString()
             .paymentType(paymentType)
             .amount(amount)

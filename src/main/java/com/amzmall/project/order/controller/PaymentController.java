@@ -1,17 +1,17 @@
-package com.amzmall.project.payment.controller;
+package com.amzmall.project.order.controller;
 
 
-import com.amzmall.project.payment.domain.dto.PaymentDto;
-import com.amzmall.project.payment.domain.dto.PaymentFailDto;
-import com.amzmall.project.payment.domain.dto.PaymentReqDto;
-import com.amzmall.project.payment.domain.dto.PaymentResDto;
-import com.amzmall.project.payment.domain.dto.PaymentResSuccessDto;
-import com.amzmall.project.payment.domain.entity.PAYMENT_TYPE;
+import com.amzmall.project.order.domain.dto.PaymentDto;
+import com.amzmall.project.order.domain.dto.PaymentFailDto;
+import com.amzmall.project.order.domain.dto.PaymentReqDto;
+import com.amzmall.project.order.domain.dto.PaymentResDto;
+import com.amzmall.project.order.domain.dto.PaymentResSuccessDto;
+import com.amzmall.project.order.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.util.dto.ListResult;
 import com.amzmall.project.util.service.ResponseService;
 import com.amzmall.project.util.dto.SingleResult;
-import com.amzmall.project.payment.service.PaymentService;
+import com.amzmall.project.order.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -130,20 +130,5 @@ public class PaymentController {
             throw new BusinessException(e.getMessage());
         }
     }
-
-//    @PostMapping("/cancel")
-//    @Operation(summary="결제 취소", description = "완료된 결제의 결제 취소를 요청합니다.")
-//    public SingleResult<String> requestCancelPayment(
-//            @Parameter(name = "paymentKey", description = "토스페이먼츠 측 결제 고유 번호", required = true)
-//            @RequestParam("paymentKey") String paymentKey,
-//            @Parameter(name = "cancelReason", description = "결제 취소 이유", required = true)
-//            @RequestParam("cancelReason") String cancelReason) {
-//        try{
-//            return responseService.getSingleResult(paymentService.requestCancelPayment(paymentKey, cancelReason));
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            throw new BusinessException(e.getMessage());
-//        }
-//    }
 
 }

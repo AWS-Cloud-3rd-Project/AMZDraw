@@ -1,4 +1,4 @@
-package com.amzmall.project.payment.domain.dto;
+package com.amzmall.project.order.domain.dto;
 
 import lombok.*;
 

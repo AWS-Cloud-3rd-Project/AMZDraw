@@ -1,6 +1,6 @@
-package com.amzmall.project.payment.domain.dto;
+package com.amzmall.project.order.domain.dto;
 
-import com.amzmall.project.payment.domain.entity.CancelPayment;
+import com.amzmall.project.order.domain.entity.CancelOrder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,8 +28,8 @@ public class PaymentResSuccessDto {
 
     PaymentResCancelDto[] cancels;  // 결제 취소 객체
 
-    public CancelPayment toCancelPayment() {
-        return CancelPayment.builder()
+    public CancelOrder toCancelPayment() {
+        return CancelOrder.builder()
             .orderId(orderId)
             .orderName(orderName)
             .paymentKey(paymentKey)

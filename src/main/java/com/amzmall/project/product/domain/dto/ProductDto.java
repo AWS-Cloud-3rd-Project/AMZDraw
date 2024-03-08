@@ -1,6 +1,10 @@
 package com.amzmall.project.product.domain.dto;
 
+import com.amzmall.project.order.domain.entity.Order;
 import com.amzmall.project.product.domain.entity.Product;
+import jakarta.persistence.ManyToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,13 +27,13 @@ public class ProductDto {
 
     public Product toEntity() {
         return Product.builder()
-                .productId(UUID.randomUUID().toString())
-                .name(name)
-                .price(price)
-                .isDiscount(isDiscount)
-                .discountPrice(discountPrice)
-                .vat(vat)
-                .stockQuantity(stockQuantity)
-                .build();
+            .productCode(UUID.randomUUID().toString())
+            .name(name)
+            .price(price)
+            .isDiscount(isDiscount)
+            .discountPrice(discountPrice)
+            .vat(vat)
+            .stockQuantity(stockQuantity)
+            .build();
     }
 }

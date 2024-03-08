@@ -1,7 +1,10 @@
 package com.amzmall.project.product.domain.entity;
 
+import com.amzmall.project.order.domain.entity.Order;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
@@ -19,8 +22,8 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id", nullable = false)
-    private String productId ; //상품고유 id 사실상 code와 동일하지 않나?
+    @Column(name = "id", nullable = false)
+    private int productId ; //상품고유 id 사실상 code와 동일하지 않나?
 
     @Column(name = "seller_id", nullable = false)
     private int sellerId; //판매자
@@ -32,7 +35,7 @@ public class Product {
     private int categoryId;
 
     @Column(name = "product_code")
-    private int productCode; //필요한가?
+    private String productCode; //필요한가?
 
     @Column(name = "name")
     private String name; //상품명
@@ -76,9 +79,18 @@ public class Product {
     //img
     @Column(name = "img")
     private String img; //상품 사진
+
     @Column(name = "imgpath")
     private String imgpath; //사진 위치
 
+    // 다대다 관계를 표현하기 위한 매핑
+    @ManyToMany(mappedBy = "products")
+    private List<Order> orders = new ArrayList<>();
+
+    public void addOrder(Order order) {
+        orders.add(order);
+        order.getProducts().add(this);
+    }
     public Product() {
     }
 
