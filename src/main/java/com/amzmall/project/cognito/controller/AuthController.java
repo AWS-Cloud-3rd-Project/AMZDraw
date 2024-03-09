@@ -1,7 +1,7 @@
-package com.amzmall.project.controller;
+package com.amzmall.project.cognito.controller;
 
-import com.amzmall.project.dto.LogInRequestDto;
-import com.amzmall.project.service.CognitoService;
+import com.amzmall.project.cognito.dto.LogInRequestDto;
+import com.amzmall.project.cognito.service.CognitoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +12,7 @@ public class AuthController {
     private CognitoService cognitoService;
 
     @PostMapping("/sign-up")
+    //코그니토 서비스 사용해서 회원가입 수행
     public String signUp(@RequestBody LogInRequestDto signUpRequestDto) {
         String username = signUpRequestDto.getUsername();
         String password = signUpRequestDto.getPassword();

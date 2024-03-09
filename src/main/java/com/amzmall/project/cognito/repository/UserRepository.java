@@ -1,6 +1,6 @@
-package com.amzmall.project.repository;
+package com.amzmall.project.cognito.repository;
 
-import com.amzmall.project.entity.User;
+import com.amzmall.project.cognito.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {

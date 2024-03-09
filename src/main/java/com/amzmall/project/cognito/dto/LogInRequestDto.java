@@ -1,4 +1,4 @@
-package com.amzmall.project.dto;
+package com.amzmall.project.cognito.dto;
 
 import lombok.Getter;
 import lombok.Setter;

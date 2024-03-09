@@ -1,4 +1,4 @@
-package com.amzmall.project.entity;
+package com.amzmall.project.cognito.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

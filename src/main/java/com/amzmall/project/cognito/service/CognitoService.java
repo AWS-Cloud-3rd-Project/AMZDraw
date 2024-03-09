@@ -1,7 +1,7 @@
-package com.amzmall.project.service;
+package com.amzmall.project.cognito.service;
 
-import com.amzmall.project.entity.User;
-import com.amzmall.project.repository.UserRepository;
+import com.amzmall.project.cognito.entity.User;
+import com.amzmall.project.cognito.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
