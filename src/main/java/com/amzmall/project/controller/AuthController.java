@@ -11,19 +11,20 @@ public class AuthController {
     @Autowired
     private CognitoService cognitoService;
 
-    @PostMapping(value = "/sign-up")
-    @ResponseBody
-    //코그니토 서비스 사용해서 회원가입 수행
-    public String signUp(@RequestBody LogInRequestDto loginRequestDto){
-        cognitoService.signUp(loginRequestDto.getUsername(), loginRequestDto.getPassword());
+    @PostMapping("/sign-up")
+    public String signUp(@RequestBody LogInRequestDto signUpRequestDto) {
+        String username = signUpRequestDto.getUsername();
+        String password = signUpRequestDto.getPassword();
+        cognitoService.signUp(username, password);
         return "sign-up";
     }
 
-    @PostMapping(value = "/login")
-    @ResponseBody
-    ///코그니토 서비스 사용해서 로그인 수행하고 액세스 토큰 반환
-    public String login(@RequestBody LogInRequestDto loginRequestDto){
-        return cognitoService.login(loginRequestDto.getUsername(), loginRequestDto.getPassword());
+    @PostMapping("/login")
+    //코그니토 서비스 사용해서 로그인 수행하고 액세스 토큰 반환
+    public String login(@RequestBody LogInRequestDto loginRequestDto) {
+        String username = loginRequestDto.getUsername();
+        String password = loginRequestDto.getPassword();
+        return cognitoService.login(username, password);
     }
 
     @PostMapping(value = "/logout")
