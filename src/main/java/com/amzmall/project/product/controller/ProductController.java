@@ -14,7 +14,7 @@ import java.util.List;
 
 @Tag(name = "product", description="상품")
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/v1/product")
 public class ProductController {
 
     private final ProductService productService;
@@ -50,6 +50,7 @@ public class ProductController {
     }
 
     //product id 값을 참고하여 조회
+    @CrossOrigin(origins = "*") // 모든 도메인에서의 요청 허용
     @GetMapping("/find/{productId}")
     @Operation(summary="상품 id로 조회", description="해당하는 id의 상품을 찾습니다.")
     public Product findProduct(@PathVariable ("productId")int productId){

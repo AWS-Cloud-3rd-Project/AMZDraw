@@ -1,10 +1,6 @@
 package com.amzmall.project.product.domain.dto;
 
-import com.amzmall.project.order.domain.entity.Order;
 import com.amzmall.project.product.domain.entity.Product;
-import jakarta.persistence.ManyToMany;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

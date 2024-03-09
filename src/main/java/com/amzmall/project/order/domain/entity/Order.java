@@ -1,8 +1,7 @@
 package com.amzmall.project.order.domain.entity;
 
 import com.amzmall.project.customer.domain.entity.Customer;
-import com.amzmall.project.util.config.TimeConfig;
-import com.amzmall.project.order.domain.dto.PaymentResDto;
+import com.amzmall.project.order.domain.dto.OrderResDto;
 import com.amzmall.project.order.domain.dto.PaymentDto;
 import com.amzmall.project.product.domain.entity.Product;
 import jakarta.persistence.CascadeType;
@@ -16,12 +15,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,28 +26,25 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.stereotype.Component;
-
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-@Component
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "seq", nullable = false)
+    @Column(name = "seq")
     private int seq;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_type", nullable = false)
+    @Column(name = "payment_type")
     private PAYMENT_TYPE paymentType;
 
     @Column(name = "amount", nullable = false)
@@ -68,6 +61,10 @@ public class Order {
 
     @Column(name = "customer_name", nullable = false)
     private String customerName;
+
+    @Column(name = "customer_address", nullable = false)
+    private String customerAddress;
+
 
     @Column(name = "payment_key")
     private String paymentKey;
@@ -101,29 +98,21 @@ public class Order {
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
-    @ManyToMany
-    @JoinTable(
-        name = "order_product", // 중간 테이블 이름
-        joinColumns = @JoinColumn(name = "order_id"), // 주문 테이블과 연결할 컬럼
-        inverseJoinColumns = @JoinColumn(name = "product_id") // 상품 테이블과 연결할 컬럼
-    )
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    private List<Product> products = new ArrayList<>();
-    public void addProduct(Product product) {
-        products.add(product);
-        product.getOrders().add(this);
-    }
-
-    public PaymentResDto toPaymentDto(){
-        return PaymentResDto.builder()
-            .paymentType(paymentType.getName())
+    public OrderResDto toEntity(){
+        return OrderResDto.builder()
             .amount(amount)
             .orderId(orderId)
+            .productId(product.getProductId())
             .orderName(orderName)
             .customerName(customerName)
             .customerEmail(customerEmail)
+            .customerAddress(customerAddress)
             .paymentKey(paymentKey)
-            .createdDate(new TimeConfig().getNowTime())
+            .createdAt(String.valueOf(createdAt))
             .build();
     }
 
@@ -140,7 +129,6 @@ public class Order {
             .isPaySuccess(isPaySuccess)
             .isPayCancled(isPayCancled)
             .payFailReason(payFailReason)
-            .createDate(new TimeConfig().getNowTime())
             .build();
     }
 }

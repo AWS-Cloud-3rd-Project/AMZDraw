@@ -71,7 +71,7 @@ public class Customer {
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
     private List<Order> orders = new ArrayList<>();
-    public void addPayment(Order order) {
+    public void addOrder(Order order) {
         this.orders.add(order);
         order.setCustomer(this);
     }

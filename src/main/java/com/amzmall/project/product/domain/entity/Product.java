@@ -1,6 +1,6 @@
 package com.amzmall.project.product.domain.entity;
 
-import com.amzmall.project.order.domain.entity.Order;
+import com.amzmall.project.util.exception.BusinessException;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -24,9 +24,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private int productId ; //상품고유 id 사실상 code와 동일하지 않나?
-
-    @Column(name = "seller_id", nullable = false)
-    private int sellerId; //판매자
 
     @Column(name = "brand")
     private String brand; // 필요한지 체크가 필요하다
@@ -71,11 +68,6 @@ public class Product {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-//    private int ratingMean;
-//    private int reviewCount;
-
-//    private String status; //A D D의 경우 null로 모두 처리 A의 경우 처리하지 않음
-//    private String isDelivery; // on off 없으면 off
     //img
     @Column(name = "img")
     private String img; //상품 사진
@@ -83,16 +75,16 @@ public class Product {
     @Column(name = "imgpath")
     private String imgpath; //사진 위치
 
-    // 다대다 관계를 표현하기 위한 매핑
-    @ManyToMany(mappedBy = "products")
-    private List<Order> orders = new ArrayList<>();
-
-    public void addOrder(Order order) {
-        orders.add(order);
-        order.getProducts().add(this);
-    }
     public Product() {
     }
 
+    public void removeStock(int stockQuantity) {
+        int restStock = this.stockQuantity - stockQuantity;
+        if(restStock < 0) {
+            throw new BusinessException(("상품의 재고가 부족합니다." +
+                "(현재 재고 수량: " + this.stockQuantity + ")"));
+        }
+        this.stockQuantity = restStock;
+    }
 
 }

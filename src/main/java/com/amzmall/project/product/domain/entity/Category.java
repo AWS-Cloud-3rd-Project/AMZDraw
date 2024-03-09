@@ -26,18 +26,18 @@ public class Category {
     @Column(name = "category_name", nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "parent_id")
+//    private Category parent;
 
-    @Column(name = "depth", nullable = false)
-    private int depth;
+//    @Column(name = "depth", nullable = false)
+//    private int depth;
 
     @Column(name = "status", nullable = false)
     private CategoryStatus status;
 
-    @OneToMany(mappedBy = "parent")
-    private List<Category> children = new ArrayList<>();
+//    @OneToMany(mappedBy = "parent")
+//    private List<Category> children = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)

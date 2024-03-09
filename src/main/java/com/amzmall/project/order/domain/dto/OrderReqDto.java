@@ -1,9 +1,11 @@
 package com.amzmall.project.order.domain.dto;
 
-import com.amzmall.project.order.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.order.domain.entity.Order;
 
+import com.amzmall.project.product.domain.entity.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.*;
 
 @Getter
@@ -11,30 +13,29 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(description = "구매 요청 DTO")
-public class PaymentReqDto {
-    @Schema(description = "결제 방식")
-    private PAYMENT_TYPE paymentType;
+@Schema(description = "주문 요청 DTO")
+public class OrderReqDto {
+    @Schema(description = "주문 상품")
+    private int productId;
     @Schema(description = "결제 금액")
     private int amount;
-    @Schema(description = "주문 ID")
-    private String orderId;
     @Schema(description = "주문 이름")
     private String orderName;
     @Schema(description = "구매자 이메일")
     private String customerEmail;
     @Schema(description = "구매자 이름")
     private String customerName;
+    @Schema(description = "구매자 주소")
+    private String customerAddress;
 
-    // 프론트에서 입력받는 값
     public Order toEntity() {
         return Order.builder()
-            .orderId(orderId)		// UUID.randomUUID().toString()
-            .paymentType(paymentType)
+            .orderId(UUID.randomUUID().toString())
             .amount(amount)
             .orderName(orderName)
             .customerEmail(customerEmail)
             .customerName(customerName)
+            .customerAddress(customerAddress)
             .isPaySuccess(false)
             .isPayCancled(false)
             .build();

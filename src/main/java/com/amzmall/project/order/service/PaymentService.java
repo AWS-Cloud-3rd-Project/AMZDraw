@@ -1,22 +1,25 @@
 package com.amzmall.project.order.service;
 
 import com.amzmall.project.order.domain.entity.Order;
+import com.amzmall.project.product.domain.entity.Product;
+import com.amzmall.project.product.repository.ProductRepository;
 import com.amzmall.project.util.advice.ExMessage;
 import com.amzmall.project.customer.service.CustomerService;
 import com.amzmall.project.order.domain.dto.PaymentDto;
 import com.amzmall.project.order.domain.dto.PaymentFailDto;
-import com.amzmall.project.order.domain.dto.PaymentReqDto;
+import com.amzmall.project.order.domain.dto.OrderReqDto;
 import com.amzmall.project.order.domain.dto.PaymentResCardDto;
-import com.amzmall.project.order.domain.dto.PaymentResDto;
+import com.amzmall.project.order.domain.dto.OrderResDto;
 import com.amzmall.project.order.domain.dto.PaymentResSuccessDto;
 import com.amzmall.project.order.domain.dto.TossErrorDto;
 import com.amzmall.project.order.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.order.config.TossPaymentConfig;
 import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.customer.repository.CustomerRepository;
-import com.amzmall.project.order.repository.PaymentRepository;
+import com.amzmall.project.order.repository.OrderRepository;
 import com.google.gson.Gson;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,47 +41,35 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class PaymentService {
     private final CustomerService customerService;
-    private final PaymentRepository paymentRepository;
+    private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final TossPaymentConfig tossPaymentConfig;
-
+    private final ProductRepository productRepository;
     @Transactional
-    public PaymentResDto requestPayment(PaymentReqDto paymentReqDto){
-        int amount = paymentReqDto.getAmount();
-        String paymentType = paymentReqDto.getPaymentType().getName();
-        String customerEmail = paymentReqDto.getCustomerEmail();
-        String customerName = paymentReqDto.getCustomerName();
-        String orderName = paymentReqDto.getOrderName();
-        String orderID = paymentReqDto.getOrderId();
+    public OrderResDto requestOrder(OrderReqDto orderReqDto){
+        int productId = orderReqDto.getProductId();
+        String customerEmail = orderReqDto.getCustomerEmail();
 
-        if (amount <= 1000) {
-            throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PRICE);
-        }
-
-        if (!paymentType.equals("일반결제") && !paymentType.equals("브랜드페이")) {
-            throw new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_PAYMENT_TYPE);
-        }
-
-        if (paymentRepository.findByOrderId(orderID).isPresent()) {
-            throw new BusinessException(ExMessage.PAYMENT_ERROR_ALREADY_APPLY);
-        }
-
-        PaymentResDto paymentResDto;
-        try {
-            Order order = paymentReqDto.toEntity();
+        OrderResDto orderResDto;
+        try{
+            Order order = orderReqDto.toEntity();
+            productRepository.findById(productId)
+                    .ifPresentOrElse(order::setProduct,
+                        () ->  {
+                            throw new BusinessException("해당 상품은 존재하지 않습니다.");
+                        });
             customerRepository.findByEmail(customerEmail)
                     .ifPresentOrElse(
-                            C -> C.addPayment(order)
+                            C -> C.addOrder(order)
                             , () -> {
                                 throw new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND);
                             });
-            paymentRepository.save(order);
-            paymentResDto = order.toPaymentDto();
-            paymentResDto.setSuccessUrl(tossPaymentConfig.getSuccessUrl());
-            paymentResDto.setFailUrl(tossPaymentConfig.getFailUrl());
+            orderResDto = order.toEntity();
+            orderResDto.setSuccessUrl(tossPaymentConfig.getSuccessUrl());
+            orderResDto.setFailUrl(tossPaymentConfig.getFailUrl());
 
-            return paymentResDto;
-        } catch (Exception e) {
+            return orderResDto;
+       } catch (Exception e) {
             throw new BusinessException(ExMessage.DB_ERROR_SAVE);
         }
     }
@@ -87,7 +78,7 @@ public class PaymentService {
         // 요청한 결제 금액과 실제 토스페이먼츠에서 결제된 금액 일치 검증
         // 조회는 orderId 기준
         // 추후 결제 조회/취소를 위한 paymentKey 설정
-        paymentRepository.findByOrderId(orderId)
+        orderRepository.findByOrderId(orderId)
                 .ifPresentOrElse(
                         P -> {
                             if (P.getAmount() == amount) {
@@ -107,7 +98,7 @@ public class PaymentService {
         String testSecretKey = tossPaymentConfig.getTestSecretKey() + ":"; // 시크릿 키는 ":" 을 붙여야 함
         // 토스 : 시크릿 키 뒤에 콜론을 추가해서 비밀번호가 없다는 것을 알립니다.
 
-        Order order = paymentRepository.findByPaymentKey(paymentKey)
+        Order order = orderRepository.findByPaymentKey(paymentKey)
                 .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
 
         PAYMENT_TYPE payType = order.getPaymentType();
@@ -149,7 +140,7 @@ public class PaymentService {
         // 일반 카드 결제 시
         if (payType.equals(PAYMENT_TYPE.NORMAL)) {
             PaymentResCardDto card = paymentResSuccessDto.getCard();
-            paymentRepository.findByOrderId(paymentResSuccessDto.getOrderId())
+            orderRepository.findByOrderId(paymentResSuccessDto.getOrderId())
                     .ifPresent(P -> {
                         P.setCardNumber(card.getNumber());
                         P.setPaySuccess(true);
@@ -175,7 +166,7 @@ public class PaymentService {
 
     @Transactional
     public PaymentFailDto requestFail(String errorCode, String errorMessage, String orderId) {
-        Order order = paymentRepository.findByOrderId(orderId)
+        Order order = orderRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
         order.setPaySuccess(false);
         order.setPayFailReason(errorMessage);
@@ -194,7 +185,7 @@ public class PaymentService {
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
             .getEmail();
 
-        return paymentRepository.findAllByCustomerEmail(targetEmail, pageRequest)
+        return orderRepository.findAllByCustomerEmail(targetEmail, pageRequest)
             .stream().map(Order::toDto)
             .collect(Collectors.toList());
     }
@@ -205,7 +196,7 @@ public class PaymentService {
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
             .getEmail();
 
-        return paymentRepository.findByCustomerEmailAndOrderId(targetEmail, orderId)
+        return orderRepository.findByCustomerEmailAndOrderId(targetEmail, orderId)
             .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND))
             .toDto();
     }

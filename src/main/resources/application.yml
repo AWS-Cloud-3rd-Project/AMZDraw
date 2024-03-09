@@ -12,8 +12,8 @@ toss:
     enabled: true
     client_key: ${TOSS_CLIENT_KEY}
     secret_key: ${TOSS_SECRET_KEY}
-    fail_url: http://localhost:8080/api/v1/payment/fail
-    success_url: http://localhost:8080/api/v1/payment/success
+    fail_url: http://localhost:8080/api/v1/order/fail
+    success_url: http://localhost:8080/api/v1/order/success
     basic_url: https://api.tosspayments.com/v1/payments/
 
 spring:

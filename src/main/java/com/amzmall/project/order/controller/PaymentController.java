@@ -3,8 +3,8 @@ package com.amzmall.project.order.controller;
 
 import com.amzmall.project.order.domain.dto.PaymentDto;
 import com.amzmall.project.order.domain.dto.PaymentFailDto;
-import com.amzmall.project.order.domain.dto.PaymentReqDto;
-import com.amzmall.project.order.domain.dto.PaymentResDto;
+import com.amzmall.project.order.domain.dto.OrderReqDto;
+import com.amzmall.project.order.domain.dto.OrderResDto;
 import com.amzmall.project.order.domain.dto.PaymentResSuccessDto;
 import com.amzmall.project.order.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.util.exception.BusinessException;
@@ -18,9 +18,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,23 +30,23 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "payments", description="결제")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/payment")
+@RequestMapping("/api/v1/order")
 public class PaymentController {
 
     private final PaymentService paymentService;
     private final ResponseService responseService;
-
     @PostMapping
-    @Operation(summary="결제 요청", description="결제 요청에 필요한 값들을 반환합니다.")
-    public SingleResult<PaymentResDto> requestPayment(
-            @Parameter(name = "PaymentReqDto", description = "요청 객체", required = true)
-            @ModelAttribute PaymentReqDto paymentReqDto) {
-       try {
-           return responseService.getSingleResult(paymentService.requestPayment(paymentReqDto));
-       } catch (Exception e){
-           e.printStackTrace();
-           throw new BusinessException(e.getMessage());
-       }
+    @CrossOrigin(origins = "*") // 모든 도메인에서의 요청 허용
+    @Operation(summary="주문 요청", description="주문 요청에 필요한 값들을 반환합니다.")
+    public SingleResult<OrderResDto> placeOrder(
+        @Parameter(name = "OrderReqDto", description = "요청 객체", required = true)
+        @RequestBody OrderReqDto orderReqDto) {
+        try {
+            return responseService.getSingleResult(paymentService.requestOrder(orderReqDto));
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @GetMapping("/success")
@@ -56,14 +57,8 @@ public class PaymentController {
             @Parameter(name = "orderId", description = "상점 측 주문 고유 번호", required = true)
             @RequestParam("orderId") String orderId,
             @Parameter(name = "amount", description = "실제 결제 금액", required = true)
-            @RequestParam("amount") int amount,
-            @Parameter(name = "paymentType", description = "결제 타입")
-            @RequestParam("paymentType") PAYMENT_TYPE paymentType) {
+            @RequestParam("amount") int amount) {
         try {
-            System.out.println("paymentKey = " + paymentKey);
-            System.out.println("orderId = " + orderId);
-            System.out.println("amount = " + amount);
-            System.out.println("paymentType" + paymentType);
             paymentService.verifyRequest(paymentKey, orderId, amount);
             PaymentResSuccessDto result = paymentService.requestFinalPayment(paymentKey, orderId, amount);
 
