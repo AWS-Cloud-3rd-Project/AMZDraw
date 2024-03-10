@@ -18,9 +18,7 @@ public class CancelPaymentResDto {
 	private String orderName;
 	private String requestedAt;
 	private String approvedAt;
-	private String cardCompany;
 	private String cardNumber;
-	private String receiptUrl;
 	private String cancelReason;
 	private int cancelAmount;
 }

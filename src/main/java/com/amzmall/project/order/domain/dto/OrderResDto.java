@@ -23,5 +23,6 @@ public class OrderResDto {
     private String successUrl;		// 성공 리다이렉트 URL
     private String failUrl;			// 실패 리다이렉트 URL
     private String customerAddress;
+    private String customerPhone;
     private String createdAt;
 }

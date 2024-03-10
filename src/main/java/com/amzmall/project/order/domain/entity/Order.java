@@ -65,6 +65,8 @@ public class Order {
     @Column(name = "customer_address", nullable = false)
     private String customerAddress;
 
+    @Column(name = "customer_phone", nullable = false)
+    private String customerPhone;
 
     @Column(name = "payment_key")
     private String paymentKey;
@@ -106,11 +108,12 @@ public class Order {
         return OrderResDto.builder()
             .amount(amount)
             .orderId(orderId)
-            .productId(product.getProductId())
+            .productId(product.getId())
             .orderName(orderName)
             .customerName(customerName)
             .customerEmail(customerEmail)
             .customerAddress(customerAddress)
+            .customerPhone(customerPhone)
             .paymentKey(paymentKey)
             .createdAt(String.valueOf(createdAt))
             .build();
@@ -125,10 +128,12 @@ public class Order {
             .orderName(orderName)
             .customerEmail(customerEmail)
             .customerName(customerName)
+            .customerAddress(customerAddress)
             .paymentKey(paymentKey)
             .isPaySuccess(isPaySuccess)
             .isPayCancled(isPayCancled)
             .payFailReason(payFailReason)
+            .createdAt(String.valueOf(createdAt))
             .build();
     }
 }

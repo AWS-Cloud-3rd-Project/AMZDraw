@@ -2,9 +2,7 @@ package com.amzmall.project.order.domain.dto;
 
 import com.amzmall.project.order.domain.entity.Order;
 
-import com.amzmall.project.product.domain.entity.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.*;
 
@@ -27,6 +25,8 @@ public class OrderReqDto {
     private String customerName;
     @Schema(description = "구매자 주소")
     private String customerAddress;
+    @Schema(description = "구매자 핸드폰 번호")
+    private String customerPhone;
 
     public Order toEntity() {
         return Order.builder()
@@ -36,6 +36,7 @@ public class OrderReqDto {
             .customerEmail(customerEmail)
             .customerName(customerName)
             .customerAddress(customerAddress)
+            .customerPhone(customerPhone)
             .isPaySuccess(false)
             .isPayCancled(false)
             .build();

@@ -51,13 +51,7 @@ public class CancelOrder {
 	private String approvedAt;				// 결제 취소 승인이 일어난 날짜와 시간
 
 	@Column
-	private String cardCompany;				// 카드사
-
-	@Column
 	private String cardNumber;				// 카드번호
-
-	@Column
-	private String cardReceiptUrl;			// 결제 취소 영수증
 
 	@Column(nullable = false)
 	private String cancelReason;			// 결제 취소 이유
@@ -81,7 +75,7 @@ public class CancelOrder {
 	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
 	private Customer customer;
 
-	public CancelPaymentResDto toCancelPaymentResDto() {
+	public CancelPaymentResDto toDto() {
 		return CancelPaymentResDto.builder()
 			.cancelPaymentId(cancelPaymentId)
 			.orderId(orderId)
@@ -89,9 +83,7 @@ public class CancelOrder {
 			.orderName(orderName)
 			.requestedAt(requestedAt)
 			.approvedAt(approvedAt)
-			.cardCompany(cardCompany)
 			.cardNumber(cardNumber)
-			.receiptUrl(cardReceiptUrl)
 			.cancelReason(cancelReason)
 			.cancelAmount(cancelAmount)
 			.build();
