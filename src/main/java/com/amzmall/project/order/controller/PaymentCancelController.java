@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/cancel")
 public class PaymentCancelController {
+
 	private final ResponseService responseService;
 	private final PaymentCancelService paymentCancelService;
 

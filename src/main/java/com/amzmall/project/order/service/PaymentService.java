@@ -1,10 +1,10 @@
 package com.amzmall.project.order.service;
 
 import com.amzmall.project.order.domain.entity.Order;
+import com.amzmall.project.order.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.product.domain.entity.Product;
 import com.amzmall.project.product.repository.ProductRepository;
 import com.amzmall.project.util.advice.ExMessage;
-import com.amzmall.project.customer.service.CustomerService;
 import com.amzmall.project.order.domain.dto.PaymentDto;
 import com.amzmall.project.order.domain.dto.PaymentFailDto;
 import com.amzmall.project.order.domain.dto.OrderReqDto;
@@ -12,14 +12,12 @@ import com.amzmall.project.order.domain.dto.PaymentResCardDto;
 import com.amzmall.project.order.domain.dto.OrderResDto;
 import com.amzmall.project.order.domain.dto.PaymentResSuccessDto;
 import com.amzmall.project.order.domain.dto.TossErrorDto;
-import com.amzmall.project.order.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.order.config.TossPaymentConfig;
 import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.customer.repository.CustomerRepository;
 import com.amzmall.project.order.repository.OrderRepository;
 import com.google.gson.Gson;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,30 +38,39 @@ import java.util.Collections;
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
-    private final CustomerService customerService;
+
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final TossPaymentConfig tossPaymentConfig;
     private final ProductRepository productRepository;
+
     @Transactional
     public OrderResDto requestOrder(OrderReqDto orderReqDto){
         int productId = orderReqDto.getProductId();
         String customerEmail = orderReqDto.getCustomerEmail();
 
         OrderResDto orderResDto;
-        try{
+        try {
             Order order = orderReqDto.toEntity();
-            productRepository.findById(productId)
-                    .ifPresentOrElse(order::setProduct,
-                        () ->  {
-                            throw new BusinessException("해당 상품은 존재하지 않습니다.");
-                        });
+            Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new BusinessException("해당 상품은 존재하지 않습니다."));
+
+            int currentStock = product.getStockQuantity();
+            if (currentStock < 5) {
+                throw new BusinessException("상품의 재고가 부족합니다.");
+            }
+
+            product.decreaseStockQuantity(1);
+            productRepository.save(product);
+            order.setProduct(product);
+
             customerRepository.findByEmail(customerEmail)
                     .ifPresentOrElse(
                             C -> C.addOrder(order)
                             , () -> {
                                 throw new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND);
                             });
+
             orderResDto = order.toEntity();
             orderResDto.setSuccessUrl(tossPaymentConfig.getSuccessUrl());
             orderResDto.setFailUrl(tossPaymentConfig.getFailUrl());
@@ -101,8 +108,6 @@ public class PaymentService {
         Order order = orderRepository.findByPaymentKey(paymentKey)
                 .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND));
 
-        PAYMENT_TYPE payType = order.getPaymentType();
-
         // 토스에서 제공한 시크릿 키를 Basic Authorization 방식으로 인코딩해서 전송
         byte[] encodedKey = Base64.getEncoder()
                 .encode(testSecretKey
@@ -137,18 +142,13 @@ public class PaymentService {
             throw new BusinessException(errorMessage);
         }
 
-        // 일반 카드 결제 시
-        if (payType.equals(PAYMENT_TYPE.NORMAL)) {
-            PaymentResCardDto card = paymentResSuccessDto.getCard();
-            orderRepository.findByOrderId(paymentResSuccessDto.getOrderId())
-                    .ifPresent(P -> {
+        PaymentResCardDto card = paymentResSuccessDto.getCard();
+        orderRepository.findByOrderId(paymentResSuccessDto.getOrderId())
+            .ifPresent(P -> {
                         P.setCardNumber(card.getNumber());
+                        order.setPaymentType(PAYMENT_TYPE.NORMAL);
                         P.setPaySuccess(true);
-                        // Order 엔티티 추가 시 설정
-                        // Order.setPayYn("Y");
-                        //Order.setPayType(PAY_TYPE.NORMAL);
-                    });
-        }
+            });
         return paymentResSuccessDto;
     }
 

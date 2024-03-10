@@ -30,14 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "QnA", description="문의 게시판")
 @RequestMapping("/api/v1/qna")
 public class QnaController {
+
     private final QnaService qnaService;
     private final ResponseService responseService;
+
     @PostMapping
     @Operation(summary = "문의 등록", description = "문의를 등록합니다.")
     public CommonResult requestQuestion(
         @Parameter(name = "QuestionReqDto", description = "문의 요청 객체", required = true)
         @RequestBody QuestionReqDto questionReqDto)
-//      @ModelAttribute QuestionReqDto questionReqDto)
         {
         try {
             qnaService.postQuestion(questionReqDto);

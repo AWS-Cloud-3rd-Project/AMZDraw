@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "payments", description="결제")
+@Tag(name = "orders", description="주문")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/order")
@@ -35,6 +35,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     private final ResponseService responseService;
+
     @PostMapping
     @CrossOrigin(origins = "*") // 모든 도메인에서의 요청 허용
     @Operation(summary="주문 요청", description="주문 요청에 필요한 값들을 반환합니다.")
