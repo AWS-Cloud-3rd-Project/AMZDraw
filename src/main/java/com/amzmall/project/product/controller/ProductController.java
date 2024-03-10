@@ -5,6 +5,7 @@ import com.amzmall.project.product.domain.entity.Product;
 import com.amzmall.project.product.domain.dto.ProductReqDto;
 import com.amzmall.project.product.repository.ProductRepository;
 import com.amzmall.project.product.service.ProductService;
+import com.amzmall.project.util.dto.ListResult;
 import com.amzmall.project.util.dto.SingleResult;
 import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.util.service.ResponseService;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,27 +48,55 @@ public class ProductController {
 
     @GetMapping("/find")
     @Operation(summary="모든 상품 조회", description="모든 상품을 조회합니다.")
-    public List<Product> findAllProduct(){
-        return productRepository.findAll();
+    public ListResult<ProductResDto> findAllProduct(@Parameter(name = "page", description = "페이지 번호 (0부터)", required = true)
+    @RequestParam(name = "page",defaultValue = "0") int page,
+        @Parameter(name = "size", description = "페이지 사이즈", required = true)
+        @RequestParam(name = "size", defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        try {
+            return responseService.getListResult(
+                productService.getAllProducts(pageRequest)
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @CrossOrigin(origins = "*") // 모든 도메인에서의 요청 허용
     @GetMapping("/find/{productId}")
     @Operation(summary="상품 id로 조회", description="해당하는 id의 상품을 찾습니다.")
-    public Product findProduct(@PathVariable ("productId")int productId){
-        return productRepository.findProductById(productId);
+    public SingleResult<ProductResDto> findProduct(
+        @PathVariable ("productId")int productId) {
+        try {
+            return responseService.getSingleResult(
+                productService.getOneProduct(productId)
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @PostMapping("/delete/{productId}")
     @Operation(summary="상품 삭제", description="상품을 삭제합니다.")
     public void delete(@PathVariable ("productId") int productId){
-        productService.deleteProduct(productId);
+        try {
+            productService.deleteProduct(productId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @PostMapping("/update/{productId}")
     @Operation(summary="상품 수정", description="상품을 수정합니다.")
     public void update(@PathVariable ("productId") int productId, @RequestBody Product newProduct){
-        productService.updateProduct(productId, newProduct);
-
+        try {
+            productService.updateProduct(productId, newProduct);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 }

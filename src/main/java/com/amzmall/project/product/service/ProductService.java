@@ -8,9 +8,13 @@ import com.amzmall.project.product.domain.dto.ProductReqDto;
 import com.amzmall.project.product.repository.CategoryRepository;
 import com.amzmall.project.product.repository.ProductRepository;
 import com.amzmall.project.util.exception.BusinessException;
-import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,25 +68,42 @@ public class ProductService {
 //        product.setImgpath(projectPath+savedFileName);
 
     @Transactional
-    public void updateProduct(int productId, Product newProduct){
+    public void updateProduct(int productId, Product newProduct) {
 
-        Optional<Product> Product = productRepository.findById(productId);
-        Product product = Product.get();
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        Product product = optionalProduct
+            .orElseThrow(() -> new BusinessException("해당 상품을 찾을 수 없습니다."));
 
-            // 변경된 필드만 수정
-        if (!Product.equals(newProduct)) {
-            productRepository.save(newProduct);
+        if (!Objects.equals(product, newProduct)) {
+            product.setBrand(newProduct.getBrand());
+            product.setProductCode(newProduct.getProductCode());
+            product.setName(newProduct.getName());
+            // 다른 필드 추가
+            productRepository.save(product);
         } else {
-            throw new EntityNotFoundException("수정 실패!");
+            throw new BusinessException("수정할 내용이 없습니다.");
         }
-
     }
 
     @Transactional
-    public void deleteProduct(int productId){
-        Optional<Product> Product = productRepository.findById(productId);
-        Product product = Product.get();
+    public void deleteProduct(int productId) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        Product product = optionalProduct
+            .orElseThrow(() -> new BusinessException("해당 상품을 찾을 수 없습니다."));
         productRepository.delete(product);
     }
 
+    @Transactional(readOnly = true)
+    public ProductResDto getOneProduct(int productId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new BusinessException("해당 상품을 찾을 수 없습니다."));
+        return product.toDto();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResDto> getAllProducts(PageRequest pageRequest) {
+        return productRepository.findAll(pageRequest)
+            .stream().map(Product::toDto)
+            .collect(Collectors.toList());
+    }
 }
