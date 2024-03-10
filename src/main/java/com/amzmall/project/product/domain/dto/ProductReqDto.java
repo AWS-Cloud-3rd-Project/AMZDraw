@@ -34,8 +34,6 @@ public class ProductReqDto {
     @NotNull(message = "카테고리는 필수 입력 값입니다.")
     @Schema(description = "카테고리 명")
     private String categoryName;
-    @Schema(description = "사진")
-    MultipartFile photo;
     
     public Product toEntity() {
         return Product.builder()

@@ -78,7 +78,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping("/delete/{productId}")
+    @DeleteMapping("/delete/{productId}")
     @Operation(summary="상품 삭제", description="상품을 삭제합니다.")
     public void delete(@PathVariable ("productId") int productId){
         try {
