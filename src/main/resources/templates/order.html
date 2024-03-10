@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ha">
+<head>
+  <meta charset="utf-8" />
+  <title>주문하기</title>
+</head>
+<body>
+<h1>주문하기</h1>
+<form id="order-form">
+  <h2>상품 정보</h2>
+  <p id="product-name">상품명: </p>
+  <p id="product-price">가격: </p>
+
+  <h2>구매자 정보</h2>
+  <label for="email">이메일:</label><br>
+  <input type="email" id="email" name="email" required><br>
+  <label for="name">이름:</label><br>
+  <input type="text" id="name" name="name" required><br>
+  <label for="address">주소:</label><br>
+  <textarea id="address" name="address" required></textarea><br><br>
+  <button type="submit">주문하기</button>
+</form>
+
+<script>
+  var orderForm = document.getElementById('order-form');
+
+  // 주문 폼 제출 시
+  orderForm.addEventListener('submit', function(event) {
+    event.preventDefault(); // 기본 동작 중단
+
+    // 주문 정보 입력
+    var email = document.getElementById("email").value;
+    var name = document.getElementById("name").value;
+    var address = document.getElementById("address").value;
+
+    // 서버로 주문 정보 전송
+    fetch('http://localhost:8080/api/v1/order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        name: name,
+        address: address
+      }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      // 서버에서 받은 응답을 사용하여 결제 창 열기
+      tossPayments.requestPayment('CARD', {
+        amount: data.amount,
+        orderId: data.orderId,
+        orderName: data.orderName,
+        customerName: name,
+        customerEmail: email,
+        successUrl: "http://localhost:8080/api/v1/order/success",
+        failUrl: "http://localhost:8080/api/v1/order/fail"
+      });
+    })
+    .catch(error => {
+      console.error('주문 정보를 가져오는 중 오류 발생:', error);
+    });
+  });
+</script>
+</body>
+</html>

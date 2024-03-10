@@ -2,9 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문하기</title>
 </head>
 <body>
-test
+<!-- 주문 정보 입력 폼 -->
+<form id="주문_폼_ID">
+    <label for="paymentType">결제 방식:</label>
+    <input type="text" id="paymentType" name="paymentType" required><br>
+
+    <label for="amount">결제 금액:</label>
+    <input type="number" id="amount" name="amount" required><br>
+
+    <label for="orderId">주문 ID:</label>
+    <input type="text" id="orderId" name="orderId" required><br>
+
+    <label for="orderName">주문 이름:</label>
+    <input type="text" id="orderName" name="orderName" required><br>
+
+    <label for="customerEmail">구매자 이메일:</label>
+    <input type="email" id="customerEmail" name="customerEmail" required><br>
+
+    <label for="customerName">구매자 이름:</label>
+    <input type="text" id="customerName" name="customerName" required><br>
+
+    <button type="submit">주문하기</button>
+</form>
+
+<script>
+    // 주문 폼 제출 이벤트 핸들러
+    document.getElementById('주문_폼_ID').addEventListener('submit', function(event) {
+        event.preventDefault(); // 폼 제출 기본 동작 방지
+
+        // 주문 정보 수집
+        const 주문정보 = {
+            paymentType: document.getElementById('paymentType').value,
+            amount: parseInt(document.getElementById('amount').value),
+            orderId: document.getElementById('orderId').value,
+            orderName: document.getElementById('orderName').value,
+            customerEmail: document.getElementById('customerEmail').value,
+            customerName: document.getElementById('customerName').value
+        };
+
+        // 서버로 요청을 보냅니다
+        fetch('http://localhost:8080/api/v1/order/requestPayment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(주문정보),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('서버 응답 실패');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // 응답 처리
+            // 예를 들어, 응답이 성공적으로 처리되었을 때의 동작을 여기에 구현합니다
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('오류 발생:', error);
+            // 오류 처리
+        });
+    });
+</script>
 </body>
 </html>
