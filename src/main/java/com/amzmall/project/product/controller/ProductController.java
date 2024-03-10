@@ -1,9 +1,13 @@
 package com.amzmall.project.product.controller;
 
+import com.amzmall.project.product.domain.dto.ProductResDto;
 import com.amzmall.project.product.domain.entity.Product;
-import com.amzmall.project.product.domain.dto.ProductDto;
+import com.amzmall.project.product.domain.dto.ProductReqDto;
 import com.amzmall.project.product.repository.ProductRepository;
 import com.amzmall.project.product.service.ProductService;
+import com.amzmall.project.util.dto.SingleResult;
+import com.amzmall.project.util.exception.BusinessException;
+import com.amzmall.project.util.service.ResponseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,27 +26,21 @@ public class ProductController {
 
     private final ProductService productService;
     private final ProductRepository productRepository;
+    private final ResponseService responseService;
 
     @PostMapping("/new")
     @Operation(summary="상품 생성", description="상품을 생성합니다.")
-    public void registerProduct(
-        @Parameter(name = "name", description = "상품명", required = true)
-        @RequestParam("name") String name,
-        @Parameter(name = "amount", description = "상품 가격", required = true)
-        @RequestParam("amount") int amount,
-        @Parameter(name = "isDiscount", description = "할인 여부", required = true)
-        @RequestParam("isDiscount") boolean isDiscount,
-        @Parameter(name = "discountPrice", description = "할인 가격")
-        @RequestParam("discountPrice") int discountPrice,
-        @Parameter(name = "stockQuantity", description = "재고", required = true)
-        @RequestParam("stockQuantity") int stockQuantity,
-        @Parameter(name = "categoryName", description = "카테고리 명", required = true)
-        @RequestParam("categoryName") String categoryName,
+    public SingleResult<ProductResDto> registerProduct(
+        @Parameter(name = "ProductReqDto", description = "요청 객체", required = true)
+        @RequestBody ProductReqDto productReqDto,
         @Parameter(name = "photo", description = "상품 사진", required = true)
-        @RequestParam("photo") MultipartFile photo
-    ) {
-        ProductDto productDto = new ProductDto(name, amount, isDiscount, discountPrice, stockQuantity, categoryName);
-        productService.registerProduct(productDto,photo);
+        @RequestParam("photo") MultipartFile photo) {
+        try {
+            return responseService.getSingleResult(productService.registerProduct(productReqDto, photo));
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @GetMapping("/find")
@@ -55,22 +53,18 @@ public class ProductController {
     @GetMapping("/find/{productId}")
     @Operation(summary="상품 id로 조회", description="해당하는 id의 상품을 찾습니다.")
     public Product findProduct(@PathVariable ("productId")int productId){
-        System.out.println(productId); //debug
         return productRepository.findProductById(productId);
     }
 
     @PostMapping("/delete/{productId}")
     @Operation(summary="상품 삭제", description="상품을 삭제합니다.")
     public void delete(@PathVariable ("productId") int productId){
-        System.out.println(productId);
         productService.deleteProduct(productId);
     }
 
     @PostMapping("/update/{productId}")
     @Operation(summary="상품 수정", description="상품을 수정합니다.")
     public void update(@PathVariable ("productId") int productId, @RequestBody Product newProduct){
-        System.out.println(productId);
-        System.out.println(newProduct);
         productService.updateProduct(productId, newProduct);
 
     }

@@ -1,5 +1,6 @@
 package com.amzmall.project.product.domain.entity;
 
+import com.amzmall.project.product.domain.dto.ProductResDto;
 import com.amzmall.project.util.exception.BusinessException;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
@@ -12,9 +13,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "product")
 @Builder
 @ToString
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Product {
 
@@ -68,8 +69,8 @@ public class Product {
     @Column(name = "img")
     private String img;
 
-    @Column(name = "imgpath")
-    private String imgpath;
+    @Column(name = "img_path")
+    private String imgPath;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -78,8 +79,25 @@ public class Product {
     @Column(name = "category_name")
     private String categoryName;
 
-    public Product() {
-
+    public ProductResDto toDto() {
+        return ProductResDto.builder()
+            .id(id)
+            .brand(brand)
+            .productCode(productCode)
+            .name(name)
+            .option(option)
+            .amount(amount)
+            .isDiscount(isDiscount)
+            .discountPrice(discountPrice)
+            .vat(vat)
+            .stockQuantity(stockQuantity)
+            .productDesc(productDesc)
+            .status(status)
+            .createdAt(String.valueOf(createdAt))
+            .img(img)
+            .imgPath(imgPath)
+            .categoryName(categoryName)
+            .build();
     }
 
     public void decreaseStockQuantity(int quantity) {

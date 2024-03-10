@@ -1,6 +1,5 @@
 package com.amzmall.project.product.domain.dto;
 
-import com.amzmall.project.product.domain.entity.Category;
 import com.amzmall.project.product.domain.entity.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -12,12 +11,13 @@ import lombok.ToString;
 
 
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDto {
+public class ProductReqDto {
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
     @Schema(description = "상품명")
     private String name;
@@ -34,7 +34,9 @@ public class ProductDto {
     @NotNull(message = "카테고리는 필수 입력 값입니다.")
     @Schema(description = "카테고리 명")
     private String categoryName;
-
+    @Schema(description = "사진")
+    MultipartFile photo;
+    
     public Product toEntity() {
         return Product.builder()
             .productCode(UUID.randomUUID().toString())
