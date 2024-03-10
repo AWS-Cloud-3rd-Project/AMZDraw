@@ -96,8 +96,7 @@ public class PaymentController {
         @Parameter(name = "page", description = "페이지 번호 (0부터)", required = true)
         @RequestParam(name = "page",defaultValue = "0") int page,
         @Parameter(name = "size", description = "페이지 사이즈", required = true)
-        @RequestParam(name = "size", defaultValue = "10") int size
-    ) {
+        @RequestParam(name = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
         try {
             return responseService.getListResult(
@@ -115,8 +114,7 @@ public class PaymentController {
         @Parameter(name = "customerEmail", description = "고객 이메일", required = true)
         @RequestParam("customerEmail") String customerEmail,
         @Parameter(name = "orderId", description = "주문 고유 번호", required = true)
-        @RequestParam("orderId") String orderId
-    ) {
+        @RequestParam("orderId") String orderId) {
         try {
             return responseService.getSingleResult(
                 paymentService.getOnePayment(customerEmail, orderId)
