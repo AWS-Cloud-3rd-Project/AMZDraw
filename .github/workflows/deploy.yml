@@ -74,10 +74,10 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         run: |
           docker build -t sample:${{steps.current-time.outputs.formattedTime}} .
-          # docker tag sample:${{steps.current-time.outputs.formattedTime}} 009946608368.dkr.ecr.ap-northeast-2.amazonaws.com/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
-          docker tag sample:${{steps.current-time.outputs.formattedTime}} public.ecr.aws/v0f8u3p8/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
-          # docker push 009946608368.dkr.ecr.ap-northeast-2.amazonaws.com/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
-          docker push public.ecr.aws/v0f8u3p8/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
+          docker tag sample:${{steps.current-time.outputs.formattedTime}} 009946608368.dkr.ecr.ap-northeast-2.amazonaws.com/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
+          # docker tag sample:${{steps.current-time.outputs.formattedTime}} public.ecr.aws/v0f8u3p8/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
+          docker push 009946608368.dkr.ecr.ap-northeast-2.amazonaws.com/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
+          # docker push public.ecr.aws/v0f8u3p8/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
   # CD 수행 부분
   update-helm-chart:
     needs: build-and-push-image
