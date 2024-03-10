@@ -115,7 +115,7 @@ public class PaymentCancelService {
 		return cancelOrderRepository
 			.findAllByCustomerEmail(targetEmail, pageRequest)
 			.stream()
-			.map(CancelOrder::toCancelPaymentResDto)
+			.map(CancelOrder::toDto)
 			.collect(Collectors.toList());
 	}
 }

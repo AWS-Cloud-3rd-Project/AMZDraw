@@ -15,17 +15,12 @@ public class PaymentResSuccessDto {
     String currency;                // 결제할 때 사용한 통화
     String method;                  // 결제수단 (카드, 가상계좌, 간편결제, 휴대폰, 계좌이체, 문화상품권, 도서문화상품권, 게임문화상품권)
     String totalAmount;             // 총 결제 금액
-    String balanceAmount;           // 취소할 수 있는 금액(잔고)
-    String suppliedAmount;          // 결제 처리 상태
     String vat;                     // 부가세
     String status;                  // 결제 처리 상태  : "DONE"
     String requestedAt;             // 결제가 일어난 날짜와 시간 정보. yyyy-MM-dd'T'HH:mm:ss±hh:mm
     String approvedAt;              // 결제 승인이 일어난 날짜와 시간 정보입니다. yyyy-MM-dd'T'HH:mm:ss±hh:mm
-    String useEscrow;               // 에스크로 사용 여부
-    String cultureExpense;          // 문화비 지출 여부, 카드 결제는 항상 false
     String type;                    // 결제 타입 정보 (NOMAL, BILLING, CONNECTPAY)
     PaymentResCardDto card;	        // 카드 결제
-
     PaymentResCancelDto[] cancels;  // 결제 취소 객체
 
     public CancelOrder toCancelPayment() {
@@ -35,7 +30,6 @@ public class PaymentResSuccessDto {
             .paymentKey(paymentKey)
             .requestedAt(requestedAt)
             .approvedAt(approvedAt)
-            .cardCompany(card.getCompany())
             .cardNumber(card.getNumber())
             .cancelAmount(cancels[0].getCancelAmount())
             .cancelDate(cancels[0].getCanceledAt())
