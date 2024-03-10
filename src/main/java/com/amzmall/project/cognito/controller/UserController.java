@@ -17,8 +17,6 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    // 프론트에서 인가코드 돌려 받는 주소
-    // 인가 코드로 엑세스 토큰 발급 -> 사용자 정보 조회 -> DB 저장 -> jwt 토큰 발급 -> 프론트에 토큰 전달
     @GetMapping(value = "")
     public List<User> getUsers(){
         return userRepository.findAll();
