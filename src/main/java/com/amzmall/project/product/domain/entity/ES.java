@@ -15,5 +15,4 @@ public class ES {
     private int id ;
     private String name;
     private String itemdesc;
-    //상품설명 등 매칭
 }

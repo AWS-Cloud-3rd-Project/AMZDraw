@@ -5,60 +5,60 @@ import com.amzmall.project.product.domain.dto.ProductDto;
 import com.amzmall.project.product.repository.ProductRepository;
 import com.amzmall.project.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 
-@Tag(name = "product", description="상품")
+@Tag(name = "products", description="상품")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/product")
 public class ProductController {
 
     private final ProductService productService;
-    private  final ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    public ProductController(ProductService productService, ProductRepository productRepository) {
-        this.productService = productService;
-        this.productRepository = productRepository;
-    }
-
-
-    //상품 추가 ---sweager 파일업로드가 테스트 안되기 때문에 postman으로 처리
     @PostMapping("/new")
     @Operation(summary="상품 생성", description="상품을 생성합니다.")
     public void registerProduct(
-            @RequestParam("name") String name,
-            @RequestParam("price") int price,
-            @RequestParam("isdiscount") boolean isDiscount,
-            @RequestParam("discountprice") int discountPrice,
-            @RequestParam("vat") double vat,
-            @RequestParam("stockquantity") int stockQuantity,
-            @RequestParam("photo") MultipartFile photo
-    ){
-        ProductDto productDto = new ProductDto(name, price, isDiscount, discountPrice, vat, stockQuantity);
+        @Parameter(name = "name", description = "상품명", required = true)
+        @RequestParam("name") String name,
+        @Parameter(name = "amount", description = "상품 가격", required = true)
+        @RequestParam("amount") int amount,
+        @Parameter(name = "isDiscount", description = "할인 여부", required = true)
+        @RequestParam("isDiscount") boolean isDiscount,
+        @Parameter(name = "discountPrice", description = "할인 가격")
+        @RequestParam("discountPrice") int discountPrice,
+        @Parameter(name = "stockQuantity", description = "재고", required = true)
+        @RequestParam("stockQuantity") int stockQuantity,
+        @Parameter(name = "categoryName", description = "카테고리 명", required = true)
+        @RequestParam("categoryName") String categoryName,
+        @Parameter(name = "photo", description = "상품 사진", required = true)
+        @RequestParam("photo") MultipartFile photo
+    ) {
+        ProductDto productDto = new ProductDto(name, amount, isDiscount, discountPrice, stockQuantity, categoryName);
         productService.registerProduct(productDto,photo);
     }
 
-    //product 전부 조회
     @GetMapping("/find")
     @Operation(summary="모든 상품 조회", description="모든 상품을 조회합니다.")
     public List<Product> findAllProduct(){
         return productRepository.findAll();
     }
 
-    //product id 값을 참고하여 조회
     @CrossOrigin(origins = "*") // 모든 도메인에서의 요청 허용
     @GetMapping("/find/{productId}")
     @Operation(summary="상품 id로 조회", description="해당하는 id의 상품을 찾습니다.")
     public Product findProduct(@PathVariable ("productId")int productId){
         System.out.println(productId); //debug
-        return productRepository.findProductByProductId(productId);
+        return productRepository.findProductById(productId);
     }
 
-    //Product 삭제 ---전부 삭제의 경우 고려하지 않음.
     @PostMapping("/delete/{productId}")
     @Operation(summary="상품 삭제", description="상품을 삭제합니다.")
     public void delete(@PathVariable ("productId") int productId){
@@ -66,7 +66,6 @@ public class ProductController {
         productService.deleteProduct(productId);
     }
 
-    //Product 수정 ---02/28 추후 테스트 필요.
     @PostMapping("/update/{productId}")
     @Operation(summary="상품 수정", description="상품을 수정합니다.")
     public void update(@PathVariable ("productId") int productId, @RequestBody Product newProduct){
@@ -75,6 +74,4 @@ public class ProductController {
         productService.updateProduct(productId, newProduct);
 
     }
-
-
 }

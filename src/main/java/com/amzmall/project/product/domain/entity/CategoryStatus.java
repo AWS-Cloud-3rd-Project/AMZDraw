@@ -1,5 +1,8 @@
 package com.amzmall.project.product.domain.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum CategoryStatus {
         ACTIVE("서비스중"),
         READY("서비스 준비중"),
@@ -11,7 +14,4 @@ public enum CategoryStatus {
         this.description = description;
     }
 
-    public String getDescription() {
-        return description;
-    }
 }

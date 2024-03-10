@@ -1,5 +1,6 @@
 package com.amzmall.project.product.domain.entity;
 
+import com.amzmall.project.order.domain.entity.Order;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 import lombok.*;
@@ -20,24 +21,15 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(name = "category_name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "parent_id")
-//    private Category parent;
-
-//    @Column(name = "depth", nullable = false)
-//    private int depth;
-
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private CategoryStatus status;
-
-//    @OneToMany(mappedBy = "parent")
-//    private List<Category> children = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -46,4 +38,8 @@ public class Category {
     @LastModifiedDate
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products = new ArrayList<>();
+
 }
