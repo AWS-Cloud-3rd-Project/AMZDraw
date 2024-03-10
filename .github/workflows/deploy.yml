@@ -2,7 +2,7 @@ name: Java CI/CD with Gradle
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "test-karpenter" ]
 
 jobs:
   build-and-push-image:
@@ -66,18 +66,18 @@ jobs:
           aws-region: ap-northeast-2
 
       ## ECR에 로그인합니다
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-      
+      - name: Login to Amazon ECR Public
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/v0f8u3p8
+
       ## 앞의 스탭에서 ${{steps.current-time.outputs.formattedTime}}로 현재 시간을 가져옵니다.
       - name: Build, tag, and push image to Amazon ECR
         run: |
           docker build -t sample:${{steps.current-time.outputs.formattedTime}} .
-          docker tag sample:${{steps.current-time.outputs.formattedTime}} 009946608368.dkr.ecr.ap-northeast-2.amazonaws.com/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
-          # docker tag sample:${{steps.current-time.outputs.formattedTime}} public.ecr.aws/v0f8u3p8/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
-          docker push 009946608368.dkr.ecr.ap-northeast-2.amazonaws.com/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
-          # docker push public.ecr.aws/v0f8u3p8/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
+          # docker tag sample:${{steps.current-time.outputs.formattedTime}} 009946608368.dkr.ecr.ap-northeast-2.amazonaws.com/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
+          docker tag sample:${{steps.current-time.outputs.formattedTime}} public.ecr.aws/v0f8u3p8/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
+          # docker push 009946608368.dkr.ecr.ap-northeast-2.amazonaws.com/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
+          docker push public.ecr.aws/v0f8u3p8/amzdraw-dev:${{steps.current-time.outputs.formattedTime}}
   # CD 수행 부분
   update-helm-chart:
     needs: build-and-push-image
