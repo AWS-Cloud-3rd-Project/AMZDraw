@@ -16,14 +16,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionReqDto {
-    @NotNull
+    @NotNull(message = "문의 제목은 필수 입력 값입니다.")
     @Schema(description = "문의 제목")
     private String questionTitle;
-    @NotNull
+    @NotNull(message = "문의 내역은 필수 입력 값입니다.")
     @Size(max = 1000, message = "문의 내용은 1000자를 초과할 수 없습니다.")
     @Schema(description = "문의 내용(1000자 까지)")
     private String questionContent;
-    @NotNull
+    @NotNull(message = "고객 이메일은 필수 입력 값입니다.")
     @Schema(description = "고객 이메일")
     private String customerEmail;
 

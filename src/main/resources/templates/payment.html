@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ha">
+<head>
+  <meta charset="utf-8" />
+  <script src="https://js.tosspayments.com/v1/payment"></script>
+  <title>주문하기</title>
+</head>
+<body>
+<h1>주문하기</h1>
+<form id="order-form">
+  <h2>상품 정보</h2>
+  <p id="product-name">상품명: </p>
+  <p id="product-price">가격: </p>
+
+  <h2>구매자 정보</h2>
+  <label for="email">이메일:</label><br>
+  <input type="email" id="email" name="email" required><br>
+  <label for="name">이름:</label><br>
+  <input type="text" id="name" name="name" required><br>
+  <label for="address">주소:</label><br>
+  <textarea id="address" name="address" required></textarea><br><br>
+  <button id="payment-button">주문하기</button>
+</form>
+
+<script>
+  var productInfo; // 상품 정보를 담을 전역 변수
+
+  // 상품 정보 가져오기
+  window.onload = function() {
+    var productId = 1;
+    fetch('http://localhost:8080/api/v1/product/find/' + productId)
+    .then(response => response.json())
+    .then(data => {
+      // 상품 정보를 전역 변수에 저장
+      productInfo = data;
+
+      // 상품 정보를 주문하기 폼에 채우기
+      document.getElementById("product-name").innerText = "상품명: " + productInfo.name;
+      document.getElementById("product-price").innerText = "가격: " + productInfo.price;
+    })
+    .catch(error => console.error('상품 정보를 가져오는 중 오류 발생:', error));
+  };
+
+  var orderForm = document.getElementById('order-form');
+
+  // 주문 폼 제출 시
+  orderForm.addEventListener('payment-button', function(event) {
+    event.preventDefault(); // 기본 동작 중단
+
+    // 구매자 정보 입력
+    var email = document.getElementById("email").value;
+    var name = document.getElementById("name").value;
+    var address = document.getElementById("address").value;
+
+    // 주문 정보를 가지고 서버로 주문 요청
+    fetch('http://localhost:8080/api/v1/order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        productId: productInfo.productId, // 상품 ID
+        amount: productInfo.price, // 가격
+        orderName: productInfo.name, // 주문 상품명
+        customerEmail: email, // 구매자 이메일
+        customerName: name, // 구매자 이름
+        customerAddress: address // 구매자 주소
+      }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      // 서버에서 받은 응답을 사용하여 결제 창 열기
+      tossPayments.requestPayment('CARD', {
+        amount: data.amount,
+        orderId: data.orderId,
+        orderName: data.orderName,
+        customerName: data.customerName,
+        customerEmail: data.customerEmail,
+        successUrl: "http://localhost:8080/api/v1/order/success",
+        failUrl: "http://localhost:8080/api/v1/order/fail"
+      });
+    })
+    .catch(error => {
+      console.error('주문 정보를 가져오는 중 오류 발생:', error);
+    });
+  });
+</script>
+</body>
+</html>

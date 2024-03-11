@@ -1,15 +1,15 @@
 package com.amzmall.project.qna.controller;
 
-import com.amzmall.project.exception.BusinessException;
+import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.qna.domain.dto.QuestionReqDto;
 import com.amzmall.project.qna.domain.dto.QuestionResDto;
 import com.amzmall.project.qna.domain.dto.ReplyReqDto;
 import com.amzmall.project.qna.domain.dto.ReplyResDto;
 import com.amzmall.project.qna.service.QnaService;
-import com.amzmall.project.response.CommonResult;
-import com.amzmall.project.response.ListResult;
-import com.amzmall.project.response.ResponseService;
-import com.amzmall.project.response.SingleResult;
+import com.amzmall.project.util.dto.CommonResult;
+import com.amzmall.project.util.dto.ListResult;
+import com.amzmall.project.util.service.ResponseService;
+import com.amzmall.project.util.dto.SingleResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,14 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "QnA", description="문의 게시판")
 @RequestMapping("/api/v1/qna")
 public class QnaController {
+
     private final QnaService qnaService;
     private final ResponseService responseService;
+
     @PostMapping
     @Operation(summary = "문의 등록", description = "문의를 등록합니다.")
     public CommonResult requestQuestion(
         @Parameter(name = "QuestionReqDto", description = "문의 요청 객체", required = true)
         @RequestBody QuestionReqDto questionReqDto)
-//      @ModelAttribute QuestionReqDto questionReqDto)
         {
         try {
             qnaService.postQuestion(questionReqDto);

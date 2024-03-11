@@ -1,10 +1,8 @@
 package com.amzmall.project.customer.domain.entity;
 
 import com.amzmall.project.customer.domain.dto.CustomerDto;
-
-import com.amzmall.project.customer.enums.ECommerceRole;
-import com.amzmall.project.payment.domain.entity.CancelPayment;
-import com.amzmall.project.payment.domain.entity.Payment;
+import com.amzmall.project.order.domain.entity.CancelOrder;
+import com.amzmall.project.order.domain.entity.Order;
 import com.amzmall.project.qna.domain.entity.Question;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -72,18 +70,18 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
-    private List<Payment> payments = new ArrayList<>();
-    public void addPayment(Payment payment) {
-        this.payments.add(payment);
-        payment.setCustomer(this);
+    private List<Order> orders = new ArrayList<>();
+    public void addOrder(Order order) {
+        this.orders.add(order);
+        order.setCustomer(this);
     }
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
-    private List<CancelPayment> cancelPayments = new ArrayList<>();
-    public void addCancelPayment(CancelPayment cancelPayment) {
-        this.cancelPayments.add(cancelPayment);
-        cancelPayment.setCustomer(this);
+    private List<CancelOrder> cancelOrders = new ArrayList<>();
+    public void addCancelPayment(CancelOrder cancelOrder) {
+        this.cancelOrders.add(cancelOrder);
+        cancelOrder.setCustomer(this);
     }
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
