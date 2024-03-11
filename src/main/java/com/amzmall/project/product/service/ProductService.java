@@ -42,7 +42,7 @@ public class ProductService {
             // 상품 카테고리 설정
             Category category = categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new BusinessException("해당 카테고리를 찾을 수 없습니다."));
-
+            product.setImg(photo.getOriginalFilename());
             product.setCategory(category); // 상품에 카테고리 설정
             productRepository.save(product);
             log.info("상품 저장 성공");
