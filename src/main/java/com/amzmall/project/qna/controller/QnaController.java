@@ -166,7 +166,7 @@ public class QnaController {
     public SingleResult<ReplyResDto> getReplyByQuestionId(
         @Parameter(name = "questionId", description = "문의 번호", required = true)
         @RequestParam("questionId") int questionId
-    ) {
+        ) {
         try {
             return responseService.getSingleResult(qnaService.getReplyByQuestionId(questionId));
         } catch (Exception e) {
