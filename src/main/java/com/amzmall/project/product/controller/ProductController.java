@@ -28,16 +28,16 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductRepository productRepository;
     private final ResponseService responseService;
 
     @PostMapping("/new")
     @Operation(summary="상품 생성", description="상품을 생성합니다.")
     public SingleResult<ProductResDto> registerProduct(
         @Parameter(name = "ProductReqDto", description = "요청 객체", required = true)
-        @RequestBody ProductReqDto productReqDto,
+        @RequestPart("ProductReqDto") ProductReqDto productReqDto,
         @Parameter(name = "photo", description = "상품 사진", required = true)
-        @RequestParam("photo") MultipartFile photo) {
+        @RequestPart("photo") MultipartFile photo) {
+
         try {
             return responseService.getSingleResult(productService.registerProduct(productReqDto, photo));
         } catch (Exception e){

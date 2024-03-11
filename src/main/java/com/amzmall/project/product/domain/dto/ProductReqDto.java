@@ -34,6 +34,8 @@ public class ProductReqDto {
     @NotNull(message = "카테고리는 필수 입력 값입니다.")
     @Schema(description = "카테고리 명")
     private String categoryName;
+    @Schema(description = "브랜드 명")
+    private String brand;
     
     public Product toEntity() {
         return Product.builder()
@@ -45,6 +47,7 @@ public class ProductReqDto {
             .categoryName(categoryName)
             .vat(0.1)
             .stockQuantity(stockQuantity)
+            .brand(brand)
             .build();
     }
 }
