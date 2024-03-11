@@ -18,13 +18,13 @@ public class JwtUtil {
 
     private static Key key; // Cognito 공개 키
 
-    @Value("${cognito.jwt.key}")
+    @Value("https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_qD0HzA3fK/.well-known/jwks.json")
     private String publicKeyPem; // application.properties에 정의된 Cognito 공개 키
 
     @PostConstruct
     public void init() {
         // PEM 포맷의 공개 키를 Key 객체로 변환하는 로직
-        // 이 부분은 Cognito의 실제 공개 키로 초기화되어야 합니다.
+        // 이 부분은 Cognito의 실제 공개 키로 초기화되어야 함
         // String publicKeyPem = "-----BEGIN PUBLIC KEY-----...-----END PUBLIC KEY-----";
         this.key = Keys.hmacShaKeyFor(publicKeyPem.getBytes());
     }

@@ -46,7 +46,7 @@ public class AuthController {
     public ResponseEntity<?> checkTokenValidity(@RequestBody String token) {
         boolean isTokenValid = jwtUtil.validateToken(token);
         if (isTokenValid) {
-            return ResponseEntity.ok("Token is valid");
+            return ResponseEntity.ok("토큰이 유효합니다 ");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
