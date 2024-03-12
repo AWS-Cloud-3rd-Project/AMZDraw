@@ -113,7 +113,7 @@ public class PaymentCancelService {
 			.getEmail();
 
 		return cancelOrderRepository
-			.findAllByCustomerEmail(targetEmail, pageRequest)
+			.findAllByUsersEmail(targetEmail, pageRequest)
 			.stream()
 			.map(CancelOrder::toDto)
 			.collect(Collectors.toList());
