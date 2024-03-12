@@ -1,6 +1,6 @@
 package com.amzmall.project.order.domain.entity;
 
-import com.amzmall.project.customer.domain.entity.Customer;
+import com.amzmall.project.users.domain.entity.Users;
 import com.amzmall.project.order.domain.dto.CancelPaymentResDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -75,7 +75,7 @@ public class CancelOrder {
 	@Setter
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-	private Customer customer;
+	private Users users;
 
 	public CancelPaymentResDto toDto() {
 		return CancelPaymentResDto.builder()

@@ -1,6 +1,6 @@
-package com.amzmall.project.customer.domain.entity;
+package com.amzmall.project.users.domain.entity;
 
-import com.amzmall.project.customer.domain.dto.CustomerDto;
+import com.amzmall.project.users.domain.dto.UserDto;
 import com.amzmall.project.order.domain.entity.CancelOrder;
 import com.amzmall.project.order.domain.entity.Order;
 import com.amzmall.project.qna.domain.entity.Question;
@@ -36,7 +36,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Customer {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,7 +73,7 @@ public class Customer {
     private List<Order> orders = new ArrayList<>();
     public void addOrder(Order order) {
         this.orders.add(order);
-        order.setCustomer(this);
+        order.setUsers(this);
     }
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -81,15 +81,15 @@ public class Customer {
     private List<CancelOrder> cancelOrders = new ArrayList<>();
     public void addCancelPayment(CancelOrder cancelOrder) {
         this.cancelOrders.add(cancelOrder);
-        cancelOrder.setCustomer(this);
+        cancelOrder.setUsers(this);
     }
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
     private List<Question> questions = new ArrayList<>();
     public void addQuestion(Question question) {
         this.questions.add(question);
-        question.setCustomer(this);
+        question.setUsers(this);
     }
 
     @CreatedDate
@@ -100,8 +100,8 @@ public class Customer {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    public CustomerDto toCustomerDto() {
-        return CustomerDto.builder()
+    public UserDto toCustomerDto() {
+        return UserDto.builder()
                 .customerId(customerId)
                 .email(email)
                 .name(name)

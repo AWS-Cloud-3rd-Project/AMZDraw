@@ -1,4 +1,4 @@
-package com.amzmall.project.customer.domain.dto;
+package com.amzmall.project.users.domain.dto;
 
 import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerDto {
+public class UserDto {
     private int customerId;
     private String email;
     private String name;

@@ -14,7 +14,7 @@ import com.amzmall.project.order.domain.dto.PaymentResSuccessDto;
 import com.amzmall.project.order.domain.dto.TossErrorDto;
 import com.amzmall.project.order.config.TossPaymentConfig;
 import com.amzmall.project.util.exception.BusinessException;
-import com.amzmall.project.customer.repository.CustomerRepository;
+import com.amzmall.project.users.repository.UsersRepository;
 import com.amzmall.project.order.repository.OrderRepository;
 import com.google.gson.Gson;
 import java.util.List;
@@ -40,7 +40,7 @@ import java.util.Collections;
 public class PaymentService {
 
     private final OrderRepository orderRepository;
-    private final CustomerRepository customerRepository;
+    private final UsersRepository usersRepository;
     private final TossPaymentConfig tossPaymentConfig;
     private final ProductRepository productRepository;
 
@@ -64,7 +64,7 @@ public class PaymentService {
             productRepository.save(product);
             order.setProduct(product);
 
-            customerRepository.findByEmail(customerEmail)
+            usersRepository.findByEmail(customerEmail)
                     .ifPresentOrElse(
                             C -> C.addOrder(order)
                             , () -> {
@@ -181,7 +181,7 @@ public class PaymentService {
 
     @Transactional(readOnly = true)
     public List<PaymentDto> getAllPayments(String customerEmail, PageRequest pageRequest) {
-        String targetEmail = customerRepository.findByEmail(customerEmail)
+        String targetEmail = usersRepository.findByEmail(customerEmail)
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
             .getEmail();
 
@@ -192,7 +192,7 @@ public class PaymentService {
 
     @Transactional(readOnly = true)
     public PaymentDto getOnePayment(String customerEmail, String orderId) {
-        String targetEmail = customerRepository.findByEmail(customerEmail)
+        String targetEmail = usersRepository.findByEmail(customerEmail)
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
             .getEmail();
 

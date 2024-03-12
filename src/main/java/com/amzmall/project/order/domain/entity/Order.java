@@ -1,6 +1,6 @@
 package com.amzmall.project.order.domain.entity;
 
-import com.amzmall.project.customer.domain.entity.Customer;
+import com.amzmall.project.users.domain.entity.Users;
 import com.amzmall.project.order.domain.dto.OrderResDto;
 import com.amzmall.project.order.domain.dto.PaymentDto;
 import com.amzmall.project.product.domain.entity.Product;
@@ -98,7 +98,7 @@ public class Order {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-    private Customer customer;
+    private Users users;
 
     @OneToOne
     @JoinColumn(name = "product_id")

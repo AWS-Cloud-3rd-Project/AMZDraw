@@ -9,7 +9,7 @@ import com.amzmall.project.order.domain.entity.CancelOrder;
 import com.amzmall.project.order.domain.entity.PAYMENT_TYPE;
 import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.order.repository.CancelOrderRepository;
-import com.amzmall.project.customer.repository.CustomerRepository;
+import com.amzmall.project.users.repository.UsersRepository;
 import com.amzmall.project.order.repository.OrderRepository;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -35,7 +35,7 @@ public class PaymentCancelService {
 	private final OrderRepository orderRepository;
 	private final TossPaymentConfig tossPaymentConfig;
 	private final CancelOrderRepository cancelOrderRepository;
-	private final CustomerRepository customerRepository;
+	private final UsersRepository usersRepository;
 	@Transactional
 	public void requestCancelPayment(String paymentKey, String cancelReason) {
 		URI cancelUri = URI.create(tossPaymentConfig.getBasicUrl() + paymentKey + "/cancel");
@@ -92,9 +92,9 @@ public class PaymentCancelService {
 				log.info("결제 취소 고객 이력에 추가");
 				CancelOrder cancelOrder;
 				cancelOrder = paymentCancelResDto.toCancelPayment();
-				P.getCustomer().addCancelPayment(cancelOrder);
+				P.getUsers().addCancelPayment(cancelOrder);
 				log.info("결제 취소 준비");
-				P.getCustomer().getOrders()
+				P.getUsers().getOrders()
 					.stream()
 					.filter(p -> p.getPaymentKey().equals(paymentKey))
 					.findFirst()
@@ -108,7 +108,7 @@ public class PaymentCancelService {
 
 	@Transactional(readOnly = true)
 	public List<CancelPaymentResDto> getAllCancelPayments(String customerEmail, PageRequest pageRequest) {
-		String targetEmail = customerRepository.findByEmail(customerEmail)
+		String targetEmail = usersRepository.findByEmail(customerEmail)
 			.orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
 			.getEmail();
 

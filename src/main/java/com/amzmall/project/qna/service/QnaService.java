@@ -6,10 +6,10 @@ import com.amzmall.project.qna.domain.dto.QuestionReqDto;
 import com.amzmall.project.qna.domain.dto.QuestionResDto;
 import com.amzmall.project.qna.domain.dto.ReplyReqDto;
 import com.amzmall.project.qna.domain.dto.ReplyResDto;
-import com.amzmall.project.customer.domain.entity.Customer;
+import com.amzmall.project.users.domain.entity.Users;
 import com.amzmall.project.qna.domain.entity.Question;
 import com.amzmall.project.qna.domain.entity.Reply;
-import com.amzmall.project.customer.repository.CustomerRepository;
+import com.amzmall.project.users.repository.UsersRepository;
 import com.amzmall.project.qna.repository.QuestionRepository;
 import com.amzmall.project.qna.repository.ReplyRepository;
 import com.amzmall.project.util.RequestValidationUtil;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class QnaService {
     private final QuestionRepository questionRepository;
-    private final CustomerRepository customerRepository;
+    private final UsersRepository usersRepository;
     private final ReplyRepository replyRepository;
     
     // 문의 등록
@@ -33,11 +33,11 @@ public class QnaService {
     public void postQuestion(QuestionReqDto questionReqDto) {
         RequestValidationUtil.validateQuestionRequestForm(questionReqDto);
 
-        Customer customer = customerRepository.findByEmail(questionReqDto.getCustomerEmail())
+        Users users = usersRepository.findByEmail(questionReqDto.getCustomerEmail())
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND));
 
         try {
-            customer.addQuestion(questionReqDto.toEntity(customer.getEmail()));
+            users.addQuestion(questionReqDto.toEntity(users.getEmail()));
         } catch (Exception e) {
             throw new BusinessException(ExMessage.DB_ERROR_SAVE);
         }
@@ -76,10 +76,10 @@ public class QnaService {
     // 문의 전체 조회
     @Transactional(readOnly = true)
     public List<QuestionResDto> getAllQuestions(String customerEmail, PageRequest pageRequest) {
-        Customer customer = customerRepository.findByEmail(customerEmail)
+        Users users = usersRepository.findByEmail(customerEmail)
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND));
 
-        return customer.getQuestions()
+        return users.getQuestions()
             .stream().filter(Question::isActive)
             .map(Question::toQuestionDto)
             .collect(Collectors.toList());
