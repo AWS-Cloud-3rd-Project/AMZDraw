@@ -4,8 +4,6 @@ import com.amzmall.project.users.domain.dto.UserDto;
 import com.amzmall.project.order.domain.entity.CancelOrder;
 import com.amzmall.project.order.domain.entity.Order;
 import com.amzmall.project.qna.domain.entity.Question;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
