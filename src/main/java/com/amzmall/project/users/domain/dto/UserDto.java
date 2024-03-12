@@ -13,9 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class UserDto {
-    private int customerId;
+    private int id;
     private String email;
     private String name;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private String createdAt;
 }

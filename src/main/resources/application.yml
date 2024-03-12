@@ -53,6 +53,9 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+    cognito:
+      pool-id: ap-northeast-2_qD0HzA3fK
+      client-id: 70aa9cojdarvlrj6e2hubvcckh
 
 
 #    logging:
