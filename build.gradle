@@ -28,24 +28,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	testImplementation 'org.projectlombok:lombok:1.18.26'
 	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-
-	implementation 'software.amazon.awssdk:cognitoidentityprovider:2.23.12'
-	implementation 'software.amazon.awssdk:core:2.23.12'// Use the latest version
-
-	// JJWT dependencies for JWT handling
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-
-	// Spring Security OAuth2 JWT
-	implementation 'org.springframework.security:spring-security-oauth2-jose'
-	// Spring Security OAuth2 Resource Server
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-
-	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -62,10 +44,23 @@ dependencies {
 
 	// Gson
 	implementation group: 'com.google.code.gson', name: 'gson', version: '2.7'
-	testImplementation 'org.springframework.security:spring-security-test'
 
 	// S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// Cognito
+	implementation 'software.amazon.awssdk:cognitoidentityprovider:2.23.12'
+	implementation 'software.amazon.awssdk:core:2.23.12'// Use the latest version
+
+	// JJWT dependencies for JWT handling
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+	// Spring Security OAuth2 JWT
+	implementation 'org.springframework.security:spring-security-oauth2-jose'
+	// Spring Security OAuth2 Resource Server
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
 }
 //

@@ -97,7 +97,7 @@ public class Order {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
+    @JoinColumn(name = "users_id")
     private Users users;
 
     @OneToOne

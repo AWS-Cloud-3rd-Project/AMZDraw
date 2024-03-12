@@ -107,13 +107,13 @@ public class PaymentCancelService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<CancelPaymentResDto> getAllCancelPayments(String customerEmail, PageRequest pageRequest) {
-		String targetEmail = usersRepository.findByEmail(customerEmail)
+	public List<CancelPaymentResDto> getAllCancelPayments(String usersEmail, PageRequest pageRequest) {
+		String targetEmail = usersRepository.findByEmail(usersEmail)
 			.orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
 			.getEmail();
 
 		return cancelOrderRepository
-			.findAllByCustomerEmail(targetEmail, pageRequest)
+			.findAllByUsersEmail(targetEmail, pageRequest)
 			.stream()
 			.map(CancelOrder::toDto)
 			.collect(Collectors.toList());

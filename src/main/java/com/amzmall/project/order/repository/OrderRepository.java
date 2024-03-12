@@ -15,7 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	Optional<Order> findByPaymentKey(String paymentKey);
 
-	List<Order> findAllByCustomerEmail(String email, Pageable pageable);
+	List<Order> findAllByUsersEmail(String email, Pageable pageable);
 
-	Optional<Order> findByCustomerEmailAndOrderId(String customerEmail, String OrderId);
+	Optional<Order> findByUsersEmailAndOrderId(String customerEmail, String OrderId);
 }

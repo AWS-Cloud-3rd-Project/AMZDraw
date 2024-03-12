@@ -50,7 +50,7 @@ public class Users {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
     private List<Order> orders = new ArrayList<>();
     public void addOrder(Order order) {
@@ -58,7 +58,7 @@ public class Users {
         order.setUsers(this);
     }
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
     private List<CancelOrder> cancelOrders = new ArrayList<>();
     public void addCancelPayment(CancelOrder cancelOrder) {

@@ -185,7 +185,7 @@ public class PaymentService {
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
             .getEmail();
 
-        return orderRepository.findAllByCustomerEmail(targetEmail, pageRequest)
+        return orderRepository.findAllByUsersEmail(targetEmail, pageRequest)
             .stream().map(Order::toDto)
             .collect(Collectors.toList());
     }
@@ -196,7 +196,7 @@ public class PaymentService {
             .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
             .getEmail();
 
-        return orderRepository.findByCustomerEmailAndOrderId(targetEmail, orderId)
+        return orderRepository.findByUsersEmailAndOrderId(targetEmail, orderId)
             .orElseThrow(() -> new BusinessException(ExMessage.PAYMENT_ERROR_ORDER_NOT_FOUND))
             .toDto();
     }

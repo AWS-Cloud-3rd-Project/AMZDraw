@@ -69,7 +69,7 @@ public class Question {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
+    @JoinColumn(name = "users_id")
     public Users users;
 
     public QuestionResDto toQuestionDto(){
