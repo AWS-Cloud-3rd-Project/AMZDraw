@@ -54,8 +54,8 @@ cloud:
     stack:
       auto: false
     cognito:
-      pool-id: ap-northeast-2_qD0HzA3fK
-      client-id: 70aa9cojdarvlrj6e2hubvcckh
+      pool-id: ${COGNITO_POOL_ID}
+      client-id: ${COGNITO_CLIENT_ID}
 
 
 #    logging:

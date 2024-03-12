@@ -1,29 +1,29 @@
-package com.amzmall.project.cognito.controller;
+package com.amzmall.project.users.domain.controller;
 
-import com.amzmall.project.cognito.entity.User;
-import com.amzmall.project.cognito.repository.UserRepository;
+import com.amzmall.project.users.domain.entity.Users;
+import com.amzmall.project.users.repository.UsersRepository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/api/v1/users")
+public class usersController {
+
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository userRepository;
 
     @GetMapping(value = "")
-    public List<User> getUsers(){
+    public List<Users> getUsers() {
         return userRepository.findAll();
     }
 
     @GetMapping(value = "/{id}")
-    public Optional<User> getUser(@PathVariable("id") Long id){
+    public Optional<Users> getUser(@PathVariable("id") int id) {
         return userRepository.findById(id);
     }
 }

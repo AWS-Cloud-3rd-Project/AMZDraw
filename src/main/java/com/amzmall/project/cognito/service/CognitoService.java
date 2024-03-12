@@ -1,21 +1,19 @@
 package com.amzmall.project.cognito.service;
 
-import com.amzmall.project.cognito.entity.User;
-import com.amzmall.project.cognito.repository.UserRepository;
 import com.amzmall.project.config.jwt.JwtUtil;
+import com.amzmall.project.users.domain.entity.Users;
+import com.amzmall.project.users.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 import software.amazon.awssdk.utils.ImmutableMap;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CognitoService {
@@ -23,19 +21,22 @@ public class CognitoService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Value("${aws.cognito.pool-id}")
-    private final String userPoolId = "ap-northeast-2_qD0HzA3fK";
+    @Value("${cloud.aws.cognito.pool-id}")
+    private String userPoolId;
 
-    @Value("${aws.cognito.client-id}")
-    private final String clientId = "70aa9cojdarvlrj6e2hubvcckh";
+    @Value("${cloud.aws.cognito.client-id}")
+    private String clientId;
 
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository usersRepository;
 
-    private final CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder().build();
+    private final CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
+        .region(Region.AP_NORTHEAST_2)
+        .credentialsProvider(DefaultCredentialsProvider.create())
+        .build();
 
     public SignUpResponse signUp(String username, String password) {
-        userRepository.save(new User(username, password));
+        usersRepository.save(new Users(username, password));
         SignUpRequest signUpRequest = SignUpRequest.builder()
                 .clientId(clientId)
                 .username(username)

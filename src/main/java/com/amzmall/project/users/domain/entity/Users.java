@@ -27,6 +27,7 @@ import jakarta.persistence.Table;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "users")
@@ -81,12 +82,22 @@ public class Users {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    public UserDto toCustomerDto() {
+    public Users(String email, String password) {
+        this.email = email;
+        setPassword(password);
+    }
+
+    public void setPassword(String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
+
+    public UserDto toDto() {
         return UserDto.builder()
                 .id(id)
                 .email(email)
                 .createdAt(String.valueOf(createdAt))
                 .build();
     }
+
 }
 
