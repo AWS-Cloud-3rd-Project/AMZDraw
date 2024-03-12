@@ -27,7 +27,7 @@ public class SecurityConfig{
                 )// 세션을 사용하지 않고, STATELESS 정책을 적용하여 매 요청마다 인증이 필요함
                 .authorizeHttpRequests((authorizeRequests)->
                         authorizeRequests // 요청에 대한 권한을 지정
-                .requestMatchers("/auth/login", "/auth/sign-up").permitAll() // 로그인 및 회원가입 경로는 모두에게 접근 허용
+                .requestMatchers("/auth/login", "/auth/sign-up","/v3/**", "/swagger-ui/**").permitAll() // 로그인 및 회원가입 경로는 모두에게 접근 허용
                 .anyRequest().authenticated());// 그 외 모든 요청은 인증된 사용자만 접근 가능
                 //.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)); // JwtRequestFilter를 필터 체인에 추가하여 요청마다 토큰을 검증
         return http.build();
