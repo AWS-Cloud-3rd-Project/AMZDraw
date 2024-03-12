@@ -1,4 +1,4 @@
-package com.amzmall.project.users.domain.controller;
+package com.amzmall.project.users.controller;
 
 import com.amzmall.project.users.domain.entity.Users;
 import com.amzmall.project.users.repository.UsersRepository;
