@@ -11,9 +11,9 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .info(new Info()
-                        .title("AMZMALL Swagger")
-                        .version("0.1")
-                        .description("AMZMALL Swagger docs"));
+            .info(new Info()
+                .title("AMZMALL Swagger")
+                .version("0.1")
+                .description("AMZMALL Swagger docs"));
     }
 }
