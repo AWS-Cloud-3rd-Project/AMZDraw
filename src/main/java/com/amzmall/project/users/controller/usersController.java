@@ -57,6 +57,13 @@ public class usersController {
         return responseService.getListResult(allActive);
     }
 
+    @GetMapping("/all/deActive")
+    @Operation(summary="모든 비활동 회원 조회", description="활동 중이지 않은 모든 회원을 조회합니다.")
+    public ListResult<UsersResDto> findAllDeActiveUsers() {
+        List<UsersResDto> allActive = usersService.findAllDeActiveUsers();
+        return responseService.getListResult(allActive);
+    }
+
     @GetMapping("/email")
     @Operation(summary="이메일로 조회", description="이메일로 회원을 조회합니다.")
     public SingleResult<UsersResDto> findUsersByEmail(

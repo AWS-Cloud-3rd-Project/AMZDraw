@@ -40,6 +40,14 @@ public class UsersService {
             .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<UsersResDto> findAllDeActiveUsers() {
+        return usersRepository.findAllDeActivateUsers()
+            .stream()
+            .map(Users::toDto)
+            .collect(Collectors.toList());
+    }
+
     @Transactional
     public void deActivateUser(String email) {
         Users users = usersRepository.findByEmail(email)

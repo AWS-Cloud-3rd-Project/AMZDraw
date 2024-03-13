@@ -17,4 +17,7 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
     @Query("SELECT u FROM Users u WHERE u.isActivate = true")
     List<Users> findAllActivateUsers();
+
+    @Query("SELECT u FROM Users u WHERE u.isActivate = false")
+    List<Users> findAllDeActivateUsers();
 }
