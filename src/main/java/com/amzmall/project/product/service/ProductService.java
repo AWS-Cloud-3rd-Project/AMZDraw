@@ -31,18 +31,22 @@ public class ProductService {
     private final S3UploadService s3UploadService;
 
     @Transactional
-    public ProductResDto registerProduct(ProductReqDto productReqDTO, MultipartFile photo){
+    public ProductResDto registerProduct(ProductReqDto productReqDTO, MultipartFile thumbnail, List<MultipartFile> photos){
         Product product = productReqDTO.toEntity();
         String categoryName = product.getCategoryName();
 
         try {
             // 아마존 S3에 이미지 업로드
-            String imgPath = s3UploadService.upload(photo, "photos");
-            product.setImgPath(imgPath); // S3의 이미지 URL 설정
+            String thumbnailPath = s3UploadService.upload(thumbnail, "photos/"+productReqDTO.getName());
+            product.setThumbnail(thumbnailPath); // 대표 이미지 S3 URL 설정
+            List<String> imgPath = s3UploadService.uploadFiles(photos, "photos/"+productReqDTO.getName());
+            product.setImgPath1(imgPath.get(0));
+            product.setImgPath2(imgPath.get(1));
+            product.setImgPath3(imgPath.get(2));
             // 상품 카테고리 설정
             Category category = categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new BusinessException("해당 카테고리를 찾을 수 없습니다."));
-            product.setImg(photo.getOriginalFilename());
+            product.setImg(thumbnail.getOriginalFilename());
             product.setCategory(category); // 상품에 카테고리 설정
             productRepository.save(product);
             log.info("상품 저장 성공");

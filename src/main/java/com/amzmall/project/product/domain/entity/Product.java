@@ -69,8 +69,18 @@ public class Product {
     @Column(name = "img")
     private String img;
 
-    @Column(name = "img_path")
-    private String imgPath;
+    @Column(name = "img_path1")
+    private String imgPath1;
+
+    @Column(name = "img_path2")
+    private String imgPath2;
+
+    @Column(name = "img_path3")
+    private String imgPath3;
+
+
+    @Column(name = "thumbnail_path")
+    private String thumbnail;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -95,7 +105,8 @@ public class Product {
             .status(status)
             .createdAt(String.valueOf(createdAt))
             .img(img)
-            .imgPath(imgPath)
+            .imgPath(imgPath1)
+            .thumbnail(thumbnail)
             .categoryName(categoryName)
             .build();
     }

@@ -28,5 +28,6 @@ public class ProductResDto {
     private String createdAt;
     private String img;
     private String imgPath;
+    private String thumbnail;
     private String categoryName;
 }
