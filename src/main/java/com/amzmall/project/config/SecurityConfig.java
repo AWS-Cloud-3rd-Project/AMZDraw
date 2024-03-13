@@ -10,14 +10,17 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 
 @Configuration // 이 클래스를 스프링 설정 클래스로 지정
 @EnableWebSecurity // 웹 보안을 활성화
-public class SecurityConfig{
+public class SecurityConfig {
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter; // JwtRequestFilter 의존성 주입
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -25,11 +28,11 @@ public class SecurityConfig{
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )// 세션을 사용하지 않고, STATELESS 정책을 적용하여 매 요청마다 인증이 필요함
-                .authorizeHttpRequests((authorizeRequests)->
+                .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests // 요청에 대한 권한을 지정
-                .requestMatchers("/auth/login", "/auth/sign-up", "/auth/check").permitAll() // 로그인 및 회원가입 경로는 모두에게 접근 허용
-                .anyRequest().authenticated());// 그 외 모든 요청은 인증된 사용자만 접근 가능
-                //.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)); // JwtRequestFilter를 필터 체인에 추가하여 요청마다 토큰을 검증
+                                .requestMatchers("v3/api-docs/**","/swagger-ui/**","/auth/**").permitAll() // 로그인 및 회원가입 경로는 모두에게 접근 허용
+                                .anyRequest().authenticated());// 그 외 모든 요청은 인증된 사용자만 접근 가능
+        //.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)); // JwtRequestFilter를 필터 체인에 추가하여 요청마다 토큰을 검증
         return http.build();
     }
 
