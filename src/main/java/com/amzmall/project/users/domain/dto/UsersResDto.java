@@ -1,6 +1,5 @@
 package com.amzmall.project.users.domain.dto;
 
-import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,9 +11,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class UsersResDto {
     private int id;
     private String email;
     private String name;
+    private boolean isActivate;
+    private Role role;
     private String createdAt;
 }

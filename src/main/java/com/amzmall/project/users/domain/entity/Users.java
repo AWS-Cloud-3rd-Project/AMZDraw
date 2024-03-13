@@ -1,9 +1,13 @@
 package com.amzmall.project.users.domain.entity;
 
-import com.amzmall.project.users.domain.dto.UserDto;
+import com.amzmall.project.users.domain.dto.Role;
+import com.amzmall.project.users.domain.dto.UsersResDto;
 import com.amzmall.project.order.domain.entity.CancelOrder;
 import com.amzmall.project.order.domain.entity.Order;
 import com.amzmall.project.qna.domain.entity.Question;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import java.util.Collections;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -48,6 +52,20 @@ public class Users {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Column(name = "is_activate", nullable = false)
+    private boolean isActivate;
+
+    public List<String> getRoles() {
+        return new ArrayList<>(Collections.singleton(role.toString()));
+    }
+
     @OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
     private List<Order> orders = new ArrayList<>();
@@ -89,10 +107,12 @@ public class Users {
         this.password = new BCryptPasswordEncoder().encode(password);
     }
 
-    public UserDto toDto() {
-        return UserDto.builder()
+    public UsersResDto toDto() {
+        return UsersResDto.builder()
                 .id(id)
                 .email(email)
+                .isActivate(isActivate)
+                .role(role)
                 .createdAt(String.valueOf(createdAt))
                 .build();
     }
