@@ -29,8 +29,10 @@ public class usersController {
 
     @GetMapping(value = "/{id}")
     @Operation(summary="회원 번호로 조회", description="회원 번호로 회원을 조회합니다.")
-    public Optional<Users> getUser(@PathVariable("id") int id) {
-        return usersRepository.findById(id);
+    public SingleResult<UsersResDto> getUser(
+        @Parameter(name = "id", description = "회원 번호", required = true)
+        @PathVariable("id") int id) {
+        return responseService.getSingleResult(usersService.findById(id));
     }
 
     @GetMapping("/find/id")

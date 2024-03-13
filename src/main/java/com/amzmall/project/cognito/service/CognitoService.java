@@ -1,6 +1,6 @@
 package com.amzmall.project.cognito.service;
 
-import com.amzmall.project.config.jwt.JwtUtil;
+import com.amzmall.project.cognito.config.jwt.JwtUtil;
 import com.amzmall.project.users.domain.entity.Users;
 import com.amzmall.project.users.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;

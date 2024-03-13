@@ -1,4 +1,4 @@
-package com.amzmall.project.config.jwt;
+package com.amzmall.project.cognito.config.jwt;
 
 
 import com.amzmall.project.cognito.service.CognitoService;

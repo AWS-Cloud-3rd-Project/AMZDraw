@@ -16,6 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UsersService {
 
     private final UsersRepository usersRepository;
+
+    @Transactional(readOnly = true)
+    public UsersResDto findById(int id) {
+        Users users = usersRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(ExMessage.USER_ERROR_NOT_FOUND));
+        return users.toDto();
+    }
     
     @Transactional(readOnly = true)
     public UsersResDto findByEmail(String email) {
