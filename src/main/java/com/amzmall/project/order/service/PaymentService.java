@@ -68,7 +68,7 @@ public class PaymentService {
                     .ifPresentOrElse(
                             C -> C.addOrder(order)
                             , () -> {
-                                throw new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND);
+                                throw new BusinessException(ExMessage.USER_ERROR_NOT_FOUND);
                             });
 
             orderResDto = order.toEntity();
@@ -182,7 +182,7 @@ public class PaymentService {
     @Transactional(readOnly = true)
     public List<PaymentDto> getAllPayments(String customerEmail, PageRequest pageRequest) {
         String targetEmail = usersRepository.findByEmail(customerEmail)
-            .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
+            .orElseThrow(() -> new BusinessException(ExMessage.USER_ERROR_NOT_FOUND))
             .getEmail();
 
         return orderRepository.findAllByUsersEmail(targetEmail, pageRequest)
@@ -193,7 +193,7 @@ public class PaymentService {
     @Transactional(readOnly = true)
     public PaymentDto getOnePayment(String customerEmail, String orderId) {
         String targetEmail = usersRepository.findByEmail(customerEmail)
-            .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND))
+            .orElseThrow(() -> new BusinessException(ExMessage.USER_ERROR_NOT_FOUND))
             .getEmail();
 
         return orderRepository.findByUsersEmailAndOrderId(targetEmail, orderId)

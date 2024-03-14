@@ -1,11 +1,13 @@
 package com.amzmall.project.users.domain.entity;
 
-import com.amzmall.project.users.domain.dto.UserDto;
+import com.amzmall.project.users.domain.dto.Role;
+import com.amzmall.project.users.domain.dto.UsersResDto;
 import com.amzmall.project.order.domain.entity.CancelOrder;
 import com.amzmall.project.order.domain.entity.Order;
 import com.amzmall.project.qna.domain.entity.Question;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import java.util.Collections;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,6 +29,7 @@ import jakarta.persistence.Table;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "users")
@@ -43,11 +46,25 @@ public class Users {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Column(name = "is_activate", nullable = false)
+    private boolean isActivate;
+
+    public List<String> getRoles() {
+        return new ArrayList<>(Collections.singleton(role.toString()));
+    }
 
     @OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Builder.Default    // 빌더 사용시 필드에 객체 타입이 있다면 반드시 사용
@@ -81,12 +98,24 @@ public class Users {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    public UserDto toCustomerDto() {
-        return UserDto.builder()
+    public Users(String email, String password) {
+        this.email = email;
+        setPassword(password);
+    }
+
+    public void setPassword(String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
+
+    public UsersResDto toDto() {
+        return UsersResDto.builder()
                 .id(id)
                 .email(email)
-                .createdAt(createdAt)
+                .isActivate(isActivate)
+                .role(role)
+                .createdAt(String.valueOf(createdAt))
                 .build();
     }
+
 }
 

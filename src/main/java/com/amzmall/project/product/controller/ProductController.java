@@ -35,11 +35,14 @@ public class ProductController {
     public SingleResult<ProductResDto> registerProduct(
         @Parameter(name = "ProductReqDto", description = "요청 객체", required = true)
         @RequestPart("ProductReqDto") ProductReqDto productReqDto,
-        @Parameter(name = "photo", description = "상품 사진", required = true)
-        @RequestPart("photo") MultipartFile photo) {
-
+        @Parameter(name = "photo", description = "대표 사진", required = true)
+        @RequestPart("thumbnail") MultipartFile thumbnail,
+        @RequestPart("photos") List<MultipartFile> photos) {
         try {
-            return responseService.getSingleResult(productService.registerProduct(productReqDto, photo));
+            if (photos.size() > 3) { // 최대 5개의 파일을 허용
+                throw new BusinessException("최대 3개의 사진을 업로드할 수 있습니다.");
+            }
+            return responseService.getSingleResult(productService.registerProduct(productReqDto, thumbnail, photos));
         } catch (Exception e){
             e.printStackTrace();
             throw new BusinessException(e.getMessage());

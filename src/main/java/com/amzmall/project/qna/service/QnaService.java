@@ -34,7 +34,7 @@ public class QnaService {
         RequestValidationUtil.validateQuestionRequestForm(questionReqDto);
 
         Users users = usersRepository.findByEmail(questionReqDto.getCustomerEmail())
-            .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND));
+            .orElseThrow(() -> new BusinessException(ExMessage.USER_ERROR_NOT_FOUND));
 
         try {
             users.addQuestion(questionReqDto.toEntity(users.getEmail()));
@@ -77,7 +77,7 @@ public class QnaService {
     @Transactional(readOnly = true)
     public List<QuestionResDto> getAllQuestions(String customerEmail, PageRequest pageRequest) {
         Users users = usersRepository.findByEmail(customerEmail)
-            .orElseThrow(() -> new BusinessException(ExMessage.CUSTOMER_ERROR_NOT_FOUND));
+            .orElseThrow(() -> new BusinessException(ExMessage.USER_ERROR_NOT_FOUND));
 
         return users.getQuestions()
             .stream().filter(Question::isActive)

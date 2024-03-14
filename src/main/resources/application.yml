@@ -35,6 +35,11 @@ spring:
         level:
           org.hibernate.SQL: debug
           org.hibernate.orm.jdbc.bind: trace
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_qD0HzA3fK/.well-known/jwks.json
 
 springdoc:
   default-consumes-media-type: application/json
@@ -53,6 +58,10 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+    cognito:
+      pool-id: ${COGNITO_POOL_ID}
+      client-id: ${COGNITO_CLIENT_ID}
+
 
 
 #    logging:

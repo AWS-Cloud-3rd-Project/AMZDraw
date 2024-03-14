@@ -48,6 +48,21 @@ dependencies {
 	// S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+	// Cognito
+	implementation 'software.amazon.awssdk:cognitoidentityprovider:2.23.12'
+	implementation 'software.amazon.awssdk:core:2.23.12'// Use the latest version
+
+	// JJWT dependencies for JWT handling
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+	// Spring Security OAuth2 JWT
+	implementation 'org.springframework.security:spring-security-oauth2-jose'
+	// Spring Security OAuth2 Resource Server
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'com.auth0:jwks-rsa:0.4.0'
+	implementation 'com.auth0:java-jwt:3.3.0'
 }
 //
 //tasks.named('test') {

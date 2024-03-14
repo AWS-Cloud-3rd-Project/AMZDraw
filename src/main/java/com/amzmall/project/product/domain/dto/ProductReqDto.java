@@ -1,6 +1,7 @@
 package com.amzmall.project.product.domain.dto;
 
 import com.amzmall.project.product.domain.entity.Product;
+import com.amzmall.project.product.domain.entity.ProductStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -47,6 +48,7 @@ public class ProductReqDto {
             .categoryName(categoryName)
             .vat(0.1)
             .stockQuantity(stockQuantity)
+            .status(ProductStatus.ACTIVE)
             .brand(brand)
             .build();
     }

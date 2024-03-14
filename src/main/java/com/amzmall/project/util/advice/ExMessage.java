@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum ExMessage {
     ERROR_REQUEST_FORM("요청 형식이 잘못되었습니다."),
     DB_ERROR_SAVE("객체 저장에 실패했습니다."),
-    CUSTOMER_ERROR_NOT_FOUND("해당 고객은 존재하지 않습니다"),
+    USER_ERROR_NOT_FOUND("해당 고객은 존재하지 않습니다"),
+    USER_ERROR_DUPLICATE("해당 이메일이 이미 가입되어 있습니다."),
     PAYMENT_ERROR_ORDER_NAME("주문하신 상품 이름이 잘못되었습니다."),
     PAYMENT_ERROR_ORDER_PRICE("주문하신 상품 금액이 잘못되었습니다."),
     PAYMENT_ERROR_ORDER_PAYMENT_TYPE("결제 수단 선택이 잘못되었습니다."),

@@ -31,28 +31,37 @@ public class ProductService {
     private final S3UploadService s3UploadService;
 
     @Transactional
-    public ProductResDto registerProduct(ProductReqDto productReqDTO, MultipartFile photo){
+    public ProductResDto registerProduct(ProductReqDto productReqDTO, MultipartFile thumbnail, List<MultipartFile> photos){
         Product product = productReqDTO.toEntity();
         String categoryName = product.getCategoryName();
 
         try {
             // 아마존 S3에 이미지 업로드
-            String imgPath = s3UploadService.upload(photo, "photos");
-            product.setImgPath(imgPath); // S3의 이미지 URL 설정
+            String thumbnailPath = s3UploadService.upload(thumbnail, "photos/"+productReqDTO.getName());
+            product.setThumbnail(thumbnailPath); // 대표 이미지 S3 URL 설정
+            List<String> imgPath = s3UploadService.uploadFiles(photos, "photos/"+productReqDTO.getName());
+            for (int i = 0; i < photos.size(); i++) {
+                if (i == 0)
+                    product.setImgPath1(imgPath.get(i));
+                else if (i == 1)
+                    product.setImgPath2(imgPath.get(i));
+                else if (i == 2)
+                    product.setImgPath3(imgPath.get(i));
+            }
             // 상품 카테고리 설정
             Category category = categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new BusinessException("해당 카테고리를 찾을 수 없습니다."));
-            product.setImg(photo.getOriginalFilename());
+            product.setImg(thumbnail.getOriginalFilename());
             product.setCategory(category); // 상품에 카테고리 설정
             productRepository.save(product);
             log.info("상품 저장 성공");
             return product.toDto();
         } catch (IOException e) {
             // S3 업로드 실패 시 예외 처리
-            throw new BusinessException("상품 이미지 업로드에 실패하였습니다.");
-        } catch (Exception e) {
-                throw new BusinessException("상품 등록에 실패하였습니다.");
-        }
+            throw new BusinessException("상품 이미지 업로드에 실패하였습니다.");}
+//        } catch (Exception e) {
+//                throw new BusinessException("상품 등록에 실패하였습니다.");
+//        }
 
     }
 

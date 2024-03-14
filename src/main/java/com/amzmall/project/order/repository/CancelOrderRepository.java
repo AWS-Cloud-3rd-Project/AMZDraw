@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CancelOrderRepository extends JpaRepository<CancelOrder, Long> {
-	List<CancelOrder> findAllByUsersEmail(String memberEmail, Pageable pageable);
+	List<CancelOrder> findAllByUsersEmail(String usersEmail, Pageable pageable);
 }

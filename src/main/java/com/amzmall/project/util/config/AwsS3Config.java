@@ -9,6 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 
 @Slf4j
 @Getter
@@ -24,12 +28,18 @@ public class AwsS3Config {
     private String region;
 
     @Bean
+    public AwsCredentialsProvider awsCredentialsProvider() {
+        AwsCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretKey);
+        return StaticCredentialsProvider.create(awsCredentials);
+    }
+
+    @Bean
     public AmazonS3Client amazonS3Client() {
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+//        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
 
         return (AmazonS3Client) AmazonS3ClientBuilder.standard()
             .withRegion(region)
-            .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+//            .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
             .build();
     }
 }
