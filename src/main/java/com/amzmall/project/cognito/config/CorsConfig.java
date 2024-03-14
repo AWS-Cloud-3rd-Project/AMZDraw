@@ -13,16 +13,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 
 @Configuration
 public class CorsConfig {
-    @Value("${cloud.aws.credentials.accessKey}")
-    private String accessKey;   // 키 수정 필요
 
-    @Value("${cloud.aws.credentials.secretKey}")
-    private String secretKey;   // 키 수정 필요
-    @Bean
-    public AwsCredentialsProvider awsCredentialsProvider() {
-        AwsCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretKey);
-        return StaticCredentialsProvider.create(awsCredentials);
-    }
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -35,4 +26,5 @@ public class CorsConfig {
         source.registerCorsConfiguration("/api/**", config);
         return new CorsFilter(source);
     }
+
 }

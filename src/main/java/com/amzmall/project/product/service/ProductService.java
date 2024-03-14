@@ -40,9 +40,14 @@ public class ProductService {
             String thumbnailPath = s3UploadService.upload(thumbnail, "photos/"+productReqDTO.getName());
             product.setThumbnail(thumbnailPath); // 대표 이미지 S3 URL 설정
             List<String> imgPath = s3UploadService.uploadFiles(photos, "photos/"+productReqDTO.getName());
-            product.setImgPath1(imgPath.get(0));
-            product.setImgPath2(imgPath.get(1));
-            product.setImgPath3(imgPath.get(2));
+            for (int i = 0; i < photos.size(); i++) {
+                if (i == 0)
+                    product.setImgPath1(imgPath.get(i));
+                else if (i == 1)
+                    product.setImgPath2(imgPath.get(i));
+                else if (i == 2)
+                    product.setImgPath3(imgPath.get(i));
+            }
             // 상품 카테고리 설정
             Category category = categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new BusinessException("해당 카테고리를 찾을 수 없습니다."));
@@ -53,10 +58,10 @@ public class ProductService {
             return product.toDto();
         } catch (IOException e) {
             // S3 업로드 실패 시 예외 처리
-            throw new BusinessException("상품 이미지 업로드에 실패하였습니다.");
-        } catch (Exception e) {
-                throw new BusinessException("상품 등록에 실패하였습니다.");
-        }
+            throw new BusinessException("상품 이미지 업로드에 실패하였습니다.");}
+//        } catch (Exception e) {
+//                throw new BusinessException("상품 등록에 실패하였습니다.");
+//        }
 
     }
 
