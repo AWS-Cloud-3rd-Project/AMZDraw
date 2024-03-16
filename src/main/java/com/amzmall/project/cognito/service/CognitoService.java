@@ -1,6 +1,7 @@
 package com.amzmall.project.cognito.service;
 
 import com.amzmall.project.cognito.config.jwt.JwtUtil;
+import com.amzmall.project.cognito.dto.LoginReqDto;
 import com.amzmall.project.users.domain.entity.Users;
 import com.amzmall.project.users.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,17 +36,19 @@ public class CognitoService {
         .credentialsProvider(DefaultCredentialsProvider.create())
         .build();
 
-    public SignUpResponse signUp(String username, String password) {
-        usersRepository.save(new Users(username, password));
+    public SignUpResponse signUp(LoginReqDto loginReqDto) {
+        String email = loginReqDto.getEmail();
+        String password = loginReqDto.getPassword();
+        usersRepository.save(new Users(email, password));
         SignUpRequest signUpRequest = SignUpRequest.builder()
                 .clientId(clientId)
-                .username(username)
+                .username(email)
                 .password(password)
                 .build();
         SignUpResponse signUpResponse = cognitoClient.signUp(signUpRequest);
         AdminConfirmSignUpRequest confirmSignUpRequest = AdminConfirmSignUpRequest.builder()
                 .userPoolId(userPoolId)
-                .username(username)
+                .username(email)
                 .build();
         cognitoClient.adminConfirmSignUp(confirmSignUpRequest);
         return signUpResponse;
