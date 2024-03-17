@@ -1,4 +1,4 @@
-package com.amzmall.project.cognito.config;
+package com.amzmall.project.util.config;
 
 import com.amzmall.project.cognito.config.jwt.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;

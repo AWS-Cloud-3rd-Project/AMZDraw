@@ -1,4 +1,4 @@
-package com.amzmall.project.cognito.config;
+package com.amzmall.project.util.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +13,6 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 
 @Configuration
 public class CorsConfig {
-
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -26,5 +25,4 @@ public class CorsConfig {
         source.registerCorsConfiguration("/api/**", config);
         return new CorsFilter(source);
     }
-
 }

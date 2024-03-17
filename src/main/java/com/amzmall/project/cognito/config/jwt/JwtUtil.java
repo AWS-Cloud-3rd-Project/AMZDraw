@@ -18,10 +18,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
-
     private static Key key; // Cognito 공개 키
-
-
 
     // 토큰에서 모든 클레임을 추출하는 메서드
     public Claims getAllClaimsFromToken(String token) {
