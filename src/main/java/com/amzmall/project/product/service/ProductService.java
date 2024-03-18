@@ -6,6 +6,7 @@ import com.amzmall.project.product.domain.entity.Product;
 import com.amzmall.project.product.domain.dto.ProductReqDto;
 import com.amzmall.project.product.repository.CategoryRepository;
 import com.amzmall.project.product.repository.ProductRepository;
+import com.amzmall.project.util.advice.ExMessage;
 import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.util.service.S3UploadService;
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class ProductService {
             }
             // 상품 카테고리 설정
             Category category = categoryRepository.findByName(categoryName)
-                .orElseThrow(() -> new BusinessException("해당 카테고리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(ExMessage.PRODUCT_ERROR_CATEGORY));
             product.setImg(thumbnail.getOriginalFilename());
             product.setCategory(category); // 상품에 카테고리 설정
             productRepository.save(product);
@@ -58,7 +59,7 @@ public class ProductService {
             return product.toDto();
         } catch (IOException e) {
             // S3 업로드 실패 시 예외 처리
-            throw new BusinessException("상품 이미지 업로드에 실패하였습니다.");}
+            throw new BusinessException(ExMessage.PRODUCT_ERROR_UPLOAD_IMAGE);}
 //        } catch (Exception e) {
 //                throw new BusinessException("상품 등록에 실패하였습니다.");
 //        }
@@ -70,7 +71,7 @@ public class ProductService {
 
         Optional<Product> optionalProduct = productRepository.findById(productId);
         Product product = optionalProduct
-            .orElseThrow(() -> new BusinessException("해당 상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new BusinessException(ExMessage.PRODUCT_ERROR_NOT_EXIST));
 
         if (!Objects.equals(product, newProduct)) {
             product.setBrand(newProduct.getBrand());
@@ -79,7 +80,7 @@ public class ProductService {
             // 다른 필드 추가
             productRepository.save(product);
         } else {
-            throw new BusinessException("수정할 내용이 없습니다.");
+            throw new BusinessException(ExMessage.PRODUCT_ERROR_NO_MODIFY);
         }
     }
 
@@ -87,14 +88,14 @@ public class ProductService {
     public void deleteProduct(int productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
         Product product = optionalProduct
-            .orElseThrow(() -> new BusinessException("해당 상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new BusinessException(ExMessage.PRODUCT_ERROR_NOT_EXIST));
         productRepository.delete(product);
     }
 
     @Transactional(readOnly = true)
     public ProductResDto getOneProduct(int productId) {
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new BusinessException("해당 상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new BusinessException(ExMessage.PRODUCT_ERROR_NOT_EXIST));
         return product.toDto();
     }
 

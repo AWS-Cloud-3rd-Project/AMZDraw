@@ -53,11 +53,11 @@ public class PaymentService {
         try {
             Order order = orderReqDto.toEntity();
             Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new BusinessException("해당 상품은 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ExMessage.PRODUCT_ERROR_NOT_EXIST));
 
             int currentStock = product.getStockQuantity();
             if (currentStock < 5) {
-                throw new BusinessException("상품의 재고가 부족합니다.");
+                throw new BusinessException(ExMessage.PRODUCT_ERROR_NO_STOCK);
             }
 
             product.decreaseStockQuantity(1);

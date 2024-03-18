@@ -3,8 +3,8 @@ package com.amzmall.project.product.controller;
 import com.amzmall.project.product.domain.dto.ProductResDto;
 import com.amzmall.project.product.domain.entity.Product;
 import com.amzmall.project.product.domain.dto.ProductReqDto;
-import com.amzmall.project.product.repository.ProductRepository;
 import com.amzmall.project.product.service.ProductService;
+import com.amzmall.project.util.advice.ExMessage;
 import com.amzmall.project.util.dto.ListResult;
 import com.amzmall.project.util.dto.SingleResult;
 import com.amzmall.project.util.exception.BusinessException;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
 
 @Tag(name = "products", description="상품")
 @RestController
@@ -40,7 +39,7 @@ public class ProductController {
         @RequestPart("photos") List<MultipartFile> photos) {
         try {
             if (photos.size() > 3) { // 최대 5개의 파일을 허용
-                throw new BusinessException("최대 3개의 사진을 업로드할 수 있습니다.");
+                throw new BusinessException(ExMessage.PRODUCT_ERROR_UPLOAD_LIMIT);
             }
             return responseService.getSingleResult(productService.registerProduct(productReqDto, thumbnail, photos));
         } catch (Exception e){
