@@ -7,6 +7,12 @@ management:
       health:
         show-details: always
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+
 toss:
   payments:
     enabled: true
