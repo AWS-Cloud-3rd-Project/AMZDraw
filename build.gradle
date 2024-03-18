@@ -35,6 +35,11 @@ dependencies {
 	testAnnotationProcessor('org.projectlombok:lombok')
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
+
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.4.1'
 
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
