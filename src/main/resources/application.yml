@@ -8,14 +8,13 @@ management:
       prometheus:
         enabled: true
 
-
 toss:
   payments:
     enabled: true
     client_key: ${TOSS_CLIENT_KEY}
     secret_key: ${TOSS_SECRET_KEY}
-    fail_url: http://localhost:8080/api/v1/order/fail
-    success_url: http://localhost:8080/api/v1/order/success
+    fail_url: https://www.amzdraw.shop/api/v1/order/fail
+    success_url: https://www.amzdraw.shop/api/v1/order/success
     basic_url: https://api.tosspayments.com/v1/payments/
 
 spring:
@@ -63,15 +62,3 @@ cloud:
     cognito:
       pool-id: ${COGNITO_POOL_ID}
       client-id: ${COGNITO_CLIENT_ID}
-
-
-
-#    logging:
-#      level:
-#        org:
-#          springframework:
-#            data:
-#              elasticsearch:
-#                client:
-#                  WIRE=TRACE:TRACE
-#
