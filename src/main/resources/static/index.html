@@ -1,52 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="utf-8" />
-    <script src="https://js.tosspayments.com/v1/order-widget"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot Test</title>
 </head>
 <body>
-<!-- 할인 쿠폰 -->
-<div>
-    <input type="checkbox" id="coupon-box" />
-    <label for="coupon-box"> 5,000원 쿠폰 적용 </label>
-</div>
-<!-- 결제 UI, 이용약관 UI 영역 -->
-<div id="order-method"></div>
-<div id="agreement"></div>
-<!-- 결제하기 버튼 -->
-<button id="order-button">결제하기</button>
-
-<script>
-    const button = document.getElementById("order-button");
-
-    // 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요.
-    // 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
-    const widgetClientKey = "test_ck_vZnjEJeQVxb5mJnxvmRD8PmOoBN0";
-    const customerKey = 구매자이메일;
-    const paymentWidget = PaymentWidget(widgetClientKey, customerKey); // 회원 결제
-
-    const paymentMethodWidget = paymentWidget.renderPaymentMethods(
-      "#order-method",
-      { value: 가격 },
-      { variantKey: "DEFAULT" }
-    );
-
-    paymentWidget.renderAgreement(
-      "#agreement",
-      { variantKey: "AGREEMENT" }
-    );
-
-    button.addEventListener("click", function () {
-      // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
-      // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-      paymentWidget.requestPayment({
-        orderName:  주문 이름,
-        successUrl: SuccessUrl,
-        failUrl: failUrl,
-        customerEmail: 고객이메일,
-        customerName: 고객 이름
-      });
-    });
-</script>
+<h1>Welcome to AMZDraw</h1>
+<p>This is a sample index page.</p>
 </body>
 </html>

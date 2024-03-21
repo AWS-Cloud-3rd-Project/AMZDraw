@@ -7,13 +7,13 @@
       <env name="COGNITO_CLIENT_ID" value="70aa9cojdarvlrj6e2hubvcckh" />
       <env name="COGNITO_POOL_ID" value="ap-northeast-2_qD0HzA3fK;" />
       <env name="COGNITO_RSA_URL" value="https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_qD0HzA3fK/.well-known/jwks.json" />
-      <env name="DB_PASSWORD" value="NY" />
       <env name="DB_URL" value="jdbc:mariadb://amzdraw.c9osquca0esm.ap-northeast-2.rds.amazonaws.com:3306/amzdraw" />
-      <env name="DB_USER" value="NY" />
       <env name="S3_ACCESS_KEY" value="AKIAQEUG5GLYJB6LVDTX" />
       <env name="S3_SECRET_KEY" value="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" />
       <env name="TOSS_CLIENT_KEY" value="test_ck_vZnjEJeQVxb5mJnxvmRD8PmOoBN0" />
       <env name="TOSS_SECRET_KEY" value="test_sk_QbgMGZzorzw0PjK0GBMk8l5E1em4" />
+      <env name="DB_PASSWORD" value="NY" />
+      <env name="DB_USER" value="NY" />
     </envs>
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="project.main" />
