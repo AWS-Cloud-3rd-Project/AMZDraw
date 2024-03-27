@@ -6,6 +6,7 @@ import com.amzmall.project.users.repository.UsersRepository;
 import com.amzmall.project.users.service.UsersService;
 import com.amzmall.project.util.dto.ListResult;
 import com.amzmall.project.util.dto.SingleResult;
+import com.amzmall.project.util.exception.BusinessException;
 import com.amzmall.project.util.service.ResponseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,7 +33,12 @@ public class usersController {
     public SingleResult<UsersResDto> getUser(
         @Parameter(name = "id", description = "회원 번호", required = true)
         @PathVariable("id") int id) {
-        return responseService.getSingleResult(usersService.findById(id));
+        try {
+            return responseService.getSingleResult(usersService.findById(id));
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @GetMapping("/find/id")
@@ -41,28 +47,48 @@ public class usersController {
         @Parameter(name = "email", description = "회원 이메일", required = true)
         @RequestParam String email
     ) {
-        return responseService.getSingleResult(usersService.findUserId(email));
+        try {
+            return responseService.getSingleResult(usersService.findUserId(email));
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @GetMapping("/all")
     @Operation(summary="모든 회원 조회", description="모든 회원을 조회합니다.")
     public ListResult<UsersResDto> findAllUsers() {
-        List<UsersResDto> allByName = usersService.findAll();
-        return responseService.getListResult(allByName);
+        try {
+            List<UsersResDto> allByName = usersService.findAll();
+            return responseService.getListResult(allByName);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @GetMapping("/all/active")
     @Operation(summary="모든 활동 회원 조회", description="활동 중인 모든 회원을 조회합니다.")
     public ListResult<UsersResDto> findAllActiveUsers() {
-        List<UsersResDto> allActive = usersService.findAllActiveUsers();
-        return responseService.getListResult(allActive);
+        try {
+            List<UsersResDto> allActive = usersService.findAllActiveUsers();
+            return responseService.getListResult(allActive);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @GetMapping("/all/deActive")
     @Operation(summary="모든 비활동 회원 조회", description="활동 중이지 않은 모든 회원을 조회합니다.")
     public ListResult<UsersResDto> findAllDeActiveUsers() {
-        List<UsersResDto> allActive = usersService.findAllDeActiveUsers();
-        return responseService.getListResult(allActive);
+        try {
+            List<UsersResDto> allActive = usersService.findAllDeActiveUsers();
+            return responseService.getListResult(allActive);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 
     @GetMapping("/email")
@@ -71,7 +97,12 @@ public class usersController {
         @Parameter(name = "email", description = "회원 이메일", required = true)
         @RequestParam(name = "email") String email
     ) {
-        UsersResDto targetEmail = usersService.findByEmail(email);
-        return responseService.getSingleResult(targetEmail);
+        try {
+            UsersResDto targetEmail = usersService.findByEmail(email);
+            return responseService.getSingleResult(targetEmail);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new BusinessException(e.getMessage());
+        }
     }
 }
